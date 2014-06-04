@@ -14,7 +14,9 @@
     "jscs": "^1.4.5",
     "jshint": "~2.5.1",
     "mocha": "~1.20.0",
-    "retext": "~0.0.2",
+    "retext": "~0.0.2"
+  },
+  "dependencies": {
     "retext-visit": "~0.0.1"
   },
   "repository": {
