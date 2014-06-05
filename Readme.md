@@ -14,7 +14,7 @@ $ npm install retext-smartypants
 var Retext = require('retext'),
     smartypants = require('retext-smartypants');
 
-var root = new Retext()
+new Retext()
     .use(smartypants()) // Note that `smartypants` is
                         // called (optionally with
                         // options).
