@@ -4,18 +4,8 @@
 
 ## Installation
 
-### With NPM
-
 ```sh
 $ npm install retext-smartypants
-```
-
-### Git
-
-```sh
-git clone https://github.com/wooorm/retext-smartypants.git
-cd retext-smartypants
-npm install
 ```
 
 ## Usage
