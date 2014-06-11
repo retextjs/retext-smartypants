@@ -6,7 +6,7 @@ var visit, EXPRESSION_ENDS_ALPHA_NUMERICAL, EXPRESSION_STARTS_ALPHA_NUMERICAL,
     THREE_DOTS, ELLIPSIS, DOT, TWO_BACKTICKS, BACKTICK, TWO_SINGLE_QUOTES,
     SINGLE_QUOTE, DOUBLE_QUOTE, OPENING_DOUBLE_QUOTE, CLOSING_DOUBLE_QUOTE,
     OPENING_SINGLE_QUOTE, CLOSING_SINGLE_QUOTE, CLOSING_QUOTE_MAP,
-    OPENING_QUOTE_MAP, educators;
+    OPENING_QUOTE_MAP, TRUE, educators;
 
 visit = require('retext-visit');
 EXPRESSION_ENDS_ALPHA_NUMERICAL = /[a-zA-Z0-9]$/;
@@ -33,6 +33,7 @@ OPENING_QUOTE_MAP[DOUBLE_QUOTE] = OPENING_DOUBLE_QUOTE = '“';
 CLOSING_QUOTE_MAP[DOUBLE_QUOTE] = CLOSING_DOUBLE_QUOTE = '”';
 OPENING_QUOTE_MAP[SINGLE_QUOTE] = OPENING_SINGLE_QUOTE = '‘';
 CLOSING_QUOTE_MAP[SINGLE_QUOTE] = CLOSING_SINGLE_QUOTE = '’';
+TRUE = 'true';
 
 educators = {
     'dashes' : {
@@ -132,7 +133,7 @@ educators = {
             var self = this,
                 value = self.data.originalValue || self.toString();
 
-            educators.backticks.true.call(self);
+            educators.backticks[TRUE].call(self);
 
             if (value === BACKTICK) {
                 self.fromString(OPENING_SINGLE_QUOTE);
