@@ -2,7 +2,7 @@
   "name": "retext-smartypants",
   "repository": "wooorm/retext-smartypants",
   "description": "Retext implementation of SmartyPants",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "keywords": [
     "retext",
     "smartypants"
