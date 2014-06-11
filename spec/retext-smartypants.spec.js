@@ -1,3 +1,4 @@
+'use strict';
 
 var smartypants = require('..'),
     Retext = require('retext'),
