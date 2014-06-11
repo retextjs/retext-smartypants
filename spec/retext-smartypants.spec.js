@@ -15,7 +15,7 @@ describe('smartypants()', function () {
 
             assert.throws(function () {
                 assert(retext.parse());
-            }, /Illegal invocation/);
+            }, 'Illegal invocation');
         }
     );
 });
@@ -28,7 +28,7 @@ describe('Curly quotes', function () {
             new Retext().use(smartypants({
                 'quotes' : 1
             }));
-        }, /'1'/);
+        }, '1');
     });
 
     it('should curl quotes', function () {
@@ -187,7 +187,7 @@ describe('En- and em-dashes', function () {
             new Retext().use(smartypants({
                 'dashes' : 'test'
             }));
-        }, /'test'/);
+        }, 'test');
     });
 
     it('should not replace double or triple dashes, when `dashes` is set ' +
@@ -259,7 +259,7 @@ describe('Ellipses', function () {
             new Retext().use(smartypants({
                 'ellipses' : Infinity
             }));
-        }, /'Infinity'/);
+        }, 'Infinity');
     });
 
     it('should not replace triple dot characters, when `ellipses` is set ' +
@@ -324,7 +324,7 @@ describe('Backticks', function () {
             new Retext().use(smartypants({
                 'backticks' : {}
             }));
-        }, /'\[object Object\]'/);
+        }, '[object Object]');
     });
 
     it('should not replace two backticks with an opening double quote, ' +
@@ -487,5 +487,3 @@ describe('Backticks', function () {
         }
     );
 });
-// Due to popular demand, four consecutive dots (....) will now be turned into
-// an ellipsis followed by a period.
