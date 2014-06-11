@@ -10,8 +10,14 @@ See [Browser Support](#browser-support) for more information (a.k.a. don’t wor
 
 ## Installation
 
+NPM:
 ```sh
 $ npm install retext-smartypants
+```
+
+Component.js:
+```sh
+$ component install wooorm/retext-smartypants
 ```
 
 ## Usage
