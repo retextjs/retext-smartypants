@@ -1,0 +1,17 @@
+{
+  "name": "retext-smartypants",
+  "repository": "wooorm/retext-smartypants",
+  "description": "Retext implementation of SmartyPants",
+  "version": "0.0.4",
+  "keywords": [
+    "retext",
+    "smartypants"
+  ],
+  "dependencies": {
+    "wooorm/retext-visit": "~0.0.3"
+  },
+  "scripts" : [
+    "index.js"
+  ],
+  "license": "MIT"
+}
