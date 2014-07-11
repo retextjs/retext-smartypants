@@ -1,5 +1,5 @@
 
-n.n.n / 2014-07-11
+0.1.0-rc.1 / 2014-07-11
 ==================
 
  * Update retext-visit for component
