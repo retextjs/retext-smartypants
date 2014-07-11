@@ -1,20 +1,14 @@
 'use strict';
 
-var visit, EXPRESSION_ENDS_ALPHA_NUMERICAL, EXPRESSION_STARTS_ALPHA_NUMERICAL,
-    EXPRESSION_ENDS_APOSTROPHE_EXCEPTION, EXPRESSION_DECADE, THREE_DASHES,
-    EXPRESSION_STARTS_APOSTROPHE_EXCEPTION, TWO_DASHES, EM_DASH, EN_DASH,
+var visit, EXPRESSION_DECADE, THREE_DASHES, TWO_DASHES, EM_DASH, EN_DASH,
     THREE_DOTS, ELLIPSIS, DOT, TWO_BACKTICKS, BACKTICK, TWO_SINGLE_QUOTES,
     SINGLE_QUOTE, DOUBLE_QUOTE, OPENING_DOUBLE_QUOTE, CLOSING_DOUBLE_QUOTE,
     OPENING_SINGLE_QUOTE, CLOSING_SINGLE_QUOTE, CLOSING_QUOTE_MAP,
     OPENING_QUOTE_MAP, TRUE, educators;
 
 visit = require('retext-visit');
-EXPRESSION_ENDS_ALPHA_NUMERICAL = /[a-zA-Z0-9]$/;
-EXPRESSION_STARTS_ALPHA_NUMERICAL = /^[a-zA-Z0-9]/;
-EXPRESSION_ENDS_APOSTROPHE_EXCEPTION = /(s|(\s|'|‘)n)$/i;
-EXPRESSION_STARTS_APOSTROPHE_EXCEPTION =
-    /^(((em|er|bout|less|twas|[0-9]+|tis|cause)\s)|n(\s|'|‘)|\s+s)/i;
-EXPRESSION_DECADE = /\d\d/;
+
+EXPRESSION_DECADE = /^\d\ds$/i;
 THREE_DASHES = '---';
 TWO_DASHES = '--';
 EM_DASH = '—';
@@ -43,7 +37,7 @@ educators = {
 
             if (value === TWO_DASHES) {
                 self.data.originalValue = value;
-                self.fromString(EM_DASH);
+                self[0].fromString(EM_DASH);
             }
         },
         'oldschool' : function () {
@@ -52,10 +46,10 @@ educators = {
 
             if (value === THREE_DASHES) {
                 self.data.originalValue = value;
-                self.fromString(EM_DASH);
+                self[0].fromString(EM_DASH);
             } else if (value === TWO_DASHES) {
                 self.data.originalValue = value;
-                self.fromString(EN_DASH);
+                self[0].fromString(EN_DASH);
             }
         },
         'inverted' : function () {
@@ -64,10 +58,10 @@ educators = {
 
             if (value === THREE_DASHES) {
                 self.data.originalValue = value;
-                self.fromString(EN_DASH);
+                self[0].fromString(EN_DASH);
             } else if (value === TWO_DASHES) {
                 self.data.originalValue = value;
-                self.fromString(EM_DASH);
+                self[0].fromString(EM_DASH);
             }
         }
     },
@@ -78,7 +72,7 @@ educators = {
 
             if (value === THREE_DOTS) {
                 self.data.originalValue = value;
-                self.fromString(ELLIPSIS);
+                self[0].fromString(ELLIPSIS);
                 return;
             }
 
@@ -115,7 +109,7 @@ educators = {
                 nodes[iterator].remove();
             }
 
-            self.fromString(self.data.originalValue = ELLIPSIS);
+            self[0].fromString(self.data.originalValue = ELLIPSIS);
         }
     },
     'backticks' : {
@@ -124,9 +118,9 @@ educators = {
                 value = self.data.originalValue || self.toString();
 
             if (value === TWO_BACKTICKS) {
-                self.fromString(OPENING_DOUBLE_QUOTE);
+                self[0].fromString(OPENING_DOUBLE_QUOTE);
             } else if (value === TWO_SINGLE_QUOTES) {
-                self.fromString(CLOSING_DOUBLE_QUOTE);
+                self[0].fromString(CLOSING_DOUBLE_QUOTE);
             }
         },
         'all' : function () {
@@ -136,9 +130,9 @@ educators = {
             educators.backticks[TRUE].call(self);
 
             if (value === BACKTICK) {
-                self.fromString(OPENING_SINGLE_QUOTE);
+                self[0].fromString(OPENING_SINGLE_QUOTE);
             } else if (value === SINGLE_QUOTE) {
-                self.fromString(CLOSING_SINGLE_QUOTE);
+                self[0].fromString(CLOSING_SINGLE_QUOTE);
             }
         }
     },
@@ -171,7 +165,7 @@ educators = {
                 next.type === self.PUNCTUATION_NODE &&
                 nextNext.type !== self.WORD_NODE) {
                     self.data.originalValue = value;
-                    self.fromString(CLOSING_QUOTE_MAP[value]);
+                    self[0].fromString(CLOSING_QUOTE_MAP[value]);
             /* Special case for double sets of quotes, e.g.:
              *    He said, "'Quoted' words in a larger quote."
              */
@@ -179,32 +173,31 @@ educators = {
                 nextValue === SINGLE_QUOTE) &&
                 nextNext.type === self.WORD_NODE) {
                     self.data.originalValue = value;
-                    self.fromString(OPENING_QUOTE_MAP[value]);
-                    next.fromString(OPENING_QUOTE_MAP[nextValue]);
+                    self[0].fromString(OPENING_QUOTE_MAP[value]);
+                    next[0].fromString(OPENING_QUOTE_MAP[nextValue]);
             /* Special case for decade abbreviations (the '80s): */
-            } else if (nextNext && EXPRESSION_DECADE.test(nextValue) &&
-                nextNext.toString() === 's') {
+            } else if (nextNext && EXPRESSION_DECADE.test(nextValue)) {
                     self.data.originalValue = value;
-                    self.fromString(CLOSING_QUOTE_MAP[value]);
+                    self[0].fromString(CLOSING_QUOTE_MAP[value]);
             /* Get most opening single quotes: */
             } else if (prev && next &&
                 (prev.type === self.WHITE_SPACE_NODE ||
                 prev.type === self.PUNCTUATION_NODE) &&
                 next.type === self.WORD_NODE) {
                     self.data.originalValue = value;
-                    self.fromString(OPENING_QUOTE_MAP[value]);
+                    self[0].fromString(OPENING_QUOTE_MAP[value]);
             /* Closing quotes: */
             } else if (prev && (prev.type !== self.WHITE_SPACE_NODE &&
                 prev.type !== self.PUNCTUATION_NODE)) {
                     self.data.originalValue = value;
-                    self.fromString(CLOSING_QUOTE_MAP[value]);
+                    self[0].fromString(CLOSING_QUOTE_MAP[value]);
             } else if (!next || next.type === self.WHITE_SPACE_NODE ||
                 (value === '\'' && nextValue === 's')) {
                     self.data.originalValue = value;
-                    self.fromString(CLOSING_QUOTE_MAP[value]);
+                    self[0].fromString(CLOSING_QUOTE_MAP[value]);
             } else {
                 self.data.originalValue = value;
-                self.fromString(OPENING_QUOTE_MAP[value]);
+                self[0].fromString(OPENING_QUOTE_MAP[value]);
             }
         }
     }
@@ -234,10 +227,10 @@ function smartypants(options) {
             ' called by Retext, but should be called by the user');
     }
 
-    var events, method, quotes, ellipses, backticks, dashes, callback;
+    var events, method, quotes, ellipses, backticks, dashes;
 
     events = {
-        'changetext' : [],
+        'changetextinside' : [],
         'changeprev' : [],
         'changenext' : []
     };
@@ -285,32 +278,32 @@ function smartypants(options) {
 
     if (quotes !== false) {
         method = educators.quotes[quotes || true];
-        events.changetext.push(method);
+        events.changetextinside.push(method);
         events.changeprev.push(method);
         events.changenext.push(method);
     }
 
     if (ellipses !== false) {
         method = educators.ellipses[ellipses || true];
-        events.changetext.push(method);
+        events.changetextinside.push(method);
         events.changeprev.push(method);
     }
 
     if (backticks !== false) {
-        events.changetext.push(educators.backticks[backticks || true]);
+        events.changetextinside.push(educators.backticks[backticks || true]);
     }
 
     if (dashes !== false) {
-        events.changetext.push(educators.dashes[dashes || true]);
+        events.changetextinside.push(educators.dashes[dashes || true]);
     }
 
-    callback = function (tree) {
+    function callback(tree) {
         tree.visitType(tree.PUNCTUATION_NODE, function (node) {
-            var value = node.toString();
-            node.fromString(null);
-            node.fromString(value);
+            var value = node[0].toString();
+            node[0].fromString(null);
+            node[0].fromString(value);
         });
-    };
+    }
 
     callback.attach = attachFactory(events);
 
