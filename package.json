@@ -9,8 +9,8 @@
   "author": "Titus Wormer <tituswormer@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "eslint": "^0.7.1",
-    "istanbul": "~0.2.16",
+    "eslint": "^0.7.4",
+    "istanbul": "^0.3.0",
     "jscs": "^1.5.8",
     "mocha": "~1.20.1",
     "retext": "^0.1.0"
