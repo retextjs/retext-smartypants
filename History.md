@@ -1,4 +1,15 @@
 
+n.n.n / 2014-07-11
+==================
+
+ * Update retext-visit for component
+ * Added changelog
+ * Removed unused variables, made API work with new retext ^0.1.0
+ * Updated retext
+ * Updated eslint, istanbul
+ * Updated eslint, istanbul, jscs, retext, and retext-visit
+ * Removed browserify and complexity-report
+
 0.0.8 / 2014-06-19
 ==================
 
