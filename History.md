@@ -1,4 +1,11 @@
 
+n.n.n / 2014-07-22
+==================
+
+ * Fix infinite loop by prohibiting certain values form working with each other
+ * Added components to gitignore
+ * Add retext as a peer dependency
+
 0.1.0-rc.1 / 2014-07-11
 ==================
 
