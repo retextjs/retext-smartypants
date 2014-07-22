@@ -1,5 +1,5 @@
 
-n.n.n / 2014-07-22
+0.1.0 / 2014-07-22
 ==================
 
  * Fix infinite loop by prohibiting certain values form working with each other
