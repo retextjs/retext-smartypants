@@ -56,7 +56,7 @@ var root = new Retext()
   - When `false`, ignores dumb ellipses;
 - `options.backticks` (`"all"`, `true`, or `false`)
   - When `true`, converts double backticks into an opening double quote, and double dumb single quotes into a closing double quote;
-  - When `"all"`, does the preceding, in addition of converting single backticks into an opening single quote, and a dumb single quote into a closing single quote;
+  - When `"all"`, does the preceding, in addition of converting single backticks into an opening single quote, and a dumb single quote into a closing single quote. **Note!** Quotes can not be `true` when backticks is `"all"` (Otherwise they'd keep arguing on about the direction of some quotes. Nothing good comes from that, only RangeErrors.);
   - When `false`, ignores dumb backticks and single quotes (although when `quotes` is true, dumb quotes might be converted to smart quotes anyway).
 - `options.dashes` (`"oldschool"`, `"inverted"`, `true`, or `false`)
   - When `true`, converts two dashes into an em-dash character;

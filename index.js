@@ -264,6 +264,11 @@ function smartypants(options) {
                 '\' is not a valid option for `backticks` in ' +
                 '\'smartypants\'');
         }
+
+        if (backticks === 'all' && quotes === true) {
+            throw new TypeError('Illegal invocation: backticks `"all"`' +
+                ' can\'t work together with quotes: `"true"`.');
+        }
     }
 
     if ('dashes' in options) {

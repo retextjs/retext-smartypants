@@ -486,4 +486,16 @@ describe('Backticks', function () {
             );
         }
     );
+
+    it('should throw when backticks is "all", and quotes is true',
+        function () {
+            var retext = new Retext();
+            assert.throws(function () {
+                retext.use(smartypants({
+                    'backticks' : 'all',
+                    'quotes' : true
+                }));
+            }, 'Illegal invocation');
+        }
+    );
 });
