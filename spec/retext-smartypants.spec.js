@@ -1,501 +1,768 @@
 'use strict';
 
-var smartypants = require('..'),
-    Retext = require('retext'),
-    assert = require('assert');
+/**
+ * Dependencies.
+ */
+
+var smartypants,
+    Retext,
+    assert;
+
+smartypants = require('..');
+Retext = require('retext');
+assert = require('assert');
+
+/**
+ * Tests.
+ */
 
 describe('smartypants()', function () {
-    it('should be of type `function`', function () {
+    it('should be a `function`', function () {
         assert(typeof smartypants === 'function');
     });
 
-    it('should throw when invoked by Retext, rather than the user',
-        function () {
-            var retext = new Retext().use(smartypants);
+    it('should pass an error when invoked by `Retext` instead of the user',
+        function (done) {
+            var retext;
 
-            assert.throws(function () {
-                assert(retext.parse());
-            }, 'Illegal invocation');
+            retext = new Retext().use(smartypants);
+
+            retext.parse(null, function (err) {
+                assert.throws(function () {
+                    throw err;
+                }, /Illegal invocation/);
+
+                done();
+            });
         }
     );
 });
 
 describe('Curly quotes', function () {
-    var retext = new Retext().use(smartypants());
+    var retext;
 
-    it('should throw when not given true, false, or omitted', function () {
-        assert.throws(function () {
-            new Retext().use(smartypants({
-                'quotes' : 1
-            }));
-        }, '1');
+    retext = new Retext().use(smartypants());
+
+    it('should throw when not given `true`, `false`, or omitted',
+        function () {
+            assert.throws(function () {
+                new Retext().use(smartypants({
+                    'quotes' : 1
+                }));
+            }, /1/);
+        }
+    );
+
+    it('should curl double quotes', function (done) {
+        retext.parse('Alfred "bertrand" cees.', function (err, tree) {
+            assert(tree.toString() === 'Alfred “bertrand” cees.');
+
+            done(err);
+        });
     });
 
-    it('should curl quotes', function () {
-        retext.parse('Alfred "bertrand" cees.');
+    it('should curl single quotes', function (done) {
+        retext.parse('Alfred \'bertrand\' cees.', function (err, tree) {
+            assert(tree.toString() === 'Alfred ‘bertrand’ cees.');
 
-        assert(
-            retext.parse('Alfred "bertrand" cees.').toString() ===
-            'Alfred “bertrand” cees.'
-        );
-
-        assert(
-            retext.parse('Alfred \'bertrand\' cees.').toString() ===
-            'Alfred ‘bertrand’ cees.'
-        );
+            done(err);
+        });
     });
 
-    it('should curl quotes at the start of a sentence', function () {
-        assert(
-            retext.parse('"Alfred" bertrand.').toString() ===
-            '“Alfred” bertrand.'
-        );
+    it('should curl double quotes at the beginning', function (done) {
+        retext.parse('"Alfred" bertrand.', function (err, tree) {
+            assert(tree.toString() === '“Alfred” bertrand.');
 
-        assert(
-            retext.parse('\'Alfred\' bertrand.').toString() ===
-            '‘Alfred’ bertrand.'
-        );
+            done(err);
+        });
     });
 
-    it('should curl quotes at the end of a sentence', function () {
-        assert(
-            retext.parse('Alfred "bertrand".').toString() ===
-            'Alfred “bertrand”.'
-        );
-        assert(
-            retext.parse('Alfred \'bertrand\'.').toString() ===
-            'Alfred ‘bertrand’.'
-        );
+    it('should curl single quotes at the beginning', function (done) {
+        retext.parse('\'Alfred\' bertrand.', function (err, tree) {
+            assert(tree.toString() === '‘Alfred’ bertrand.');
+
+            done(err);
+        });
     });
 
-    it('should curl nested quotes', function () {
-        assert(
-            retext.parse('"\'Alfred\' bertrand" cees.').toString() ===
-            '“‘Alfred’ bertrand” cees.'
-        );
+    it('should curl double quotes at the end', function (done) {
+        retext.parse('Alfred "bertrand".', function (err, tree) {
+            assert(tree.toString() === 'Alfred “bertrand”.');
 
-        assert(
-            retext.parse('\'"Alfred" bertrand\' cees.').toString() ===
-            '‘“Alfred” bertrand’ cees.'
-        );
+            done(err);
+        });
+    });
 
-        assert(
-            retext.parse('"Alfred "bertrand" cees."').toString() ===
-            '“Alfred “bertrand” cees.”'
-        );
+    it('should curl single quotes at the end', function (done) {
+        retext.parse('Alfred \'bertrand\'.', function (err, tree) {
+            assert(tree.toString() === 'Alfred ‘bertrand’.');
 
-        assert(
-            retext.parse('\'Alfred \'bertrand\' cees.\'').toString() ===
-            '‘Alfred ‘bertrand’ cees.’'
-        );
+            done(err);
+        });
+    });
 
-        assert(
+    it('should curl quotes when single quotes occur in double quotes',
+        function (done) {
+            retext.parse('"\'Alfred\' bertrand" cees.', function (err, tree) {
+                assert(tree.toString() === '“‘Alfred’ bertrand” cees.');
+
+                done(err);
+            });
+        }
+    );
+
+    it('should curl quotes when single quotes occur in double quotes #2',
+        function (done) {
+            retext.parse('He said, "\'Quoted\' words in a larger quote."',
+                function (err, tree) {
+                    assert(
+                        tree.toString() ===
+                        'He said, “‘Quoted’ words in a larger quote.”'
+                    );
+
+                    done(err);
+                }
+            );
+        }
+    );
+
+    it('should curl quotes when double quotes occur in single quotes',
+        function (done) {
+            retext.parse('\'"Alfred bertrand"\' cees.', function (err, tree) {
+                assert(tree.toString() === '‘“Alfred bertrand”’ cees.');
+
+                done(err);
+            });
+        }
+    );
+
+    it('should curl quotes when double quotes occur in single quotes #2',
+        function (done) {
+            retext.parse('He said, \'"Quoted" words in a larger quote.\'',
+                function (err, tree) {
+                    assert(
+                        tree.toString() ===
+                        'He said, ‘“Quoted” words in a larger quote.’'
+                    );
+
+                    done(err);
+                }
+            );
+        }
+    );
+
+    it('should curl quotes when double quotes occur in double quotes',
+        function (done) {
+            retext.parse('"Alfred "bertrand" cees."', function (err, tree) {
+                assert(tree.toString() === '“Alfred “bertrand” cees.”');
+
+                done(err);
+            });
+        }
+    );
+
+    it('should curl quotes when single quotes occur in single quotes',
+        function (done) {
             retext.parse(
-                'He said, "\'Quoted\' words in a larger quote."'
-            ).toString() === 'He said, “‘Quoted’ words in a larger quote.”'
-        );
+                '\'Alfred \'bertrand\' cees.\'',
+                function (err, tree) {
+                    assert(tree.toString() === '‘Alfred ‘bertrand’ cees.’');
 
-        assert(
-            retext.parse(
-                'He said, \'"Quoted" words in a larger quote.\''
-            ).toString() === 'He said, ‘“Quoted” words in a larger quote.’'
-        );
-    });
-
-    it('should curl quotes when the opening quote is followed by a ' +
-        'dot-character', function () {
-            assert(
-                retext.parse('Alfred ".bertrand" cees.').toString() ===
-                'Alfred “.bertrand” cees.'
-            );
-
-            assert(
-                retext.parse('Alfred \'.bertrand\' cees.').toString() ===
-                'Alfred ‘.bertrand’ cees.'
+                    done(err);
+                }
             );
         }
     );
 
-    it('should curl quotes when the closing quote is followed by a ' +
-        'dot-character', function () {
-            assert(
-                retext.parse('Alfred "bertrand."').toString() ===
-                'Alfred “bertrand.”'
-            );
+    it('should curl opening double quotes when followed by a full stop',
+        function (done) {
+            retext.parse('Alfred ".bertrand" cees.', function (err, tree) {
+                assert(tree.toString() === 'Alfred “.bertrand” cees.');
 
-            assert(
-                retext.parse('Alfred \'bertrand.\'').toString() ===
-                'Alfred ‘bertrand.’'
-            );
+                done(err);
+            });
         }
     );
 
-    it('should curl quotes when the closing quote is followed by ' +
-        'multiple dot-characters', function () {
-            assert(retext.parse('"..alfred"').toString() === '“..alfred”');
-            assert(retext.parse('\'..alfred\'').toString() === '‘..alfred’');
+    it('should curl opening single quotes when followed by a full stop',
+        function (done) {
+            retext.parse('Alfred \'.bertrand\' cees.', function (err, tree) {
+                assert(tree.toString() === 'Alfred ‘.bertrand’ cees.');
+
+                done(err);
+            });
         }
     );
 
-    it('should curl quotes when the closing quote is followed by a comma',
-        function () {
-            assert(
-                retext.parse('"Alfred", bertrand.').toString() ===
-                '“Alfred”, bertrand.'
-            );
+    it('should curl closing double quotes when preceded by a full stop',
+        function (done) {
+            retext.parse('Alfred "bertrand." Cees.', function (err, tree) {
+                assert(tree.toString() === 'Alfred “bertrand.” Cees.');
 
-            assert(
-                retext.parse('\'Alfred\', bertrand.').toString() ===
-                '‘Alfred’, bertrand.'
-            );
+                done(err);
+            });
         }
     );
 
-    it('should curl a single quote when followed by an s-character',
-        function () {
-            assert(
-                retext.parse('Alfred\'s bertrand.').toString() ===
-                'Alfred’s bertrand.'
-            );
+    it('should curl closing single quotes when preceded by a full stop',
+        function (done) {
+            retext.parse('Alfred \'bertrand.\' Cees.', function (err, tree) {
+                assert(tree.toString() === 'Alfred ‘bertrand.’ Cees.');
+
+                done(err);
+            });
         }
     );
 
-    it('should curl a single quote when followed by an decade (e.g., ’80s)',
-        function () {
-            assert(
-                retext.parse('In the \'90s.').toString() === 'In the ’90s.'
-            );
+    it('should curl opening double quotes when followed by a multiple ' +
+        'full stops',
+        function (done) {
+            retext.parse('"..Alfred"', function (err, tree) {
+                assert(tree.toString() === '“..Alfred”');
+
+                done(err);
+            });
         }
     );
 
-    it('should curl quotes followed by a dot character', function () {
-        assert(
-            retext.parse('"Alfred bertrand". Cees.').toString() ===
-            '“Alfred bertrand”. Cees.'
-        );
+    it('should curl closing double quotes when followed by a multiple ' +
+        'full stops',
+        function (done) {
+            retext.parse('\'..Alfred\'', function (err, tree) {
+                assert(tree.toString() === '‘..Alfred’');
 
-        assert(
-            retext.parse('\'Alfred bertrand\'. Cees.').toString() ===
-            '‘Alfred bertrand’. Cees.'
-        );
-    });
+                done(err);
+            });
+        }
+    );
+
+    it('should curl closing double quotes when followed by a comma',
+        function (done) {
+            retext.parse('"Alfred", bertrand.', function (err, tree) {
+                assert(tree.toString() === '“Alfred”, bertrand.');
+
+                done(err);
+            });
+        }
+    );
+
+    it('should curl closing single quotes when followed by a comma',
+        function (done) {
+            retext.parse('\'Alfred\', bertrand.', function (err, tree) {
+                assert(tree.toString() === '‘Alfred’, bertrand.');
+
+                done(err);
+            });
+        }
+    );
+
+    it('should curl single quotes when followed by `s`',
+        function (done) {
+            retext.parse('Alfred\'s bertrand.', function (err, tree) {
+                assert(tree.toString() === 'Alfred’s bertrand.');
+
+                done(err);
+            });
+        }
+    );
+
+    it('should curl single quotes when followed by a decade (e.g., `80s`)',
+        function (done) {
+            retext.parse('In the \'90s.', function (err, tree) {
+                assert(tree.toString() === 'In the ’90s.');
+
+                done(err);
+            });
+        }
+    );
+
+    it('should curl double quotes when followed by a full stop',
+        function (done) {
+            retext.parse('"Alfred bertrand". Cees.', function (err, tree) {
+                assert(tree.toString() === '“Alfred bertrand”. Cees.');
+
+                done(err);
+            });
+        }
+    );
+
+    it('should curl single quotes when followed by a full stop',
+        function (done) {
+            retext.parse('\'Alfred bertrand\'. Cees.', function (err, tree) {
+                assert(tree.toString() === '‘Alfred bertrand’. Cees.');
+
+                done(err);
+            });
+        }
+    );
 });
 
 describe('En- and em-dashes', function () {
-    it('should throw when not given true, false, or omitted', function () {
-        assert.throws(function () {
-            new Retext().use(smartypants({
-                'dashes' : 'test'
-            }));
-        }, 'test');
-    });
+    it('should throw when not given `true`, `false`, `oldschool`, ' +
+        '`inverted`, or omitted',
+        function () {
+            assert.throws(function () {
+                new Retext().use(smartypants({
+                    'dashes' : 'test'
+                }));
+            }, /test/);
+        }
+    );
 
-    it('should not replace double or triple dashes, when `dashes` is set ' +
-        'to `false`', function () {
-            var retext = new Retext().use(smartypants({
+    it('should not replace double or triple dashes, when `dashes` is `false`',
+        function (done) {
+            var retext;
+
+            retext = new Retext().use(smartypants({
                 'dashes' : false
             }));
 
-            assert(
-                retext.parse('Alfred--bertrand---cees.').toString() ===
-                'Alfred--bertrand---cees.'
-            );
+            retext.parse('Alfred--bertrand---cees.', function (err, tree) {
+                assert(tree.toString() === 'Alfred--bertrand---cees.');
+
+                done(err);
+            });
         }
     );
 
-    it('should replace double dashes with an em-dash, when `dashes` is ' +
-        'set to `true`', function () {
-            var retext = new Retext().use(smartypants());
+    it('should replace two dashes with an em-dash, when `dashes` is `true`',
+        function (done) {
+            var retext;
 
-            assert(
-                retext.parse('Alfred--bertrand--cees.').toString() ===
-                'Alfred—bertrand—cees.'
-            );
-    });
+            retext = new Retext().use(smartypants({
+                'dashes' : true
+            }));
 
-    it('should replace double dashes with an en-dash and triple dashes ' +
-        'with an em-dash, when `dashes` is set to `oldschool`', function () {
-            var retext = new Retext().use(smartypants({
+            retext.parse('Alfred--bertrand--cees.', function (err, tree) {
+                assert(tree.toString() === 'Alfred—bertrand—cees.');
+
+                done(err);
+            });
+        }
+    );
+
+    it('should replace two dashes with an en-dash and three dashes with ' +
+        'an em-dash, when `dashes` is `oldschool`',
+        function (done) {
+            var retext;
+
+            retext = new Retext().use(smartypants({
                 'dashes' : 'oldschool'
             }));
 
-            assert(
-                retext.parse('Alfred--bertrand---cees.').toString() ===
-                'Alfred–bertrand—cees.'
-            );
+            retext.parse('Alfred--bertrand---cees.', function (err, tree) {
+                assert(tree.toString() === 'Alfred–bertrand—cees.');
+
+                done(err);
+            });
         }
     );
 
-    it('should replace double dashes with an em-dash and triple dashes ' +
-        'with an en-dash, when `dashes` is set to `inverted`', function () {
-            var retext = new Retext().use(smartypants({
+    it('should replace two dashes with an em-dash and three dashes with ' +
+        'an en-dash, when `dashes` is `inverted`',
+        function (done) {
+            var retext;
+
+            retext = new Retext().use(smartypants({
                 'dashes' : 'inverted'
             }));
 
-            assert(
-                retext.parse('Alfred--bertrand---cees.').toString() ===
-                'Alfred—bertrand–cees.'
-            );
+            retext.parse('Alfred--bertrand---cees.', function (err, tree) {
+                assert(tree.toString() === 'Alfred—bertrand–cees.');
+
+                done(err);
+            });
         }
     );
 
-    it('should replace double dashes without spaces', function () {
-        var retext = new Retext().use(smartypants({
-            'dashes' : 'oldschool'
-        }));
+    it('should replace two dashes with an em-dash and three dashes with ' +
+        'an en-dash, when `dashes` is `inverted`',
+        function (done) {
+            var retext;
 
-        assert(
+            retext = new Retext().use(smartypants({
+                'dashes' : 'oldschool'
+            }));
+
             retext.parse(
-                '"dashes"---without spaces--"are tricky."'
-            ).toString() ===
-            '“dashes”—without spaces–“are tricky.”'
-        );
-    });
+                '"dashes"---without spaces--"are tricky."',
+                function (err, tree) {
+                    assert(
+                        tree.toString() ===
+                        '“dashes”—without spaces–“are tricky.”'
+                    );
+
+                    done(err);
+                }
+            );
+        }
+    );
 });
 
 describe('Ellipses', function () {
-    it('should throw when not given true, false, or omitted', function () {
-        assert.throws(function () {
-            new Retext().use(smartypants({
-                'ellipses' : Infinity
-            }));
-        }, 'Infinity');
-    });
+    it('should throw when not given `true`, `false`, or omitted',
+        function () {
+            assert.throws(function () {
+                new Retext().use(smartypants({
+                    'ellipses' : Infinity
+                }));
+            }, /Infinity/);
+        }
+    );
 
-    it('should not replace triple dot characters, when `ellipses` is set ' +
-        'to `false`', function () {
-            var retext = new Retext().use(smartypants({
+    it('should not replace three full stops, when `ellipses` is `false`',
+        function (done) {
+            var retext;
+
+            retext = new Retext().use(smartypants({
                 'ellipses' : false
             }));
 
-            assert(
-                retext.parse('Alfred... ...Bertrand.').toString() ===
-                'Alfred... ...Bertrand.'
-            );
+            retext.parse('Alfred... ...Bertrand.', function (err, tree) {
+                assert(tree.toString() === 'Alfred... ...Bertrand.');
+
+                done(err);
+            });
         }
     );
 
-    it('should replace triple dot characters with an ellipsis, when ' +
-        '`ellipses` is set to `true`', function () {
-            var retext = new Retext().use(smartypants());
+    it('should replace three full stops, when `ellipses` is `true`',
+        function (done) {
+            var retext;
 
-            assert(
-                retext.parse('Alfred... Bertrand.').toString() ===
-                'Alfred\u2026 Bertrand.'
-            );
+            retext = new Retext().use(smartypants({
+                'ellipses' : true
+            }));
 
-            assert(
-                retext.parse('Alfred bertrand...').toString() ===
-                'Alfred bertrand\u2026'
-            );
+            retext.parse('Alfred... Bertrand.', function (err, tree) {
+                assert(tree.toString() === 'Alfred\u2026 Bertrand.');
 
-            assert(
-                retext.parse('...Alfred bertrand.').toString() ===
-                '\u2026Alfred bertrand.'
-            );
+                done(err);
+            });
         }
     );
 
-    it('should replace triple dot characters with spaces between, when ' +
-        '`ellipses` is set to `true`', function () {
-            var retext = new Retext().use(smartypants());
+    it('should replace three full stops, when `ellipses` is `true`, ' +
+        'when at the beginning',
+        function (done) {
+            var retext;
 
-            assert(
-                retext.parse('Alfred. . . Bertrand.').toString() ===
-                'Alfred\u2026 Bertrand.'
-            );
+            retext = new Retext().use(smartypants({
+                'ellipses' : true
+            }));
 
-            assert(
-                retext.parse('Alfred bertrand. . .').toString() ===
-                'Alfred bertrand\u2026'
-            );
+            retext.parse('...Alfred bertrand.', function (err, tree) {
+                assert(tree.toString() === '\u2026Alfred bertrand.');
 
-            assert(
-                retext.parse('. . .Alfred bertrand.').toString() ===
-                '\u2026Alfred bertrand.'
-            );
+                done(err);
+            });
+        }
+    );
+
+    it('should replace three full stops, when `ellipses` is `true`, ' +
+        'when at the end',
+        function (done) {
+            var retext;
+
+            retext = new Retext().use(smartypants({
+                'ellipses' : true
+            }));
+
+            retext.parse('Alfred bertrand...', function (err, tree) {
+                assert(tree.toString() === 'Alfred bertrand\u2026');
+
+                done(err);
+            });
+        }
+    );
+
+    it('should replace three full stops with spaces, when `ellipses` is ' +
+        '`true`',
+        function (done) {
+            var retext;
+
+            retext = new Retext().use(smartypants({
+                'ellipses' : true
+            }));
+
+            retext.parse('Alfred. . . Bertrand.', function (err, tree) {
+                assert(tree.toString() === 'Alfred\u2026 Bertrand.');
+
+                done(err);
+            });
+        }
+    );
+
+    it('should replace three full stops with spaces, when `ellipses` is ' +
+        '`true`, when at the beginning',
+        function (done) {
+            var retext;
+
+            retext = new Retext().use(smartypants({
+                'ellipses' : true
+            }));
+
+            retext.parse('. . .Alfred bertrand.', function (err, tree) {
+                assert(tree.toString() === '\u2026Alfred bertrand.');
+
+                done(err);
+            });
+        }
+    );
+
+    it('should replace three full stops with spaces, when `ellipses` is ' +
+        '`true`, when at the end',
+        function (done) {
+            var retext;
+
+            retext = new Retext().use(smartypants({
+                'ellipses' : true
+            }));
+
+            retext.parse('Alfred bertrand. . .', function (err, tree) {
+                assert(tree.toString() === 'Alfred bertrand\u2026');
+
+                done(err);
+            });
         }
     );
 });
 
 describe('Backticks', function () {
-    it('should throw when not given true, false, or omitted', function () {
-        assert.throws(function () {
-            new Retext().use(smartypants({
-                'backticks' : {}
-            }));
-        }, '[object Object]');
-    });
-
-    it('should not replace two backticks with an opening double quote, ' +
-        'when `backticks` is set to `false`', function () {
-            var retext = new Retext().use(smartypants({
-                'backticks' : false, 'quotes' : false
-            }));
-
-            assert(
-                retext.parse('``Alfred bertrand.').toString() ===
-                '``Alfred bertrand.'
-            );
-        }
-    );
-
-    it('should not replace two single quotes with a closing double quote, ' +
-        'when `backticks` is set to `false`', function () {
-            var retext = new Retext().use(smartypants({
-                'backticks' : false, 'quotes' : false
-            }));
-
-            assert(
-                retext.parse('Alfred\'\' bertrand.').toString() ===
-                'Alfred\'\' bertrand.'
-            );
-        }
-    );
-
-    it('should not replace one backtick with an opening single quote, ' +
-        'when `backticks` is set to `false`', function () {
-            var retext = new Retext().use(smartypants({
-                'backticks' : false, 'quotes' : false
-            }));
-
-            assert(
-                retext.parse('`Alfred bertrand.').toString() ===
-                '`Alfred bertrand.'
-            );
-        }
-    );
-
-    it('should not replace one single quote with a closing single quote, ' +
-        'when `backticks` is set to `false`', function () {
-            var retext = new Retext().use(smartypants({
-                'backticks' : false, 'quotes' : false
-            }));
-
-            assert(
-                retext.parse('Alfred\' bertrand.').toString() ===
-                'Alfred\' bertrand.'
-            );
-        }
-    );
-
-    it('should replace two backticks with an opening double quote, ' +
-        'when `backticks` is set to `true`', function () {
-            var retext = new Retext().use(smartypants({
-                'quotes' : false
-            }));
-
-            assert(
-                retext.parse('``Alfred bertrand.').toString() ===
-                '“Alfred bertrand.'
-            );
-        }
-    );
-
-    it('should replace two single quotes with a closing double quote, ' +
-        'when `backticks` is set to `true`', function () {
-            var retext = new Retext().use(smartypants({
-                'quotes' : false
-            }));
-
-            assert(
-                retext.parse('Alfred\'\' bertrand.').toString() ===
-                'Alfred” bertrand.'
-            );
-        }
-    );
-
-    it('should not replace one backtick with an opening single quote, ' +
-        'when `backticks` is set to `true`', function () {
-            var retext = new Retext().use(smartypants({
-                'quotes' : false
-            }));
-
-            assert(
-                retext.parse('`Alfred bertrand.').toString() ===
-                '`Alfred bertrand.'
-            );
-        }
-    );
-
-    it('should not replace one single quote with a closing single quote, ' +
-        'when `backticks` is set to `true`', function () {
-            var retext = new Retext().use(smartypants({
-                'quotes' : false
-            }));
-
-            assert(
-                retext.parse('Alfred\' bertrand.').toString() ===
-                'Alfred\' bertrand.'
-            );
-        }
-    );
-
-    it('should replace two backticks with an opening double quote, ' +
-        'when `backticks` is set to `all`', function () {
-            var retext = new Retext().use(smartypants({
-                'backticks' : 'all',
-                'quotes' : false
-            }));
-
-            assert(
-                retext.parse('``Alfred bertrand.').toString() ===
-                '“Alfred bertrand.'
-            );
-        }
-    );
-
-    it('should replace two single quotes with a closing double quote, ' +
-        'when `backticks` is set to `all`', function () {
-            var retext = new Retext().use(smartypants({
-                'backticks' : 'all',
-                'quotes' : false
-            }));
-
-            assert(
-                retext.parse('Alfred\'\' bertrand.').toString() ===
-                'Alfred” bertrand.'
-            );
-        }
-    );
-
-    it('should replace one backtick with an opening single quote, ' +
-        'when `backticks` is set to `all`', function () {
-            var retext = new Retext().use(smartypants({
-                'backticks' : 'all',
-                'quotes' : false
-            }));
-
-            assert(
-                retext.parse('`Alfred bertrand.').toString() ===
-                '‘Alfred bertrand.'
-            );
-        }
-    );
-
-    it('should replace one single quote with a closing single quote, ' +
-        'when `backticks` is set to `all`', function () {
-            var retext = new Retext().use(smartypants({
-                'backticks' : 'all',
-                'quotes' : false
-            }));
-
-            assert(
-                retext.parse('Alfred\' bertrand.').toString() ===
-                'Alfred’ bertrand.'
-            );
-        }
-    );
-
-    it('should throw when backticks is "all", and quotes is true',
+    it('should throw when not given `true`, `false`, or omitted',
         function () {
-            var retext = new Retext();
             assert.throws(function () {
-                retext.use(smartypants({
+                new Retext().use(smartypants({
+                    'backticks' : {}
+                }));
+            }, /object Object/);
+        }
+    );
+
+    it('should throw when `backticks` is `all`, and `quotes` is `true`',
+        function () {
+            assert.throws(function () {
+                new Retext().use(smartypants({
                     'backticks' : 'all',
                     'quotes' : true
                 }));
             }, 'Illegal invocation');
+        }
+    );
+
+    it('should not replace two backticks with an opening double quote ' +
+        'when `backticks` is `false`',
+        function (done) {
+            var retext;
+
+            retext = new Retext().use(smartypants({
+                'backticks' : false,
+                'quotes' : false
+            }));
+
+            retext.parse('``Alfred bertrand.', function (err, tree) {
+                assert(tree.toString() === '``Alfred bertrand.');
+
+                done(err);
+            });
+        }
+    );
+
+    it('should not replace two single quotes with a closing double quote ' +
+        'when `backticks` is `false`',
+        function (done) {
+            var retext;
+
+            retext = new Retext().use(smartypants({
+                'backticks' : false,
+                'quotes' : false
+            }));
+
+            retext.parse('Alfred\'\' bertrand.', function (err, tree) {
+                assert(tree.toString() === 'Alfred\'\' bertrand.');
+
+                done(err);
+            });
+        }
+    );
+
+    it('should not replace a backtick with an opening single quote ' +
+        'when `backticks` is `false`',
+        function (done) {
+            var retext;
+
+            retext = new Retext().use(smartypants({
+                'backticks' : false,
+                'quotes' : false
+            }));
+
+            retext.parse('`Alfred bertrand.', function (err, tree) {
+                assert(tree.toString() === '`Alfred bertrand.');
+
+                done(err);
+            });
+        }
+    );
+
+    it('should not replace a single quote with a closing single quote ' +
+        'when `backticks` is `false`',
+        function (done) {
+            var retext;
+
+            retext = new Retext().use(smartypants({
+                'backticks' : false,
+                'quotes' : false
+            }));
+
+            retext.parse('Alfred\' bertrand.', function (err, tree) {
+                assert(tree.toString() === 'Alfred\' bertrand.');
+
+                done(err);
+            });
+        }
+    );
+
+    it('should replace two backticks with an opening double quote ' +
+        'when `backticks` is `true`',
+        function (done) {
+            var retext;
+
+            retext = new Retext().use(smartypants({
+                'backticks' : true,
+                'quotes' : false
+            }));
+
+            retext.parse('``Alfred bertrand.', function (err, tree) {
+                assert(tree.toString() === '“Alfred bertrand.');
+
+                done(err);
+            });
+        }
+    );
+
+    it('should replace two single quotes with a closing double quote ' +
+        'when `backticks` is `true`',
+        function (done) {
+            var retext;
+
+            retext = new Retext().use(smartypants({
+                'backticks' : true,
+                'quotes' : false
+            }));
+
+            retext.parse('Alfred\'\' bertrand.', function (err, tree) {
+                assert(tree.toString() === 'Alfred” bertrand.');
+
+                done(err);
+            });
+        }
+    );
+
+    it('should not replace a backtick with an opening single quote ' +
+        'when `backticks` is `true`',
+        function (done) {
+            var retext;
+
+            retext = new Retext().use(smartypants({
+                'backticks' : true,
+                'quotes' : false
+            }));
+
+            retext.parse('`Alfred bertrand.', function (err, tree) {
+                assert(tree.toString() === '`Alfred bertrand.');
+
+                done(err);
+            });
+        }
+    );
+
+    it('should not replace a single quote with a closing single quote ' +
+        'when `backticks` is `true`',
+        function (done) {
+            var retext;
+
+            retext = new Retext().use(smartypants({
+                'backticks' : true,
+                'quotes' : false
+            }));
+
+            retext.parse('Alfred\' bertrand.', function (err, tree) {
+                assert(tree.toString() === 'Alfred\' bertrand.');
+
+                done(err);
+            });
+        }
+    );
+
+    it('should replace two backticks with an opening double quote ' +
+        'when `backticks` is `all`',
+        function (done) {
+            var retext;
+
+            retext = new Retext().use(smartypants({
+                'backticks' : 'all',
+                'quotes' : false
+            }));
+
+            retext.parse('``Alfred bertrand.', function (err, tree) {
+                assert(tree.toString() === '“Alfred bertrand.');
+
+                done(err);
+            });
+        }
+    );
+
+    it('should replace two single quotes with a closing double quote ' +
+        'when `backticks` is `all`',
+        function (done) {
+            var retext;
+
+            retext = new Retext().use(smartypants({
+                'backticks' : 'all',
+                'quotes' : false
+            }));
+
+            retext.parse('Alfred\'\' bertrand.', function (err, tree) {
+                assert(tree.toString() === 'Alfred” bertrand.');
+
+                done(err);
+            });
+        }
+    );
+
+    it('should replace one backtick with an opening single quote, ' +
+        'when `backticks` is `all`',
+        function (done) {
+            var retext;
+
+            retext = new Retext().use(smartypants({
+                'backticks' : 'all',
+                'quotes' : false
+            }));
+
+            retext.parse('`Alfred bertrand.', function (err, tree) {
+                assert(tree.toString() === '‘Alfred bertrand.');
+
+                done(err);
+            });
+        }
+    );
+
+    it('should replace one single quote with a closing single quote, ' +
+        'when `backticks` is `all`',
+        function (done) {
+            var retext;
+
+            retext = new Retext().use(smartypants({
+                'backticks' : 'all',
+                'quotes' : false
+            }));
+
+            retext.parse('Alfred\' bertrand.', function (err, tree) {
+                assert(tree.toString() === 'Alfred’ bertrand.');
+
+                done(err);
+            });
         }
     );
 });
