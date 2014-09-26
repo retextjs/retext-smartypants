@@ -86,14 +86,28 @@ educators = {
                 iterator = -1,
                 type;
 
+            if (
+                !node &&
+                self.parent &&
+                self.parent.type === self.WORD_NODE
+            ) {
+                node = self.parent.prev;
+            }
+
             while (node) {
                 type = node.type;
 
-                if (!(type === node.WHITE_SPACE_NODE &&
-                    node.next.toString() === DOT) &&
-                    !(type === node.PUNCTUATION_NODE &&
-                    node.toString() === DOT)) {
-                        break;
+                if (
+                    !(
+                        type === node.WHITE_SPACE_NODE &&
+                        node.next.toString().charAt(0) === DOT
+                    ) &&
+                    !(
+                        type === node.PUNCTUATION_NODE &&
+                        node.toString() === DOT
+                    )
+                ) {
+                    break;
                 }
 
                 count++;
