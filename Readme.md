@@ -4,14 +4,19 @@
 
 ## Installation
 
-NPM:
+npm:
 ```sh
 $ npm install retext-smartypants
 ```
 
-Component.js:
+Component:
 ```sh
 $ component install wooorm/retext-smartypants
+```
+
+Bower:
+```sh
+$ bower install retext-smartypants
 ```
 
 ## Usage
