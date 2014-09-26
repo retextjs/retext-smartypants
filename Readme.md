@@ -23,27 +23,42 @@ $ bower install retext-smartypants
 
 ```js
 var Retext = require('retext'),
-    smartypants = require('retext-smartypants');
+    smartypants = require('retext-smartypants'),
+    retext;
 
-new Retext()
-    .use(smartypants()) // Note that `smartypants` is
-                        // called (optionally with
-                        // options).
-    .parse('He said, "A \'simple\' english sentence. . ."')
-    .toString(); // 'He said, “A ‘simple’ english sentence…”'
+/**
+ * Note that `smartypants` is invoked,
+ * optionally with options.
+ */
+
+retext = new Retext().use(smartypants());
+
+retext.parse(
+    'He said, "A \'simple\' english sentence. . ."',
+    function (err, tree) {
+        tree.toString();
+        /* 'He said, “A ‘simple’ english sentence…”' */
+    }
+);
 ```
 
 ## API
+
 ### smartypants(options?)
 
 ```js
-var root = new Retext()
-    .use(smartypants({
-        'ellipses' : false,
-        'dashes' : 'oldschool'
-    }))
-    .parse('He said---A \'simple\' english sentence. . ."')
-    .toString(); // 'He said—A ‘simple’ english sentence. . .'
+retext = new Retext().use(smartypants({
+    'ellipses' : false,
+    'dashes' : 'oldschool'
+}));
+
+retext.parse(
+    'He said---A \'simple\' english sentence. . ."',
+    function (err, tree) {
+        tree.toString();
+        /* 'He said—A ‘simple’ english sentence. . .' */
+    }
+);
 ```
 
 - `options` (`null` or `Object`)
