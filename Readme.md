@@ -62,4 +62,4 @@ All options can be omitted (i.e., `null` or `undefined`) to default to `true`.
 
 ## License
 
-  MIT
+MIT © Titus Wormer
