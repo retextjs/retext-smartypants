@@ -1,39 +1,80 @@
 'use strict';
 
-var visit, EXPRESSION_DECADE, THREE_DASHES, TWO_DASHES, EM_DASH, EN_DASH,
-    THREE_DOTS, ELLIPSIS, DOT, TWO_BACKTICKS, BACKTICK, TWO_SINGLE_QUOTES,
-    SINGLE_QUOTE, DOUBLE_QUOTE, OPENING_DOUBLE_QUOTE, CLOSING_DOUBLE_QUOTE,
-    OPENING_SINGLE_QUOTE, CLOSING_SINGLE_QUOTE, CLOSING_QUOTE_MAP,
-    OPENING_QUOTE_MAP, TRUE, educators;
+/**
+ * Module dependencies.
+ */
+
+var visit;
 
 visit = require('retext-visit');
 
+/**
+ * Constants.
+ */
+
+var EXPRESSION_DECADE,
+    THREE_DASHES,
+    TWO_DASHES,
+    EM_DASH,
+    EN_DASH,
+    THREE_DOTS,
+    ELLIPSIS,
+    DOT,
+    TWO_BACKTICKS,
+    BACKTICK,
+    TWO_SINGLE_QUOTES,
+    SINGLE_QUOTE,
+    DOUBLE_QUOTE,
+    OPENING_DOUBLE_QUOTE,
+    CLOSING_DOUBLE_QUOTE,
+    OPENING_SINGLE_QUOTE,
+    CLOSING_SINGLE_QUOTE,
+    CLOSING_QUOTE_MAP,
+    OPENING_QUOTE_MAP,
+    TRUE;
+
 EXPRESSION_DECADE = /^\d\ds$/i;
+
 THREE_DASHES = '---';
 TWO_DASHES = '--';
 EM_DASH = '—';
 EN_DASH = '–';
+
 THREE_DOTS = '...';
 ELLIPSIS = '\u2026';
 DOT = '.';
+
 TWO_BACKTICKS = '``';
 BACKTICK = '`';
 TWO_SINGLE_QUOTES = '\'\'';
+
 SINGLE_QUOTE = '\'';
 DOUBLE_QUOTE = '"';
+
 CLOSING_QUOTE_MAP = {};
 OPENING_QUOTE_MAP = {};
 OPENING_QUOTE_MAP[DOUBLE_QUOTE] = OPENING_DOUBLE_QUOTE = '“';
 CLOSING_QUOTE_MAP[DOUBLE_QUOTE] = CLOSING_DOUBLE_QUOTE = '”';
 OPENING_QUOTE_MAP[SINGLE_QUOTE] = OPENING_SINGLE_QUOTE = '‘';
 CLOSING_QUOTE_MAP[SINGLE_QUOTE] = CLOSING_SINGLE_QUOTE = '’';
+
 TRUE = 'true';
+
+/**
+ * Define the methods.
+ */
+
+var educators;
 
 educators = {
     'dashes' : {
         'true' : function () {
-            var self = this,
-                value = self.data.originalValue || self.toString();
+            var self,
+                value;
+
+            self = this;
+
+            value = self.data.originalValue || self.toString();
 
             if (value === TWO_DASHES) {
                 self.data.originalValue = value;
@@ -41,8 +82,12 @@ educators = {
             }
         },
         'oldschool' : function () {
-            var self = this,
-                value = self.data.originalValue || self.toString();
+            var self,
+                value;
+
+            self = this;
+
+            value = self.data.originalValue || self.toString();
 
             if (value === THREE_DASHES) {
                 self.data.originalValue = value;
@@ -53,8 +98,12 @@ educators = {
             }
         },
         'inverted' : function () {
-            var self = this,
-                value = self.data.originalValue || self.toString();
+            var self,
+                value;
+
+            self = this;
+
+            value = self.data.originalValue || self.toString();
 
             if (value === THREE_DASHES) {
                 self.data.originalValue = value;
@@ -67,8 +116,17 @@ educators = {
     },
     'ellipses' : {
         'true' : function () {
-            var self = this,
-                value = self.data.originalValue || self.toString();
+            var self,
+                value,
+                nodes,
+                node,
+                count,
+                index,
+                type;
+
+            self = this;
+
+            value = self.data.originalValue || self.toString();
 
             if (value === THREE_DOTS) {
                 self.data.originalValue = value;
@@ -80,11 +138,15 @@ educators = {
                 return;
             }
 
-            var nodes = [],
-                node = self.prev,
-                count = 1,
-                iterator = -1,
-                type;
+            nodes = [];
+            node = self.prev;
+            count = 1;
+            index = -1;
+
+            /**
+             * This full stop is the first character
+             * in a word.
+             */
 
             if (
                 !node &&
@@ -119,8 +181,8 @@ educators = {
                 return;
             }
 
-            while (nodes[++iterator]) {
-                nodes[iterator].remove();
+            while (nodes[++index]) {
+                nodes[index].remove();
             }
 
             self[0].fromString(self.data.originalValue = ELLIPSIS);
@@ -128,8 +190,12 @@ educators = {
     },
     'backticks' : {
         'true' : function () {
-            var self = this,
-                value = self.data.originalValue || self.toString();
+            var self,
+                value;
+
+            self = this;
+
+            value = self.toString();
 
             if (value === TWO_BACKTICKS) {
                 self[0].fromString(OPENING_DOUBLE_QUOTE);
@@ -138,8 +204,12 @@ educators = {
             }
         },
         'all' : function () {
-            var self = this,
-                value = self.data.originalValue || self.toString();
+            var self,
+                value;
+
+            self = this;
+
+            value = self.toString();
 
             educators.backticks[TRUE].call(self);
 
@@ -152,13 +222,20 @@ educators = {
     },
     'quotes' : {
         'true' : function () {
-            if (!this.parent) {
+            var self,
+                value,
+                next,
+                nextNext,
+                prev,
+                nextValue;
+
+            self = this;
+
+            if (!self.parent) {
                 return;
             }
 
-            var self = this,
-                value = self.data.originalValue || self.toString(),
-                next, nextNext, prev, nextValue;
+            value = self.data.originalValue || self.toString();
 
             if (value !== DOUBLE_QUOTE && value !== SINGLE_QUOTE) {
                 return;
@@ -167,81 +244,165 @@ educators = {
             next = self.next;
             nextNext = next && next.next;
             prev = self.prev;
-            nextValue = next ?
-                next.data.originalValue || next.toString() :
-                '';
 
-            /* Special case if the very first character is a quote
-             * followed by punctuation at a non-word-break. Close the
-             * quotes by brute force:
-             */
-            if (nextNext &&
+            nextValue = '';
+
+            if (next) {
+                nextValue = next.data.originalValue || next.toString();
+            }
+
+            if (
+                nextNext &&
                 next.type === self.PUNCTUATION_NODE &&
-                nextNext.type !== self.WORD_NODE) {
-                    self.data.originalValue = value;
-                    self[0].fromString(CLOSING_QUOTE_MAP[value]);
-            /* Special case for double sets of quotes, e.g.:
-             *    He said, "'Quoted' words in a larger quote."
-             */
-            } else if (nextNext && (nextValue === DOUBLE_QUOTE ||
-                nextValue === SINGLE_QUOTE) &&
-                nextNext.type === self.WORD_NODE) {
-                    self.data.originalValue = value;
-                    self[0].fromString(OPENING_QUOTE_MAP[value]);
-                    next[0].fromString(OPENING_QUOTE_MAP[nextValue]);
-            /* Special case for decade abbreviations (the '80s): */
-            } else if (nextNext && EXPRESSION_DECADE.test(nextValue)) {
-                    self.data.originalValue = value;
-                    self[0].fromString(CLOSING_QUOTE_MAP[value]);
-            /* Get most opening single quotes: */
-            } else if (prev && next &&
-                (prev.type === self.WHITE_SPACE_NODE ||
-                prev.type === self.PUNCTUATION_NODE) &&
-                next.type === self.WORD_NODE) {
-                    self.data.originalValue = value;
-                    self[0].fromString(OPENING_QUOTE_MAP[value]);
-            /* Closing quotes: */
-            } else if (prev && (prev.type !== self.WHITE_SPACE_NODE &&
-                prev.type !== self.PUNCTUATION_NODE)) {
-                    self.data.originalValue = value;
-                    self[0].fromString(CLOSING_QUOTE_MAP[value]);
-            } else if (!next || next.type === self.WHITE_SPACE_NODE ||
-                (value === '\'' && nextValue === 's')) {
-                    self.data.originalValue = value;
-                    self[0].fromString(CLOSING_QUOTE_MAP[value]);
+                nextNext.type !== self.WORD_NODE
+            ) {
+                /**
+                 * Special case if the very first character is
+                 * a quote followed by punctuation at a
+                 * non-word-break. Close the quotes by brute
+                 * force:
+                 */
+
+                self.data.originalValue = value;
+
+                self[0].fromString(CLOSING_QUOTE_MAP[value]);
+            } else if (
+                nextNext &&
+                (
+                    nextValue === DOUBLE_QUOTE ||
+                    nextValue === SINGLE_QUOTE
+                ) &&
+                nextNext.type === self.WORD_NODE
+            ) {
+                /**
+                 * Special case for double sets of quotes:
+                 *
+                 *    He said, "'Quoted' words in a larger quote."
+                 */
+
+                self.data.originalValue = value;
+
+                self[0].fromString(OPENING_QUOTE_MAP[value]);
+                next[0].fromString(OPENING_QUOTE_MAP[nextValue]);
+            } else if (
+                nextNext &&
+                EXPRESSION_DECADE.test(nextValue)
+            ) {
+                /**
+                 * Special case for decade abbreviations:
+                 *
+                 *   the '80s
+                 */
+
+                self.data.originalValue = value;
+
+                self[0].fromString(CLOSING_QUOTE_MAP[value]);
+            } else if (
+                prev &&
+                next &&
+                (
+                    prev.type === self.WHITE_SPACE_NODE ||
+                    prev.type === self.PUNCTUATION_NODE
+                ) &&
+                next.type === self.WORD_NODE
+            ) {
+                /**
+                 * Get most opening single quotes.
+                 */
+
+                self.data.originalValue = value;
+
+                self[0].fromString(OPENING_QUOTE_MAP[value]);
+            } else if (
+                prev &&
+                (
+                    prev.type !== self.WHITE_SPACE_NODE &&
+                    prev.type !== self.PUNCTUATION_NODE
+                )
+            ) {
+                /**
+                 * Closing quotes
+                 */
+
+                self.data.originalValue = value;
+
+                self[0].fromString(CLOSING_QUOTE_MAP[value]);
+            } else if (
+                !next ||
+                next.type === self.WHITE_SPACE_NODE ||
+                (
+                    value === '\'' &&
+                    nextValue === 's'
+                )
+            ) {
+                self.data.originalValue = value;
+
+                self[0].fromString(CLOSING_QUOTE_MAP[value]);
             } else {
                 self.data.originalValue = value;
+
                 self[0].fromString(OPENING_QUOTE_MAP[value]);
             }
         }
     }
 };
 
+/**
+ * Define `attachFactory`.
+ *
+ * @param {Object.<string, Array.<function>>} events
+ * @return {function}
+ */
+
 function attachFactory(events) {
+    /**
+     * @param {Retext} retext
+     */
+
     return function (retext) {
-        var PunctuationNode = retext.parser.TextOM.PunctuationNode,
-            iterator, event, methods;
+        var PunctuationNode,
+            index,
+            event,
+            methods;
 
         retext.use(visit);
 
+        PunctuationNode = retext.TextOM.PunctuationNode;
+
         for (event in events) {
             methods = events[event];
-            iterator = -1;
 
-            while (methods[++iterator]) {
-                PunctuationNode.on(event, methods[iterator]);
+            index = methods.length;
+
+            while (index--) {
+                PunctuationNode.on(event, methods[index]);
             }
         }
     };
 }
 
-function smartypants(options) {
-    if (arguments.length > 1) {
-        throw new TypeError('Illegal invocation: smartypants was' +
-            ' called by Retext, but should be called by the user');
-    }
+/**
+ * Define `smartypantsFactory`.
+ *
+ * @param {Object} options
+ * @return {function}
+ */
 
-    var events, method, quotes, ellipses, backticks, dashes;
+function smartypantsFactory(options) {
+    var events,
+        method,
+        quotes,
+        ellipses,
+        backticks,
+        dashes;
+
+    if (arguments.length > 1) {
+        throw new TypeError(
+            'Illegal invocation: `smartypants` was ' +
+            'invoked by `Retext`, but should be ' +
+            'invoked by the user'
+        );
+    }
 
     events = {
         'changetextinside' : [],
@@ -255,48 +416,74 @@ function smartypants(options) {
 
     if ('quotes' in options) {
         quotes = options.quotes;
+
         if (quotes !== Boolean(quotes)) {
-            throw new TypeError('Illegal invocation: \'' + quotes +
-                '\' is not a valid option for `quotes` in ' +
-                '\'smartypants\'');
+            throw new TypeError(
+                'Illegal invocation: `' + quotes + '` ' +
+                'is not a valid value for `quotes` in ' +
+                '`smartypants`'
+            );
         }
     }
 
     if ('ellipses' in options) {
         ellipses = options.ellipses;
+
         if (ellipses !== Boolean(ellipses)) {
-            throw new TypeError('Illegal invocation: \'' + ellipses +
-                '\' is not a valid option for `ellipses` in ' +
-                '\'smartypants\'');
+            throw new TypeError(
+                'Illegal invocation: `' + ellipses + '` ' +
+                'is not a valid value for `ellipses` in ' +
+                '`smartypants`'
+            );
         }
     }
 
     if ('backticks' in options) {
         backticks = options.backticks;
-        if (backticks !== Boolean(backticks) && backticks !== 'all') {
-            throw new TypeError('Illegal invocation: \'' + backticks +
-                '\' is not a valid option for `backticks` in ' +
-                '\'smartypants\'');
+
+        if (
+            backticks !== Boolean(backticks) &&
+            backticks !== 'all'
+        ) {
+            throw new TypeError(
+                'Illegal invocation: `' + backticks + '` ' +
+                'is not a valid value for `backticks` in ' +
+                '`smartypants`'
+            );
         }
 
-        if (backticks === 'all' && quotes === true) {
-            throw new TypeError('Illegal invocation: backticks `"all"`' +
-                ' can\'t work together with quotes: `"true"`.');
+        if (
+            backticks === 'all' &&
+            quotes === true
+        ) {
+            throw new TypeError(
+                'Illegal invocation: `backticks: ' +
+                backticks + '` is not a valid value ' +
+                'when `quotes: ' + quotes + '` in ' +
+                '`smartypants`'
+            );
         }
     }
 
     if ('dashes' in options) {
         dashes = options.dashes;
-        if (dashes !== Boolean(dashes) && dashes !== 'oldschool' &&
-            dashes !== 'inverted') {
-                throw new TypeError('Illegal invocation: \'' + dashes +
-                    '\' is not a valid option for `dashes` in ' +
-                    '\'smartypants\'');
+
+        if (
+            dashes !== Boolean(dashes) &&
+            dashes !== 'oldschool' &&
+            dashes !== 'inverted'
+        ) {
+            throw new TypeError(
+                'Illegal invocation: `' + dashes + '` ' +
+                'is not a valid value for `dahes` in ' +
+                '`smartypants`'
+            );
         }
     }
 
     if (quotes !== false) {
         method = educators.quotes[quotes || true];
+
         events.changetextinside.push(method);
         events.changeprev.push(method);
         events.changenext.push(method);
@@ -304,6 +491,7 @@ function smartypants(options) {
 
     if (ellipses !== false) {
         method = educators.ellipses[ellipses || true];
+
         events.changetextinside.push(method);
         events.changeprev.push(method);
     }
@@ -316,17 +504,34 @@ function smartypants(options) {
         events.changetextinside.push(educators.dashes[dashes || true]);
     }
 
-    function callback(tree) {
+    /**
+     * Define `smartypants`.
+     *
+     * @param {Node} tree
+     */
+
+    function smartypants(tree) {
         tree.visitType(tree.PUNCTUATION_NODE, function (node) {
-            var value = node[0].toString();
+            var value;
+
+            value = node[0].toString();
+
             node[0].fromString(null);
             node[0].fromString(value);
         });
     }
 
-    callback.attach = attachFactory(events);
+    /**
+     * Expose `attach`.
+     */
 
-    return callback;
+    smartypants.attach = attachFactory(events);
+
+    return smartypants;
 }
 
-exports = module.exports = smartypants;
+/**
+ * Expose `smartypantsFactory`.
+ */
+
+module.exports = smartypantsFactory;
