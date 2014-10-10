@@ -25,6 +25,6 @@
     "package.json",
     "coverage",
     "node_modules",
-    "spec"
+    "test.js"
   ]
 }

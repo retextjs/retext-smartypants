@@ -8,7 +8,7 @@ var smartypants,
     Retext,
     assert;
 
-smartypants = require('..');
+smartypants = require('./');
 Retext = require('retext');
 assert = require('assert');
 
