@@ -8,7 +8,7 @@
     "smartypants"
   ],
   "dependencies": {
-    "wooorm/retext-visit": "^0.1.1"
+    "wooorm/retext-visit": "^0.2.0"
   },
   "repository": "wooorm/retext-smartypants",
   "scripts" : [
