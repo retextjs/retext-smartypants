@@ -511,7 +511,7 @@ function smartypantsFactory(options) {
      */
 
     function smartypants(tree) {
-        tree.visitType(tree.PUNCTUATION_NODE, function (node) {
+        tree.visit(tree.PUNCTUATION_NODE, function (node) {
             var value;
 
             value = node[0].toString();
