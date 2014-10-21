@@ -20,7 +20,7 @@
     "istanbul": "^0.3.0",
     "jscs": "^1.7.0",
     "mocha": "^1.21.0",
-    "retext": "^0.2.0"
+    "retext": "^0.3.0-rc.1"
   },
   "scripts": {
     "test": "node_modules/.bin/_mocha --reporter spec --check-leaks -u exports test.js",
