@@ -78,7 +78,7 @@ educators = {
 
             if (value === TWO_DASHES) {
                 self.data.originalValue = value;
-                self[0].fromString(EM_DASH);
+                self.fromString(EM_DASH);
             }
         },
         'oldschool' : function () {
@@ -91,10 +91,10 @@ educators = {
 
             if (value === THREE_DASHES) {
                 self.data.originalValue = value;
-                self[0].fromString(EM_DASH);
+                self.fromString(EM_DASH);
             } else if (value === TWO_DASHES) {
                 self.data.originalValue = value;
-                self[0].fromString(EN_DASH);
+                self.fromString(EN_DASH);
             }
         },
         'inverted' : function () {
@@ -107,10 +107,10 @@ educators = {
 
             if (value === THREE_DASHES) {
                 self.data.originalValue = value;
-                self[0].fromString(EN_DASH);
+                self.fromString(EN_DASH);
             } else if (value === TWO_DASHES) {
                 self.data.originalValue = value;
-                self[0].fromString(EM_DASH);
+                self.fromString(EM_DASH);
             }
         }
     },
@@ -130,7 +130,7 @@ educators = {
 
             if (value === THREE_DOTS) {
                 self.data.originalValue = value;
-                self[0].fromString(ELLIPSIS);
+                self.fromString(ELLIPSIS);
                 return;
             }
 
@@ -165,7 +165,10 @@ educators = {
                         node.next.toString().charAt(0) === DOT
                     ) &&
                     !(
-                        type === node.PUNCTUATION_NODE &&
+                        (
+                            type === node.PUNCTUATION_NODE ||
+                            type === node.SYMBOL_NODE
+                        ) &&
                         node.toString() === DOT
                     )
                 ) {
@@ -185,7 +188,7 @@ educators = {
                 nodes[index].remove();
             }
 
-            self[0].fromString(self.data.originalValue = ELLIPSIS);
+            self.fromString(self.data.originalValue = ELLIPSIS);
         }
     },
     'backticks' : {
@@ -198,9 +201,9 @@ educators = {
             value = self.toString();
 
             if (value === TWO_BACKTICKS) {
-                self[0].fromString(OPENING_DOUBLE_QUOTE);
+                self.fromString(OPENING_DOUBLE_QUOTE);
             } else if (value === TWO_SINGLE_QUOTES) {
-                self[0].fromString(CLOSING_DOUBLE_QUOTE);
+                self.fromString(CLOSING_DOUBLE_QUOTE);
             }
         },
         'all' : function () {
@@ -214,9 +217,9 @@ educators = {
             educators.backticks[TRUE].call(self);
 
             if (value === BACKTICK) {
-                self[0].fromString(OPENING_SINGLE_QUOTE);
+                self.fromString(OPENING_SINGLE_QUOTE);
             } else if (value === SINGLE_QUOTE) {
-                self[0].fromString(CLOSING_SINGLE_QUOTE);
+                self.fromString(CLOSING_SINGLE_QUOTE);
             }
         }
     },
@@ -253,7 +256,10 @@ educators = {
 
             if (
                 nextNext &&
-                next.type === self.PUNCTUATION_NODE &&
+                (
+                    next.type === self.PUNCTUATION_NODE ||
+                    next.type === self.SYMBOL_NODE
+                ) &&
                 nextNext.type !== self.WORD_NODE
             ) {
                 /**
@@ -265,7 +271,7 @@ educators = {
 
                 self.data.originalValue = value;
 
-                self[0].fromString(CLOSING_QUOTE_MAP[value]);
+                self.fromString(CLOSING_QUOTE_MAP[value]);
             } else if (
                 nextNext &&
                 (
@@ -282,10 +288,10 @@ educators = {
 
                 self.data.originalValue = value;
 
-                self[0].fromString(OPENING_QUOTE_MAP[value]);
-                next[0].fromString(OPENING_QUOTE_MAP[nextValue]);
+                self.fromString(OPENING_QUOTE_MAP[value]);
+                next.fromString(OPENING_QUOTE_MAP[nextValue]);
             } else if (
-                nextNext &&
+                next &&
                 EXPRESSION_DECADE.test(nextValue)
             ) {
                 /**
@@ -296,13 +302,14 @@ educators = {
 
                 self.data.originalValue = value;
 
-                self[0].fromString(CLOSING_QUOTE_MAP[value]);
+                self.fromString(CLOSING_QUOTE_MAP[value]);
             } else if (
                 prev &&
                 next &&
                 (
                     prev.type === self.WHITE_SPACE_NODE ||
-                    prev.type === self.PUNCTUATION_NODE
+                    prev.type === self.PUNCTUATION_NODE ||
+                    prev.type === self.SYMBOL_NODE
                 ) &&
                 next.type === self.WORD_NODE
             ) {
@@ -312,11 +319,12 @@ educators = {
 
                 self.data.originalValue = value;
 
-                self[0].fromString(OPENING_QUOTE_MAP[value]);
+                self.fromString(OPENING_QUOTE_MAP[value]);
             } else if (
                 prev &&
                 (
                     prev.type !== self.WHITE_SPACE_NODE &&
+                    prev.type !== self.SYMBOL_NODE &&
                     prev.type !== self.PUNCTUATION_NODE
                 )
             ) {
@@ -326,7 +334,7 @@ educators = {
 
                 self.data.originalValue = value;
 
-                self[0].fromString(CLOSING_QUOTE_MAP[value]);
+                self.fromString(CLOSING_QUOTE_MAP[value]);
             } else if (
                 !next ||
                 next.type === self.WHITE_SPACE_NODE ||
@@ -337,11 +345,11 @@ educators = {
             ) {
                 self.data.originalValue = value;
 
-                self[0].fromString(CLOSING_QUOTE_MAP[value]);
+                self.fromString(CLOSING_QUOTE_MAP[value]);
             } else {
                 self.data.originalValue = value;
 
-                self[0].fromString(OPENING_QUOTE_MAP[value]);
+                self.fromString(OPENING_QUOTE_MAP[value]);
             }
         }
     }
@@ -360,14 +368,14 @@ function attachFactory(events) {
      */
 
     return function (retext) {
-        var PunctuationNode,
+        var SymbolNode,
             index,
             event,
             methods;
 
         retext.use(visit);
 
-        PunctuationNode = retext.TextOM.PunctuationNode;
+        SymbolNode = retext.TextOM.SymbolNode;
 
         for (event in events) {
             methods = events[event];
@@ -375,7 +383,7 @@ function attachFactory(events) {
             index = methods.length;
 
             while (index--) {
-                PunctuationNode.on(event, methods[index]);
+                SymbolNode.on(event, methods[index]);
             }
         }
     };
@@ -405,7 +413,7 @@ function smartypantsFactory(options) {
     }
 
     events = {
-        'changetextinside' : [],
+        'changetext' : [],
         'changeprev' : [],
         'changenext' : []
     };
@@ -484,7 +492,7 @@ function smartypantsFactory(options) {
     if (quotes !== false) {
         method = educators.quotes[quotes || true];
 
-        events.changetextinside.push(method);
+        events.changetext.push(method);
         events.changeprev.push(method);
         events.changenext.push(method);
     }
@@ -492,16 +500,16 @@ function smartypantsFactory(options) {
     if (ellipses !== false) {
         method = educators.ellipses[ellipses || true];
 
-        events.changetextinside.push(method);
+        events.changetext.push(method);
         events.changeprev.push(method);
     }
 
     if (backticks !== false) {
-        events.changetextinside.push(educators.backticks[backticks || true]);
+        events.changetext.push(educators.backticks[backticks || true]);
     }
 
     if (dashes !== false) {
-        events.changetextinside.push(educators.dashes[dashes || true]);
+        events.changetext.push(educators.dashes[dashes || true]);
     }
 
     /**
@@ -511,13 +519,20 @@ function smartypantsFactory(options) {
      */
 
     function smartypants(tree) {
-        tree.visit(tree.PUNCTUATION_NODE, function (node) {
+        tree.visit(function (node) {
             var value;
 
-            value = node[0].toString();
+            if (
+                node.type !== node.PUNCTUATION_NODE &&
+                node.type !== node.SYMBOL_NODE
+            ) {
+                return;
+            }
 
-            node[0].fromString(null);
-            node[0].fromString(value);
+            value = node.toString();
+
+            node.fromString(null);
+            node.fromString(value);
         });
     }
 
