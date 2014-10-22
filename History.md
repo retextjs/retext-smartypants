@@ -1,5 +1,5 @@
 
-n.n.n / 2014-10-22
+0.3.0 / 2014-10-22
 ==================
 
  * Update module for changes in retext
