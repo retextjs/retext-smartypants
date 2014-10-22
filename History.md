@@ -1,4 +1,11 @@
 
+n.n.n / 2014-10-22
+==================
+
+ * Update module for changes in retext
+ * Refactor .jscs.json
+ * Update retext
+
 0.2.1 / 2014-10-15
 ==================
 
