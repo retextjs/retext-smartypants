@@ -8,7 +8,7 @@
     "smartypants"
   ],
   "dependencies": {
-    "retext-visit": "^0.2.0"
+    "retext-visit": "^0.2.2"
   },
   "repository": {
     "type": "git",
@@ -16,11 +16,11 @@
   },
   "author": "Titus Wormer <tituswormer@gmail.com>",
   "devDependencies": {
-    "eslint": "^0.8.0",
+    "eslint": "^0.9.0",
     "istanbul": "^0.3.0",
     "jscs": "^1.7.0",
-    "mocha": "^1.21.0",
-    "retext": "^0.3.0-rc.1"
+    "mocha": "^2.0.0",
+    "retext": "^0.3.0-rc.2"
   },
   "scripts": {
     "test": "node_modules/.bin/_mocha --reporter spec --check-leaks -u exports test.js",

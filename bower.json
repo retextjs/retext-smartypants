@@ -8,7 +8,7 @@
     "smartypants"
   ],
   "dependencies": {
-    "retext-visit": "^0.2.0"
+    "retext-visit": "^0.2.2"
   },
   "repository": {
     "type": "git",
