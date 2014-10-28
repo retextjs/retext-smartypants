@@ -67,8 +67,8 @@ TRUE = 'true';
 var educators;
 
 educators = {
-    'dashes' : {
-        'true' : function () {
+    'dashes': {
+        'true': function () {
             var self,
                 value;
 
@@ -81,7 +81,7 @@ educators = {
                 self.fromString(EM_DASH);
             }
         },
-        'oldschool' : function () {
+        'oldschool': function () {
             var self,
                 value;
 
@@ -97,7 +97,7 @@ educators = {
                 self.fromString(EN_DASH);
             }
         },
-        'inverted' : function () {
+        'inverted': function () {
             var self,
                 value;
 
@@ -114,8 +114,8 @@ educators = {
             }
         }
     },
-    'ellipses' : {
-        'true' : function () {
+    'ellipses': {
+        'true': function () {
             var self,
                 value,
                 nodes,
@@ -191,8 +191,8 @@ educators = {
             self.fromString(self.data.originalValue = ELLIPSIS);
         }
     },
-    'backticks' : {
-        'true' : function () {
+    'backticks': {
+        'true': function () {
             var self,
                 value;
 
@@ -206,7 +206,7 @@ educators = {
                 self.fromString(CLOSING_DOUBLE_QUOTE);
             }
         },
-        'all' : function () {
+        'all': function () {
             var self,
                 value;
 
@@ -223,8 +223,8 @@ educators = {
             }
         }
     },
-    'quotes' : {
-        'true' : function () {
+    'quotes': {
+        'true': function () {
             var self,
                 value,
                 next,
@@ -411,9 +411,9 @@ function smartypants(retext, options) {
     retext.use(visit);
 
     events = {
-        'changetext' : [],
-        'changeprev' : [],
-        'changenext' : []
+        'changetext': [],
+        'changeprev': [],
+        'changenext': []
     };
 
     if ('quotes' in options) {

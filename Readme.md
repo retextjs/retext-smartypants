@@ -43,8 +43,8 @@ retext.parse(
 
 ```js
 retext = new Retext().use(smartypants, {
-    'ellipses' : false,
-    'dashes' : 'oldschool'
+    'ellipses': false,
+    'dashes': 'oldschool'
 });
 
 retext.parse(

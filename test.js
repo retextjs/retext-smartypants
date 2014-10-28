@@ -28,7 +28,7 @@ describe('smartypants()', function () {
 
         assert.throws(function () {
             smartypants({
-                'quotes' : true
+                'quotes': true
             });
         }, /Illegal invocation/);
     });
@@ -43,7 +43,7 @@ describe('Curly quotes', function () {
         function () {
             assert.throws(function () {
                 new Retext().use(smartypants, {
-                    'quotes' : 1
+                    'quotes': 1
                 });
             }, /1/);
         }
@@ -299,7 +299,7 @@ describe('En- and em-dashes', function () {
         function () {
             assert.throws(function () {
                 new Retext().use(smartypants, {
-                    'dashes' : 'test'
+                    'dashes': 'test'
                 });
             }, /test/);
         }
@@ -310,7 +310,7 @@ describe('En- and em-dashes', function () {
             var retext;
 
             retext = new Retext().use(smartypants, {
-                'dashes' : false
+                'dashes': false
             });
 
             retext.parse('Alfred--bertrand---cees.', function (err, tree) {
@@ -326,7 +326,7 @@ describe('En- and em-dashes', function () {
             var retext;
 
             retext = new Retext().use(smartypants, {
-                'dashes' : true
+                'dashes': true
             });
 
             retext.parse('Alfred--bertrand--cees.', function (err, tree) {
@@ -343,7 +343,7 @@ describe('En- and em-dashes', function () {
             var retext;
 
             retext = new Retext().use(smartypants, {
-                'dashes' : 'oldschool'
+                'dashes': 'oldschool'
             });
 
             retext.parse('Alfred--bertrand---cees.', function (err, tree) {
@@ -360,7 +360,7 @@ describe('En- and em-dashes', function () {
             var retext;
 
             retext = new Retext().use(smartypants, {
-                'dashes' : 'inverted'
+                'dashes': 'inverted'
             });
 
             retext.parse('Alfred--bertrand---cees.', function (err, tree) {
@@ -377,7 +377,7 @@ describe('En- and em-dashes', function () {
             var retext;
 
             retext = new Retext().use(smartypants, {
-                'dashes' : 'oldschool'
+                'dashes': 'oldschool'
             });
 
             retext.parse(
@@ -400,7 +400,7 @@ describe('Ellipses', function () {
         function () {
             assert.throws(function () {
                 new Retext().use(smartypants, {
-                    'ellipses' : Infinity
+                    'ellipses': Infinity
                 });
             }, /Infinity/);
         }
@@ -411,7 +411,7 @@ describe('Ellipses', function () {
             var retext;
 
             retext = new Retext().use(smartypants, {
-                'ellipses' : false
+                'ellipses': false
             });
 
             retext.parse('Alfred... ...Bertrand.', function (err, tree) {
@@ -427,7 +427,7 @@ describe('Ellipses', function () {
             var retext;
 
             retext = new Retext().use(smartypants, {
-                'ellipses' : true
+                'ellipses': true
             });
 
             retext.parse('Alfred... Bertrand.', function (err, tree) {
@@ -444,7 +444,7 @@ describe('Ellipses', function () {
             var retext;
 
             retext = new Retext().use(smartypants, {
-                'ellipses' : true
+                'ellipses': true
             });
 
             retext.parse('...Alfred bertrand.', function (err, tree) {
@@ -461,7 +461,7 @@ describe('Ellipses', function () {
             var retext;
 
             retext = new Retext().use(smartypants, {
-                'ellipses' : true
+                'ellipses': true
             });
 
             retext.parse('Alfred bertrand...', function (err, tree) {
@@ -478,7 +478,7 @@ describe('Ellipses', function () {
             var retext;
 
             retext = new Retext().use(smartypants, {
-                'ellipses' : true
+                'ellipses': true
             });
 
             retext.parse('Alfred. . . Bertrand.', function (err, tree) {
@@ -495,7 +495,7 @@ describe('Ellipses', function () {
             var retext;
 
             retext = new Retext().use(smartypants, {
-                'ellipses' : true
+                'ellipses': true
             });
 
             retext.parse('. . .Alfred bertrand.', function (err, tree) {
@@ -512,7 +512,7 @@ describe('Ellipses', function () {
             var retext;
 
             retext = new Retext().use(smartypants, {
-                'ellipses' : true
+                'ellipses': true
             });
 
             retext.parse('Alfred bertrand. . .', function (err, tree) {
@@ -529,7 +529,7 @@ describe('Backticks', function () {
         function () {
             assert.throws(function () {
                 new Retext().use(smartypants, {
-                    'backticks' : {}
+                    'backticks': {}
                 });
             }, /object Object/);
         }
@@ -539,8 +539,8 @@ describe('Backticks', function () {
         function () {
             assert.throws(function () {
                 new Retext().use(smartypants, {
-                    'backticks' : 'all',
-                    'quotes' : true
+                    'backticks': 'all',
+                    'quotes': true
                 });
             }, 'Illegal invocation');
         }
@@ -552,8 +552,8 @@ describe('Backticks', function () {
             var retext;
 
             retext = new Retext().use(smartypants, {
-                'backticks' : false,
-                'quotes' : false
+                'backticks': false,
+                'quotes': false
             });
 
             retext.parse('``Alfred bertrand.', function (err, tree) {
@@ -570,8 +570,8 @@ describe('Backticks', function () {
             var retext;
 
             retext = new Retext().use(smartypants, {
-                'backticks' : false,
-                'quotes' : false
+                'backticks': false,
+                'quotes': false
             });
 
             retext.parse('Alfred\'\' bertrand.', function (err, tree) {
@@ -588,8 +588,8 @@ describe('Backticks', function () {
             var retext;
 
             retext = new Retext().use(smartypants, {
-                'backticks' : false,
-                'quotes' : false
+                'backticks': false,
+                'quotes': false
             });
 
             retext.parse('`Alfred bertrand.', function (err, tree) {
@@ -606,8 +606,8 @@ describe('Backticks', function () {
             var retext;
 
             retext = new Retext().use(smartypants, {
-                'backticks' : false,
-                'quotes' : false
+                'backticks': false,
+                'quotes': false
             });
 
             retext.parse('Alfred\' bertrand.', function (err, tree) {
@@ -624,8 +624,8 @@ describe('Backticks', function () {
             var retext;
 
             retext = new Retext().use(smartypants, {
-                'backticks' : true,
-                'quotes' : false
+                'backticks': true,
+                'quotes': false
             });
 
             retext.parse('``Alfred bertrand.', function (err, tree) {
@@ -642,8 +642,8 @@ describe('Backticks', function () {
             var retext;
 
             retext = new Retext().use(smartypants, {
-                'backticks' : true,
-                'quotes' : false
+                'backticks': true,
+                'quotes': false
             });
 
             retext.parse('Alfred\'\' bertrand.', function (err, tree) {
@@ -660,8 +660,8 @@ describe('Backticks', function () {
             var retext;
 
             retext = new Retext().use(smartypants, {
-                'backticks' : true,
-                'quotes' : false
+                'backticks': true,
+                'quotes': false
             });
 
             retext.parse('`Alfred bertrand.', function (err, tree) {
@@ -678,8 +678,8 @@ describe('Backticks', function () {
             var retext;
 
             retext = new Retext().use(smartypants, {
-                'backticks' : true,
-                'quotes' : false
+                'backticks': true,
+                'quotes': false
             });
 
             retext.parse('Alfred\' bertrand.', function (err, tree) {
@@ -696,8 +696,8 @@ describe('Backticks', function () {
             var retext;
 
             retext = new Retext().use(smartypants, {
-                'backticks' : 'all',
-                'quotes' : false
+                'backticks': 'all',
+                'quotes': false
             });
 
             retext.parse('``Alfred bertrand.', function (err, tree) {
@@ -714,8 +714,8 @@ describe('Backticks', function () {
             var retext;
 
             retext = new Retext().use(smartypants, {
-                'backticks' : 'all',
-                'quotes' : false
+                'backticks': 'all',
+                'quotes': false
             });
 
             retext.parse('Alfred\'\' bertrand.', function (err, tree) {
@@ -732,8 +732,8 @@ describe('Backticks', function () {
             var retext;
 
             retext = new Retext().use(smartypants, {
-                'backticks' : 'all',
-                'quotes' : false
+                'backticks': 'all',
+                'quotes': false
             });
 
             retext.parse('`Alfred bertrand.', function (err, tree) {
@@ -750,8 +750,8 @@ describe('Backticks', function () {
             var retext;
 
             retext = new Retext().use(smartypants, {
-                'backticks' : 'all',
-                'quotes' : false
+                'backticks': 'all',
+                'quotes': false
             });
 
             retext.parse('Alfred\' bertrand.', function (err, tree) {
