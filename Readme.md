@@ -26,17 +26,12 @@ var Retext = require('retext'),
     smartypants = require('retext-smartypants'),
     retext;
 
-/**
- * Note that `smartypants` is invoked,
- * optionally with options.
- */
-
-retext = new Retext().use(smartypants());
+retext = new Retext().use(smartypants);
 
 retext.parse(
     'He said, "A \'simple\' english sentence. . ."',
     function (err, tree) {
-        tree.toString();
+        console.log(tree.toString());
         /* 'He said, “A ‘simple’ english sentence…”' */
     }
 );
@@ -44,39 +39,41 @@ retext.parse(
 
 ## API
 
-### smartypants(options?)
+### smartypants
 
 ```js
-retext = new Retext().use(smartypants({
+retext = new Retext().use(smartypants, {
     'ellipses' : false,
     'dashes' : 'oldschool'
-}));
+});
 
 retext.parse(
     'He said---A \'simple\' english sentence. . ."',
     function (err, tree) {
-        tree.toString();
+        console.log(tree.toString());
         /* 'He said—A ‘simple’ english sentence. . .' */
     }
 );
 ```
 
+You **may** provide an `options` object as the second argument to `Retext#use`:
+
 - `options` (`null` or `Object`)
 - `options.quotes` (`true` or `false`):
-  - When `true`, converts dumb double and single quotes to smart double or single quotes;
-  - When `false`, ignores dumb quotes;
+  - `true`: converts dumb double and single quotes to smart double or single quotes;
+  - `false`: ignores dumb quotes;
 - `options.ellipses` (`true` or `false`) - note the plural of `ellipsis`;
-  - When `true`, converts triple dot characters (with or without spaces between) into a single unicode ellipsis character;
-  - When `false`, ignores dumb ellipses;
+  - `true`: converts triple dot characters (with or without spaces between) into a single unicode ellipsis character;
+  - `false`: ignores dumb ellipses;
 - `options.backticks` (`"all"`, `true`, or `false`)
-  - When `true`, converts double backticks into an opening double quote, and double dumb single quotes into a closing double quote;
-  - When `"all"`, does the preceding, in addition of converting single backticks into an opening single quote, and a dumb single quote into a closing single quote. **Note!** Quotes can not be `true` when backticks is `"all"` (Otherwise they'd keep arguing on about the direction of some quotes. Nothing good comes from that, only RangeErrors.);
-  - When `false`, ignores dumb backticks and single quotes (although when `quotes` is true, dumb quotes might be converted to smart quotes anyway).
+  - `true`: converts double backticks into an opening double quote, and double dumb single quotes into a closing double quote;
+  - `"all"`: does the preceding, in addition of converting single backticks into an opening single quote, and a dumb single quote into a closing single quote. **Note!** Quotes can not be `true` when backticks is `"all"` (Otherwise they'd keep arguing on about the direction of some quotes. Nothing good comes from that, only RangeErrors.);
+  - `false`: ignores dumb backticks and single quotes (although when `quotes` is true, dumb quotes might be converted to smart quotes anyway).
 - `options.dashes` (`"oldschool"`, `"inverted"`, `true`, or `false`)
-  - When `true`, converts two dashes into an em-dash character;
-  - When `"oldschool"`, converts two dashes into an en-dash, and three dashes into an em-dash;
-  - When `"inverted"`, converts two dashes into an em-dash, and three dashes into an en-dash;
-  - When `false`, ignores dumb dashes.
+  - `true`: converts two dashes into an em-dash character;
+  - `"oldschool"`: converts two dashes into an en-dash, and three dashes into an em-dash;
+  - `"inverted"`: converts two dashes into an em-dash, and three dashes into an en-dash;
+  - `false`: ignores dumb dashes.
 
 All options can be omitted (i.e., `null` or `undefined`) to default to `true`.
 

@@ -356,71 +356,65 @@ educators = {
 };
 
 /**
- * Define `attachFactory`.
+ * Define `onrun`.
  *
- * @param {Object.<string, Array.<function>>} events
- * @return {function}
+ * @param {Node} tree
  */
 
-function attachFactory(events) {
-    /**
-     * @param {Retext} retext
-     */
+function onrun(tree) {
+    tree.visit(function (node) {
+        var value;
 
-    return function (retext) {
-        var SymbolNode,
-            index,
-            event,
-            methods;
-
-        retext.use(visit);
-
-        SymbolNode = retext.TextOM.SymbolNode;
-
-        for (event in events) {
-            methods = events[event];
-
-            index = methods.length;
-
-            while (index--) {
-                SymbolNode.on(event, methods[index]);
-            }
+        if (
+            node.type !== node.PUNCTUATION_NODE &&
+            node.type !== node.SYMBOL_NODE
+        ) {
+            return;
         }
-    };
+
+        value = node.toString();
+
+        node.fromString(null);
+        node.fromString(value);
+    });
 }
 
 /**
- * Define `smartypantsFactory`.
+ * Define `smartypants`.
  *
  * @param {Object} options
  * @return {function}
  */
 
-function smartypantsFactory(options) {
+function smartypants(retext, options) {
     var events,
         method,
         quotes,
         ellipses,
         backticks,
-        dashes;
+        dashes,
+        SymbolNode,
+        index,
+        event,
+        methods;
 
-    if (arguments.length > 1) {
+    if (arguments.length < 2) {
         throw new TypeError(
             'Illegal invocation: `smartypants` was ' +
-            'invoked by `Retext`, but should be ' +
-            'invoked by the user'
+            'invoked by the user. This is no longer ' +
+            'valid. This breaking change occurred in ' +
+            'retext-smartypants@0.4.0. See GitHub for ' +
+            'more information'
         );
     }
+
+    retext.use(visit);
 
     events = {
         'changetext' : [],
         'changeprev' : [],
         'changenext' : []
     };
-
-    if (!options) {
-        options = {};
-    }
 
     if ('quotes' in options) {
         quotes = options.quotes;
@@ -512,41 +506,23 @@ function smartypantsFactory(options) {
         events.changetext.push(educators.dashes[dashes || true]);
     }
 
-    /**
-     * Define `smartypants`.
-     *
-     * @param {Node} tree
-     */
+    SymbolNode = retext.TextOM.SymbolNode;
 
-    function smartypants(tree) {
-        tree.visit(function (node) {
-            var value;
+    for (event in events) {
+        methods = events[event];
 
-            if (
-                node.type !== node.PUNCTUATION_NODE &&
-                node.type !== node.SYMBOL_NODE
-            ) {
-                return;
-            }
+        index = methods.length;
 
-            value = node.toString();
-
-            node.fromString(null);
-            node.fromString(value);
-        });
+        while (index--) {
+            SymbolNode.on(event, methods[index]);
+        }
     }
 
-    /**
-     * Expose `attach`.
-     */
-
-    smartypants.attach = attachFactory(events);
-
-    return smartypants;
+    return onrun;
 }
 
 /**
- * Expose `smartypantsFactory`.
+ * Expose `smartypants`.
  */
 
-module.exports = smartypantsFactory;
+module.exports = smartypants;
