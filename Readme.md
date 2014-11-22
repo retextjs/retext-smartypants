@@ -1,4 +1,4 @@
-# retext-smartypants [![Build Status](https://travis-ci.org/wooorm/retext-smartypants.svg?branch=master)](https://travis-ci.org/wooorm/retext-smartypants) [![Coverage Status](https://img.shields.io/coveralls/wooorm/retext-smartypants.svg)](https://coveralls.io/r/wooorm/retext-smartypants?branch=master)
+# retext-smartypants [![Build Status](https://img.shields.io/travis/wooorm/retext-smartypants.svg?style=flat)](https://travis-ci.org/wooorm/retext-smartypants) [![Coverage Status](https://img.shields.io/coveralls/wooorm/retext-smartypants.svg?style=flat)](https://coveralls.io/r/wooorm/retext-smartypants?branch=master)
 
 **[retext](https://github.com/wooorm/retext "Retext")** implementation of [smartypants](http://daringfireball.net/projects/smartypants/ "SmartyPants").
 
