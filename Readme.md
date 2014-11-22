@@ -22,11 +22,10 @@ $ bower install retext-smartypants
 ## Usage
 
 ```js
-var Retext = require('retext'),
-    smartypants = require('retext-smartypants'),
-    retext;
+var Retext = require('retext');
+var smartypants = require('retext-smartypants');
 
-retext = new Retext().use(smartypants);
+var retext = new Retext().use(smartypants);
 
 retext.parse(
     'He said, "A \'simple\' english sentence. . ."',
@@ -42,7 +41,7 @@ retext.parse(
 ### smartypants
 
 ```js
-retext = new Retext().use(smartypants, {
+var retext = new Retext().use(smartypants, {
     'ellipses': false,
     'dashes': 'oldschool'
 });
@@ -56,7 +55,7 @@ retext.parse(
 );
 ```
 
-You **may** provide an `options` object as the second argument to `Retext#use`:
+Parameters:
 
 - `options` (`null` or `Object`)
 - `options.quotes` (`true` or `false`):
