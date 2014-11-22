@@ -1,4 +1,13 @@
 
+n.n.n / 2014-11-22
+==================
+
+ * Refactor `Readme.md`
+ * Add flat badges to `Readme.md`
+ * Fix incorrect executive rights on `test.js`
+ * Refactor npm script targets in `package.json`
+ * Update retext
+
 0.4.0 / 2014-10-28
 ==================
 
