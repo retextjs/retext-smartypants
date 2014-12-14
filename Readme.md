@@ -1,6 +1,6 @@
 # retext-smartypants [![Build Status](https://img.shields.io/travis/wooorm/retext-smartypants.svg?style=flat)](https://travis-ci.org/wooorm/retext-smartypants) [![Coverage Status](https://img.shields.io/coveralls/wooorm/retext-smartypants.svg?style=flat)](https://coveralls.io/r/wooorm/retext-smartypants?branch=master)
 
-**[retext](https://github.com/wooorm/retext "Retext")** implementation of [smartypants](http://daringfireball.net/projects/smartypants/ "SmartyPants").
+**[retext](https://github.com/wooorm/retext)** implementation of [smartypants](http://daringfireball.net/projects/smartypants/).
 
 ## Installation
 
@@ -57,6 +57,8 @@ retext.parse(
 
 Parameters:
 
+All options can be omitted (as in, `null` or `undefined`) to default to `true`.
+
 - `options` (`null` or `Object`)
 - `options.quotes` (`true` or `false`):
   - `true`: converts dumb double and single quotes to smart double or single quotes;
@@ -73,8 +75,6 @@ Parameters:
   - `"oldschool"`: converts two dashes into an en-dash, and three dashes into an em-dash;
   - `"inverted"`: converts two dashes into an em-dash, and three dashes into an en-dash;
   - `false`: ignores dumb dashes.
-
-All options can be omitted (i.e., `null` or `undefined`) to default to `true`.
 
 ## License
 
