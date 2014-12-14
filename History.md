@@ -1,4 +1,12 @@
 
+n.n.n / 2014-12-14
+==================
+
+ * Add benchmark
+ * Fix wording in `Readme.md`
+ * Add link to personal website to copyright in `Readme.md`
+ * Update eslint, retext
+
 0.4.1 / 2014-11-22
 ==================
 
