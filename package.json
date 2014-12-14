@@ -19,6 +19,7 @@
     "eslint": "^0.10.0",
     "istanbul": "^0.3.0",
     "jscs": "^1.0.0",
+    "matcha": "^0.6.0",
     "mocha": "^2.0.0",
     "retext": "^0.5.0-rc.1"
   },
@@ -27,9 +28,11 @@
     "test-travis": "node_modules/.bin/istanbul cover node_modules/.bin/_mocha --report lcovonly -- --reporter spec --check-leaks -u exports test.js",
     "coverage": "node_modules/.bin/istanbul cover node_modules/.bin/_mocha -- -- test.js",
     "lint-api": "node_modules/.bin/eslint index.js",
+    "lint-benchmark": "node_modules/.bin/eslint benchmark.js --global bench,before,suite,set",
     "lint-test": "node_modules/.bin/eslint test.js --env mocha",
-    "lint-style": "node_modules/.bin/jscs index.js test.js --reporter=inline",
-    "lint": "npm run-script lint-api && npm run-script lint-test && npm run-script lint-style",
-    "make": "npm run-script lint && npm run-script coverage"
+    "lint-style": "node_modules/.bin/jscs index.js test.js benchmark.js --reporter=inline",
+    "lint": "npm run lint-api && npm run lint-benchmark && npm run lint-test && npm run lint-style",
+    "make": "npm run lint && npm run coverage",
+    "benchmark": "node_modules/.bin/matcha benchmark.js"
   }
 }

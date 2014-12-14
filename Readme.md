@@ -76,6 +76,20 @@ All options can be omitted (as in, `null` or `undefined`) to default to `true`.
   - `"inverted"`: converts two dashes into an em-dash, and three dashes into an en-dash;
   - `false`: ignores dumb dashes.
 
+## Performance
+
+On a MacBook Air, **retext** performs about 15% slower with **retext-smartypants**.
+
+```
+           retext w/o retext-smartypants
+  220 op/s » A paragraph (5 sentences, 100 words)
+   24 op/s » A section (10 paragraphs, 50 sentences, 1,000 words)
+
+           retext w/ retext-smartypants
+  188 op/s » A paragraph (5 sentences, 100 words)
+   20 op/s » A section (10 paragraphs, 50 sentences, 1,000 words)
+```
+
 ## License
 
 MIT © [Titus Wormer](http://wooorm.com)
