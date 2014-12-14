@@ -78,4 +78,4 @@ All options can be omitted (i.e., `null` or `undefined`) to default to `true`.
 
 ## License
 
-MIT © Titus Wormer
+MIT © [Titus Wormer](http://wooorm.com)
