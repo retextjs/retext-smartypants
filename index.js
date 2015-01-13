@@ -395,7 +395,7 @@ function smartypants(retext, options) {
         dashes,
         SymbolNode,
         index,
-        event,
+        eventName,
         methods;
 
     if (arguments.length < 2) {
@@ -503,13 +503,13 @@ function smartypants(retext, options) {
 
     SymbolNode = retext.TextOM.SymbolNode;
 
-    for (event in events) {
-        methods = events[event];
+    for (eventName in events) {
+        methods = events[eventName];
 
         index = methods.length;
 
         while (index--) {
-            SymbolNode.on(event, methods[index]);
+            SymbolNode.on(eventName, methods[index]);
         }
     }
 
