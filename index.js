@@ -388,15 +388,12 @@ function onrun(tree) {
 
 function smartypants(retext, options) {
     var events,
-        method,
         quotes,
         ellipses,
         backticks,
         dashes,
         SymbolNode,
-        index,
-        eventName,
-        methods;
+        index;
 
     if (arguments.length < 2) {
         throw new TypeError(
@@ -410,9 +407,7 @@ function smartypants(retext, options) {
 
     retext.use(visit);
 
-    events = {
-        'changetext': []
-    };
+    events = [];
 
     if ('quotes' in options) {
         quotes = options.quotes;
@@ -482,35 +477,27 @@ function smartypants(retext, options) {
     }
 
     if (quotes !== false) {
-        method = educators.quotes[quotes || true];
-
-        events.changetext.push(method);
+        events.push(educators.quotes[quotes || true]);
     }
 
     if (ellipses !== false) {
-        method = educators.ellipses[ellipses || true];
-
-        events.changetext.push(method);
+        events.push(educators.ellipses[ellipses || true]);
     }
 
     if (backticks !== false) {
-        events.changetext.push(educators.backticks[backticks || true]);
+        events.push(educators.backticks[backticks || true]);
     }
 
     if (dashes !== false) {
-        events.changetext.push(educators.dashes[dashes || true]);
+        events.push(educators.dashes[dashes || true]);
     }
 
     SymbolNode = retext.TextOM.SymbolNode;
 
-    for (eventName in events) {
-        methods = events[eventName];
+    index = events.length;
 
-        index = methods.length;
-
-        while (index--) {
-            SymbolNode.on(eventName, methods[index]);
-        }
+    while (index--) {
+        SymbolNode.on('changetext', events[index]);
     }
 
     return onrun;
