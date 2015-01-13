@@ -411,9 +411,7 @@ function smartypants(retext, options) {
     retext.use(visit);
 
     events = {
-        'changetext': [],
-        'changeprev': [],
-        'changenext': []
+        'changetext': []
     };
 
     if ('quotes' in options) {
@@ -487,15 +485,12 @@ function smartypants(retext, options) {
         method = educators.quotes[quotes || true];
 
         events.changetext.push(method);
-        events.changeprev.push(method);
-        events.changenext.push(method);
     }
 
     if (ellipses !== false) {
         method = educators.ellipses[ellipses || true];
 
         events.changetext.push(method);
-        events.changeprev.push(method);
     }
 
     if (backticks !== false) {
