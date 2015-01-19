@@ -101,4 +101,4 @@ On a MacBook Air, **retext** performs about 15% slower with **retext-smartypants
 
 ## License
 
-MIT © [Titus Wormer](http://wooorm.com)
+[MIT](LICENSE) © [Titus Wormer](http://wooorm.com)
