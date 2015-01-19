@@ -5,23 +5,26 @@
 ## Installation
 
 npm:
-```sh
+
+```bash
 $ npm install retext-smartypants
 ```
 
 Component:
-```sh
+
+```bash
 $ component install wooorm/retext-smartypants
 ```
 
 Bower:
-```sh
+
+```bash
 $ bower install retext-smartypants
 ```
 
 ## Usage
 
-```js
+```javascript
 var Retext = require('retext');
 var smartypants = require('retext-smartypants');
 
@@ -40,7 +43,7 @@ retext.parse(
 
 ### smartypants
 
-```js
+```javascript
 var retext = new Retext().use(smartypants, {
     'ellipses': false,
     'dashes': 'oldschool'
@@ -80,7 +83,7 @@ All options can be omitted (as in, `null` or `undefined`) to default to `true`.
 
 On a MacBook Air, **retext** performs about 15% slower with **retext-smartypants**.
 
-```
+```text
            retext w/o retext-smartypants
   220 op/s » A paragraph (5 sentences, 100 words)
    24 op/s » A section (10 paragraphs, 50 sentences, 1,000 words)
