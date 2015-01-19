@@ -1,4 +1,22 @@
 
+n.n.n / 2015-01-19
+==================
+
+  * Update copyright notice in `LICENSE` to include 2015
+  * Add link to whole license in `Readme.md`
+  * Add Duo as an instalation method in `Readme.md`
+  * Add links to installation methods in `Readme.md`
+  * Refactor fences code blocks in `Readme.md`
+  * Refactor to adhere to strict jsdoc style
+  * Add jscs-jsdoc configuration to `.jscs.json`
+  * Add jscs-jsdoc as a dev-dependency
+  * Refactor npm scripts for changes in npm
+  * Update eslint
+  * Refactor module for single event
+  * Remove use of reserver word `event`
+  * Remove `changeprev` and `changenext` usage
+  * Update retext to stable release
+
 0.4.2 / 2014-12-14
 ==================
 
