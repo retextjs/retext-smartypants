@@ -1,6 +1,6 @@
 'use strict';
 
-/**
+/*
  * Module dependencies.
  */
 
@@ -8,7 +8,7 @@ var visit;
 
 visit = require('retext-visit');
 
-/**
+/*
  * Constants.
  */
 
@@ -60,7 +60,7 @@ CLOSING_QUOTE_MAP[SINGLE_QUOTE] = CLOSING_SINGLE_QUOTE = '’';
 
 TRUE = 'true';
 
-/**
+/*
  * Define the methods.
  */
 
@@ -68,6 +68,11 @@ var educators;
 
 educators = {
     'dashes': {
+        /**
+         * Transform two dahes into an em-dash.
+         *
+         * @this {Child}
+         */
         'true': function () {
             var self,
                 value;
@@ -81,6 +86,12 @@ educators = {
                 self.fromString(EM_DASH);
             }
         },
+        /**
+         * Transform three dahes into an em-dash, and two
+         * into an en-dash.
+         *
+         * @this {Child}
+         */
         'oldschool': function () {
             var self,
                 value;
@@ -97,6 +108,12 @@ educators = {
                 self.fromString(EN_DASH);
             }
         },
+        /**
+         * Transform three dahes into an en-dash, and two
+         * into an em-dash.
+         *
+         * @this {Child}
+         */
         'inverted': function () {
             var self,
                 value;
@@ -115,6 +132,11 @@ educators = {
         }
     },
     'ellipses': {
+        /**
+         * Transform multiple dots into unicode ellipses.
+         *
+         * @this {Child}
+         */
         'true': function () {
             var self,
                 value,
@@ -143,7 +165,7 @@ educators = {
             count = 1;
             index = -1;
 
-            /**
+            /*
              * This full stop is the first character
              * in a word.
              */
@@ -192,6 +214,12 @@ educators = {
         }
     },
     'backticks': {
+        /**
+         * Transform double backticks and single
+         * quotes into smart quotes.
+         *
+         * @this {Child}
+         */
         'true': function () {
             var self,
                 value;
@@ -206,6 +234,12 @@ educators = {
                 self.fromString(CLOSING_DOUBLE_QUOTE);
             }
         },
+        /**
+         * Transform single and double backticks and
+         * single quotes into smart quotes.
+         *
+         * @this {Child}
+         */
         'all': function () {
             var self,
                 value;
@@ -224,6 +258,12 @@ educators = {
         }
     },
     'quotes': {
+        /**
+         * Transform dumb single- and double quotes into
+         * smart quotes.
+         *
+         * @this {Child}
+         */
         'true': function () {
             var self,
                 value,
@@ -262,7 +302,7 @@ educators = {
                 ) &&
                 nextNext.type !== self.WORD_NODE
             ) {
-                /**
+                /*
                  * Special case if the very first character is
                  * a quote followed by punctuation at a
                  * non-word-break. Close the quotes by brute
@@ -280,7 +320,7 @@ educators = {
                 ) &&
                 nextNext.type === self.WORD_NODE
             ) {
-                /**
+                /*
                  * Special case for double sets of quotes:
                  *
                  *    He said, "'Quoted' words in a larger quote."
@@ -294,7 +334,7 @@ educators = {
                 next &&
                 EXPRESSION_DECADE.test(nextValue)
             ) {
-                /**
+                /*
                  * Special case for decade abbreviations:
                  *
                  *   the '80s
@@ -313,7 +353,7 @@ educators = {
                 ) &&
                 next.type === self.WORD_NODE
             ) {
-                /**
+                /*
                  * Get most opening single quotes.
                  */
 
@@ -328,7 +368,7 @@ educators = {
                     prev.type !== self.PUNCTUATION_NODE
                 )
             ) {
-                /**
+                /*
                  * Closing quotes
                  */
 
@@ -360,7 +400,6 @@ educators = {
  *
  * @param {Node} tree
  */
-
 function onrun(tree) {
     tree.visit(function (node) {
         var value;
@@ -382,10 +421,10 @@ function onrun(tree) {
 /**
  * Define `smartypants`.
  *
+ * @param {Retext} retext
  * @param {Object} options
- * @return {function}
+ * @return {Function}
  */
-
 function smartypants(retext, options) {
     var events,
         quotes,
@@ -503,7 +542,7 @@ function smartypants(retext, options) {
     return onrun;
 }
 
-/**
+/*
  * Expose `smartypants`.
  */
 

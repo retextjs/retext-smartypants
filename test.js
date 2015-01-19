@@ -1,6 +1,6 @@
 'use strict';
 
-/**
+/*
  * Dependencies.
  */
 
@@ -12,7 +12,7 @@ smartypants = require('./');
 Retext = require('retext');
 assert = require('assert');
 
-/**
+/*
  * Tests.
  */
 

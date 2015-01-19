@@ -3,14 +3,14 @@
 var Retext,
     smartypants;
 
-/**
+/*
  * Dependencies.
  */
 
 Retext = require('retext');
 smartypants = require('./');
 
-/**
+/*
  * Dependencies.
  */
 
@@ -20,7 +20,7 @@ var retext,
 retext = new Retext();
 retextWithSmartypants = new Retext().use(smartypants);
 
-/**
+/*
  * Test data: A (big?) article (w/ 100 paragraphs, 500
  * sentences, 10,000 words);
  *
