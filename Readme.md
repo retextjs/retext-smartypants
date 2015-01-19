@@ -22,6 +22,12 @@ $ component install wooorm/retext-smartypants
 $ bower install retext-smartypants
 ```
 
+[Duo](http://duojs.org/#getting-started):
+
+```javascript
+var smartypants = require('wooorm/retext-smartypants');
+```
+
 ## Usage
 
 ```javascript
