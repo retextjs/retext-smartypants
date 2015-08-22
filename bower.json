@@ -1,15 +1,12 @@
 {
   "name": "retext-smartypants",
-  "main": "index.js",
+  "main": "retext-smartypants.js",
   "description": "Retext implementation of SmartyPants",
   "license": "MIT",
   "keywords": [
     "retext",
     "smartypants"
   ],
-  "dependencies": {
-    "retext-visit": "^0.2.2"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/wooorm/retext-smartypants.git"

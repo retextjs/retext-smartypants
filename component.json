@@ -8,10 +8,10 @@
     "smartypants"
   ],
   "dependencies": {
-    "wooorm/retext-visit": "^0.2.2"
+    "wooorm/nlcst-to-string": "~0.1.5"
   },
   "repository": "wooorm/retext-smartypants",
-  "scripts" : [
+  "scripts": [
     "index.js"
   ]
 }
