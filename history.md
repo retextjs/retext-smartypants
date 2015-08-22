@@ -4,6 +4,11 @@
 
 <!--lint disable maximum-line-length-->
 
+1.0.0 / 2015-08-22
+==================
+
+*   Refactor api for retext@1.0.0 ([806bfa6](https://github.com/wooorm/retext-smartypants/commit/806bfa6))
+
 0.4.3 / 2015-08-04
 ==================
 
