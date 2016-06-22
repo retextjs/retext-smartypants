@@ -1,33 +1,29 @@
 /**
  * @author Titus Wormer
- * @copyright 2014-2015 Titus Wormer
+ * @copyright 2014 Titus Wormer
  * @license MIT
  * @module retext:smartypants
- * @fileoverview Count smartypantss in Retext.
+ * @fileoverview Retext implementation of SmartyPants.
  */
 
 'use strict';
 
-/*
- * Dependencies.
- */
+/* eslint-env commonjs */
 
+/* Dependencies. */
 var visit = require('unist-util-visit');
 var nlcstToString = require('nlcst-to-string');
 
-/*
- * Types.
- */
+/* Map of educators. */
+var educators = {};
 
+/* Types. */
 var PUNCTUATION_NODE = 'PunctuationNode';
 var SYMBOL_NODE = 'SymbolNode';
 var WORD_NODE = 'WordNode';
 var WHITE_SPACE_NODE = 'WhiteSpaceNode';
 
-/*
- * Characters.
- */
-
+/* Characters. */
 var EXPRESSION_DECADE = /^\d\ds$/;
 var FULL_STOPS_THREE = /^\.{3,}$/;
 var FULL_STOPS = /^\.+$/;
@@ -53,12 +49,6 @@ OPENING_QUOTE_MAP[DOUBLE_QUOTE] = OPENING_DOUBLE_QUOTE;
 CLOSING_QUOTE_MAP[DOUBLE_QUOTE] = CLOSING_DOUBLE_QUOTE;
 OPENING_QUOTE_MAP[SINGLE_QUOTE] = OPENING_SINGLE_QUOTE;
 CLOSING_QUOTE_MAP[SINGLE_QUOTE] = CLOSING_SINGLE_QUOTE;
-
-/*
- * Map of educators.
- */
-
-var educators = {};
 
 /**
  * Transform two dahes into an em-dash.
@@ -133,6 +123,8 @@ function all(node) {
  * Transform multiple dots into unicode ellipses.
  *
  * @param {NLCSTPunctuationNode} node - Node to transform.
+ * @param {number} index - Position of `node` in `parent`.
+ * @param {Node} parent - Parent of `node`.
  */
 function ellipses(node, index, parent) {
     var value = node.value;
@@ -144,10 +136,7 @@ function ellipses(node, index, parent) {
     var count;
     var queue;
 
-    /*
-     * Simple node with three dots and without white-space.
-     */
-
+    /* Simple node with three dots and without white-space. */
     if (FULL_STOPS_THREE.test(node.value)) {
         node.value = ELLIPSIS;
 
@@ -158,21 +147,15 @@ function ellipses(node, index, parent) {
         return;
     }
 
-    /*
-     * Search for dot-nodes with white-space between.
-     */
-
+    /* Search for dot-nodes with white-space between. */
     nodes = [];
     position = index;
     count = 1;
 
-    /*
-     * It’s possible that the node is merged with an
+    /* It’s possible that the node is merged with an
      * adjacent word-node. In that code, we cannot
      * transform it because there’s no reference to the
-     * grandparent.
-     */
-
+     * grandparent. */
     while (--position > 0) {
         sibling = siblings[position];
 
@@ -213,6 +196,8 @@ function ellipses(node, index, parent) {
  * quotes.
  *
  * @param {NLCSTPunctuationNode} node - Node to transform.
+ * @param {number} index - Position of `node` in `parent`.
+ * @param {Node} parent - Parent of `node`.
  */
 function quotes(node, index, parent) {
     var siblings = parent.children;
@@ -237,13 +222,10 @@ function quotes(node, index, parent) {
         (next.type === PUNCTUATION_NODE || next.type === SYMBOL_NODE) &&
         nextNext.type !== WORD_NODE
     ) {
-        /*
-         * Special case if the very first character is
+        /* Special case if the very first character is
          * a quote followed by punctuation at a
          * non-word-break. Close the quotes by brute
-         * force.
-         */
-
+         * force. */
         node.value = CLOSING_QUOTE_MAP[value];
     } else if (
         nextNext &&
@@ -253,24 +235,20 @@ function quotes(node, index, parent) {
         ) &&
         nextNext.type === WORD_NODE
     ) {
-        /*
-         * Special case for double sets of quotes:
+        /* Special case for double sets of quotes:
          *
          *    He said, "'Quoted' words in a larger quote."
          */
-
         node.value = OPENING_QUOTE_MAP[value];
         next.value = OPENING_QUOTE_MAP[nextValue];
     } else if (
         next &&
         EXPRESSION_DECADE.test(nextValue)
     ) {
-        /*
-         * Special case for decade abbreviations:
+        /* Special case for decade abbreviations:
          *
          *   the '80s
          */
-
         node.value = CLOSING_QUOTE_MAP[value];
     } else if (
         prev &&
@@ -282,10 +260,7 @@ function quotes(node, index, parent) {
         ) &&
         next.type === WORD_NODE
     ) {
-        /*
-         * Get most opening single quotes.
-         */
-
+        /* Get most opening single quotes. */
         node.value = OPENING_QUOTE_MAP[value];
     } else if (
         prev &&
@@ -295,10 +270,7 @@ function quotes(node, index, parent) {
             prev.type !== PUNCTUATION_NODE
         )
     ) {
-        /*
-         * Closing quotes
-         */
-
+        /* Closing quotes */
         node.value = CLOSING_QUOTE_MAP[value];
     } else if (
         !next ||
@@ -314,27 +286,24 @@ function quotes(node, index, parent) {
     }
 }
 
-/*
- * Expose educators.
- */
-
+/* Expose educators. */
 educators.dashes = {
-    'true': dashes,
-    'oldschool': oldschool,
-    'inverted': inverted
+    true: dashes,
+    oldschool: oldschool,
+    inverted: inverted
 };
 
 educators.backticks = {
-    'true': backticks,
-    'all': all
+    true: backticks,
+    all: all
 };
 
 educators.ellipses = {
-    'true': ellipses
+    true: ellipses
 };
 
 educators.quotes = {
-    'true': quotes
+    true: quotes
 };
 
 /**
@@ -371,6 +340,8 @@ function transformFactory(methods) {
 /**
  * Attacher.
  *
+ * @param {Unified} processor - Processor.
+ * @param {Object} [options] - Configuration.
  * @return {Function} - `transformer`.
  */
 function attacher(processor, options) {
@@ -478,8 +449,5 @@ function attacher(processor, options) {
     return transformFactory(methods);
 }
 
-/*
- * Expose.
- */
-
+/* Expose. */
 module.exports = attacher;

@@ -1,548 +1,695 @@
-'use strict';
-
-/* eslint-env mocha */
-
-/*
- * Dependencies.
+/**
+ * @author Titus Wormer
+ * @copyright 2014 Titus Wormer
+ * @license MIT
+ * @module retext:smartypants
+ * @fileoverview Test suite for `retext-smartypants`.
  */
 
-var assert = require('assert');
+'use strict';
+
+/* eslint-env node */
+/* jscs:disable jsDoc */
+/* jscs:disable maximumLineLength */
+
+/* Dependencies. */
+var test = require('tape');
 var retext = require('retext');
 var smartypants = require('./');
 
-/*
- * Methods.
- */
+/* Tests. */
+test('Curly quotes', function (t) {
+    var processor = retext().use(smartypants);
 
-var equal = assert.strictEqual;
-var throws = assert.throws;
-
-/*
- * Tests.
- */
-
-describe('Curly quotes', function () {
-    var processor = retext.use(smartypants);
-
-    it('should throw when not given `true`, `false`, or omitted',
-        function () {
-            throws(function () {
-                retext.use(smartypants, {
-                    'quotes': 1
+    t.test('should throw when not given `true`, `false`, or omitted',
+        function (st) {
+            st.throws(function () {
+                retext().use(smartypants, {
+                    quotes: 1
                 });
             }, /1/);
+
+            st.end();
         }
     );
 
-    it('should not throw when not omitted', function () {
-        retext.use(smartypants, {
-            'quotes': false
+    t.test('should not throw when not omitted', function (st) {
+        st.doesNotThrow(function () {
+            retext().use(smartypants, {
+                quotes: false
+            });
         });
+
+        st.end();
     });
 
-    it('should curl double quotes', function () {
-        equal(
-            processor.process('Alfred "bertrand" cees.'),
+    t.test('should curl double quotes', function (st) {
+        st.equal(
+            processor.process('Alfred "bertrand" cees.').toString(),
             'Alfred “bertrand” cees.'
         );
+
+        st.end();
     });
 
-    it('should curl single quotes', function () {
-        equal(
-            processor.process('Alfred \'bertrand\' cees.'),
+    t.test('should curl single quotes', function (st) {
+        st.equal(
+            processor.process('Alfred \'bertrand\' cees.').toString(),
             'Alfred ‘bertrand’ cees.'
         );
+
+        st.end();
     });
 
-    it('should curl initial double quotes', function () {
-        equal(
-            processor.process('"Alfred" bertrand.'),
+    t.test('should curl initial double quotes', function (st) {
+        st.equal(
+            processor.process('"Alfred" bertrand.').toString(),
             '“Alfred” bertrand.'
         );
+
+        st.end();
     });
 
-    it('should curl initial single quotes', function () {
-        equal(
-            processor.process('\'Alfred\' bertrand.'),
+    t.test('should curl initial single quotes', function (st) {
+        st.equal(
+            processor.process('\'Alfred\' bertrand.').toString(),
             '‘Alfred’ bertrand.'
         );
+
+        st.end();
     });
 
-    it('should curl final double quotes', function () {
-        equal(
-            processor.process('Alfred "bertrand".'),
+    t.test('should curl final double quotes', function (st) {
+        st.equal(
+            processor.process('Alfred "bertrand".').toString(),
             'Alfred “bertrand”.'
         );
+
+        st.end();
     });
 
-    it('should curl final single quotes', function () {
-        equal(
-            processor.process('Alfred \'bertrand\'.'),
+    t.test('should curl final single quotes', function (st) {
+        st.equal(
+            processor.process('Alfred \'bertrand\'.').toString(),
             'Alfred ‘bertrand’.'
         );
+
+        st.end();
     });
 
-    it('should curl single quotes in double quotes', function () {
-        equal(
-            processor.process('"\'Alfred\' bertrand" cees.'),
+    t.test('should curl single quotes in double quotes', function (st) {
+        st.equal(
+            processor.process('"\'Alfred\' bertrand" cees.').toString(),
             '“‘Alfred’ bertrand” cees.'
         );
 
-        equal(
-            processor.process('"Alfred \'bertrand\'" cees.'),
+        st.equal(
+            processor.process('"Alfred \'bertrand\'" cees.').toString(),
             '“Alfred ‘bertrand’” cees.'
         );
+
+        st.end();
     });
 
-    it('should curl double quotes in single quotes', function () {
-        equal(
-            processor.process('\'"Alfred" bertrand\' cees.'),
+    t.test('should curl double quotes in single quotes', function (st) {
+        st.equal(
+            processor.process('\'"Alfred" bertrand\' cees.').toString(),
             '‘“Alfred” bertrand’ cees.'
         );
 
-        equal(
-            processor.process('\'Alfred "bertrand"\' cees.'),
+        st.equal(
+            processor.process('\'Alfred "bertrand"\' cees.').toString(),
             '‘Alfred “bertrand”’ cees.'
         );
+
+        st.end();
     });
 
-    it('should curl nested double quotes', function () {
-        equal(
-            processor.process('"Alfred "bertrand" cees."'),
+    t.test('should curl nested double quotes', function (st) {
+        st.equal(
+            processor.process('"Alfred "bertrand" cees."').toString(),
             '“Alfred “bertrand” cees.”'
         );
+
+        st.end();
     });
 
-    it('should curl nested single quotes', function () {
-        equal(
-            processor.process('\'Alfred \'bertrand\' cees.\''),
+    t.test('should curl nested single quotes', function (st) {
+        st.equal(
+            processor.process('\'Alfred \'bertrand\' cees.\'').toString(),
             '‘Alfred ‘bertrand’ cees.’'
         );
+
+        st.end();
     });
 
-    it('should curl initial double quotes when followed by a full stop',
-        function () {
-            equal(
-                processor.process('Alfred ".bertrand" cees.'),
+    t.test('should curl initial double quotes when followed by a full stop',
+        function (st) {
+            st.equal(
+                processor.process('Alfred ".bertrand" cees.').toString(),
                 'Alfred “.bertrand” cees.'
             );
+
+            st.end();
         }
     );
 
-    it('should curl initial single quotes when followed by a full stop',
-        function () {
-            equal(
-                processor.process('Alfred \'.bertrand\' cees.'),
+    t.test('should curl initial single quotes when followed by a full stop',
+        function (st) {
+            st.equal(
+                processor.process('Alfred \'.bertrand\' cees.').toString(),
                 'Alfred ‘.bertrand’ cees.'
             );
+
+            st.end();
         }
     );
 
-    it('should curl initial double quotes when preceded by a full stop',
-        function () {
-            equal(
-                processor.process('Alfred "bertrand." cees.'),
+    t.test('should curl initial double quotes when preceded by a full stop',
+        function (st) {
+            st.equal(
+                processor.process('Alfred "bertrand." cees.').toString(),
                 'Alfred “bertrand.” cees.'
             );
+
+            st.end();
         }
     );
 
-    it('should curl initial single quotes when preceded by a full stop',
-        function () {
-            equal(
-                processor.process('Alfred \'bertrand.\' cees.'),
+    t.test('should curl initial single quotes when preceded by a full stop',
+        function (st) {
+            st.equal(
+                processor.process('Alfred \'bertrand.\' cees.').toString(),
                 'Alfred ‘bertrand.’ cees.'
             );
+
+            st.end();
         }
     );
 
-    it('should curl initial double quotes when followed by a multiple ' +
-        'full-stops', function () {
-            equal(processor.process('"..Alfred"'), '“..Alfred”');
+    t.test('should curl initial double quotes when followed by a multiple ' +
+        'full-stops', function (st) {
+            st.equal(
+                processor.process('"..Alfred"').toString(),
+                '“..Alfred”'
+            );
+
+            st.end();
         }
     );
 
-    it('should curl initial single quotes when followed by a multiple ' +
-        'full-stops', function () {
-            equal(processor.process('\'..Alfred\''), '‘..Alfred’');
+    t.test('should curl initial single quotes when followed by a multiple ' +
+        'full-stops', function (st) {
+            st.equal(
+                processor.process('\'..Alfred\'').toString(),
+                '‘..Alfred’'
+            );
+
+            st.end();
         }
     );
 
-    it('should curl final double quotes when followed by a multiple ' +
-        'full-stops', function () {
-            equal(processor.process('"Alfred"..'), '“Alfred”..');
+    t.test('should curl final double quotes when followed by a multiple ' +
+        'full-stops', function (st) {
+            st.equal(
+                processor.process('"Alfred"..').toString(),
+                '“Alfred”..'
+            );
+
+            st.end();
         }
     );
 
-    it('should curl final single quotes when followed by a multiple ' +
-        'full-stops', function () {
-            equal(processor.process('\'Alfred\'..'), '‘Alfred’..');
+    t.test('should curl final single quotes when followed by a multiple ' +
+        'full-stops', function (st) {
+            st.equal(
+                processor.process('\'Alfred\'..').toString(),
+                '‘Alfred’..'
+            );
+
+            st.end();
         }
     );
 
-    it('should curl final double quotes when followed by a comma',
-        function () {
-            equal(
-                processor.process('"Alfred", bertrand.'),
+    t.test('should curl final double quotes when followed by a comma',
+        function (st) {
+            st.equal(
+                processor.process('"Alfred", bertrand.').toString(),
                 '“Alfred”, bertrand.'
             );
+
+            st.end();
         }
     );
 
-    it('should curl final single quotes when followed by a comma',
-        function () {
-            equal(
-                processor.process('\'Alfred\', bertrand.'),
+    t.test('should curl final single quotes when followed by a comma',
+        function (st) {
+            st.equal(
+                processor.process('\'Alfred\', bertrand.').toString(),
                 '‘Alfred’, bertrand.'
             );
+
+            st.end();
         }
     );
 
-    it('should curl apostrophes when followed `s`', function () {
-        equal(
-            processor.process('Alfred\'s bertrand.'),
+    t.test('should curl apostrophes when followed `s`', function (st) {
+        st.equal(
+            processor.process('Alfred\'s bertrand.').toString(),
             'Alfred’s bertrand.'
         );
+
+        st.end();
     });
 
-    it('should curl apostrophes when followed by a decade (`80s`)',
-        function () {
-            equal(
-                processor.process('In the \'90s.'),
+    t.test('should curl apostrophes when followed by a decade (`80s`)',
+        function (st) {
+            st.equal(
+                processor.process('In the \'90s.').toString(),
                 'In the ’90s.'
             );
+
+            st.end();
         }
     );
 
-    it('should curl final double quotes when followed by a full stop',
-        function () {
-            equal(
-                processor.process('"Alfred bertrand". Cees.'),
+    t.test('should curl final double quotes when followed by a full stop',
+        function (st) {
+            st.equal(
+                processor.process('"Alfred bertrand". Cees.').toString(),
                 '“Alfred bertrand”. Cees.'
             );
+
+            st.end();
         }
     );
 
-    it('should curl final single quotes when followed by a full stop',
-        function () {
-            equal(
-                processor.process('\'Alfred bertrand\'. Cees.'),
+    t.test('should curl final single quotes when followed by a full stop',
+        function (st) {
+            st.equal(
+                processor.process('\'Alfred bertrand\'. Cees.').toString(),
                 '‘Alfred bertrand’. Cees.'
             );
+
+            st.end();
         }
     );
+
+    t.end();
 });
 
-describe('En- and em-dashes', function () {
-    it('should throw when not given `true`, `false`, `oldschool`, ' +
+test('En- and em-dashes', function (t) {
+    t.test('should throw when not given `true`, `false`, `oldschool`, ' +
         '`inverted`, or omitted',
-        function () {
-            throws(function () {
-                retext.use(smartypants, {
-                    'dashes': 'test'
+        function (st) {
+            st.throws(function () {
+                retext().use(smartypants, {
+                    dashes: 'test'
                 });
             }, /test/);
+
+            st.end();
         }
     );
 
-    it('should not throw when not omitted', function () {
-        retext.use(smartypants, {
-            'dashes': false
+    t.test('should not throw when not omitted', function (st) {
+        retext().use(smartypants, {
+            dashes: false
         });
+
+        st.end();
     });
 
-    describe('true', function () {
-        it('should replace two dashes with an em-dash', function () {
-            equal(
-                retext.use(smartypants).process('Alfred--bertrand--cees.'),
+    t.test('true', function (st) {
+        st.test('should replace two dashes with an em-dash', function (sst) {
+            sst.equal(
+                retext().use(smartypants).process('Alfred--bertrand--cees.').toString(),
                 'Alfred—bertrand—cees.'
             );
+
+            sst.end();
         });
+
+        st.end();
     })
 
-    describe('oldschool', function () {
-        it('should replace two dashes with an en-dash, three dashes with ' +
+    t.test('oldschool', function (st) {
+        t.test('should replace two dashes with an en-dash, three dashes with ' +
             'an em-dash',
-            function () {
-                equal(
-                    retext.use(smartypants, {
-                        'dashes': 'oldschool'
-                    }).process('Alfred--bertrand---cees.'),
+            function (sst) {
+                sst.equal(
+                    retext().use(smartypants, {
+                        dashes: 'oldschool'
+                    }).process('Alfred--bertrand---cees.').toString(),
                     'Alfred–bertrand—cees.'
                 );
+
+                sst.end();
             }
         );
+
+        st.end();
     })
 
-    describe('inverted', function () {
-        it('should replace two dashes with an em-dash, three dashes with ' +
+    t.test('inverted', function (st) {
+        t.test('should replace two dashes with an em-dash, three dashes with ' +
             'an en-dash',
-            function () {
-                equal(
-                    retext.use(smartypants, {
-                        'dashes': 'inverted'
-                    }).process('Alfred--bertrand---cees.'),
+            function (sst) {
+                sst.equal(
+                    retext().use(smartypants, {
+                        dashes: 'inverted'
+                    }).process('Alfred--bertrand---cees.').toString(),
                     'Alfred—bertrand–cees.'
                 );
+
+                sst.end();
             }
         );
+
+        st.end();
     })
+
+    t.end();
 });
 
-describe('Backticks', function () {
-    it('should throw when not given `true`, `false`, `all`, or omitted',
-        function () {
-            throws(function () {
-                retext.use(smartypants, {
-                    'backticks': Infinity
+test('Backticks', function (t) {
+    t.test('should throw when not given `true`, `false`, `all`, or omitted',
+        function (st) {
+            st.throws(function () {
+                retext().use(smartypants, {
+                    backticks: Infinity
                 });
             }, /Infinity/);
+
+            st.end();
         }
     );
 
-    it('should not throw when not omitted', function () {
-        retext.use(smartypants, {
-            'backticks': false
+    t.test('should not throw when not omitted', function (st) {
+        retext().use(smartypants, {
+            backticks: false
         });
+
+        st.end();
     });
 
-    it('should throw when `all` is combined with `quotes`', function () {
-        throws(function () {
-            retext.use(smartypants, {
-                'backticks': 'all'
+    t.test('should throw when `all` is combined with `quotes`', function (st) {
+        st.throws(function () {
+            retext().use(smartypants, {
+                backticks: 'all'
             });
         }, /`backticks: all` is not a valid value when `quotes: true`/);
+
+        st.end();
     });
 
-    describe('true', function () {
-        var processor = retext.use(smartypants, {
-            'quotes': false
+    t.test('true', function (st) {
+        var processor = retext().use(smartypants, {
+            quotes: false
         });
 
-        it('should replace two backticks with an opening double quote',
-            function () {
-                equal(
-                    processor.process('``Alfred bertrand.'),
+        st.test('should replace two backticks with an opening double quote',
+            function (sst) {
+                sst.equal(
+                    processor.process('``Alfred bertrand.').toString(),
                     '“Alfred bertrand.'
                 );
+
+                sst.end();
             }
         );
 
-        it('should replace two single quotes with a closing double quote',
-            function () {
-                equal(
-                    processor.process('Alfred\'\' bertrand.'),
+        st.test('should replace two single quotes with a closing double quote',
+            function (sst) {
+                sst.equal(
+                    processor.process('Alfred\'\' bertrand.').toString(),
                     'Alfred” bertrand.'
                 );
+
+                sst.end();
             }
         );
 
-        it('should NOT replace a single backtick', function () {
-            equal(
-                processor.process('`Alfred bertrand.'),
+        st.test('should NOT replace a single backtick', function (sst) {
+            sst.equal(
+                processor.process('`Alfred bertrand.').toString(),
                 '`Alfred bertrand.'
             );
+
+            sst.end();
         });
 
-        it('should NOT replace a single quote', function () {
-            equal(
-                processor.process('Alfred\' bertrand.'),
+        st.test('should NOT replace a single quote', function (sst) {
+            sst.equal(
+                processor.process('Alfred\' bertrand.').toString(),
                 'Alfred\' bertrand.'
             );
+
+            sst.end();
         });
     });
 
-    describe('all', function () {
-        var processor = retext.use(smartypants, {
-            'backticks': 'all',
-            'quotes': false
+    t.test('all', function (st) {
+        var processor = retext().use(smartypants, {
+            backticks: 'all',
+            quotes: false
         });
 
-        it('should replace two backticks with an opening double quote',
-            function () {
-                equal(
-                    processor.process('``Alfred bertrand.'),
+        st.test('should replace two backticks with an opening double quote',
+            function (sst) {
+                sst.equal(
+                    processor.process('``Alfred bertrand.').toString(),
                     '“Alfred bertrand.'
                 );
+
+                sst.end();
             }
         );
 
-        it('should replace two single quotes with a closing double quote',
-            function () {
-                equal(
-                    processor.process('Alfred\'\' bertrand.'),
+        st.test('should replace two single quotes with a closing double quote',
+            function (sst) {
+                sst.equal(
+                    processor.process('Alfred\'\' bertrand.').toString(),
                     'Alfred” bertrand.'
                 );
+
+                sst.end();
             }
         );
 
-        it('should replace a single backtick', function () {
-            equal(
-                processor.process('`Alfred bertrand.'),
+        st.test('should replace a single backtick', function (sst) {
+            sst.equal(
+                processor.process('`Alfred bertrand.').toString(),
                 '‘Alfred bertrand.'
             );
+
+            sst.end();
         });
 
-        it('should replace a single quote', function () {
-            equal(
-                processor.process('Alfred\' bertrand.'),
+        st.test('should replace a single quote', function (sst) {
+            sst.equal(
+                processor.process('Alfred\' bertrand.').toString(),
                 'Alfred’ bertrand.'
             );
+
+            sst.end();
         });
+
+        st.end();
     });
+
+    t.end();
 });
 
-describe('Ellipses', function () {
-    var processor = retext.use(smartypants);
+test('Ellipses', function (t) {
+    var processor = retext().use(smartypants);
 
-    it('should throw when not given `true`, `false`, or omitted',
-        function () {
-            throws(function () {
-                retext.use(smartypants, {
-                    'ellipses': Math
+    t.test('should throw when not given `true`, `false`, or omitted',
+        function (st) {
+            st.throws(function () {
+                retext().use(smartypants, {
+                    ellipses: Math
                 });
             }, /\[object Math\]/);
+
+            st.end();
         }
     );
 
-    it('should not throw when not omitted', function () {
-        retext.use(smartypants, {
-            'ellipses': false
-        });
+    t.test('should not throw when not omitted', function (st) {
+        st.doesNotThrow(function () {
+            retext().use(smartypants, {
+                ellipses: false
+            });
+        })
+
+        st.end();
     });
 
-    it('should replace three full stops', function () {
-        equal(
-            processor.process('Alfred... Bertrand.'),
+    t.test('should replace three full stops', function (st) {
+        st.equal(
+            processor.process('Alfred... Bertrand.').toString(),
             'Alfred\u2026 Bertrand.'
         );
+
+        st.end();
     });
 
-    it('should replace three initial full stops', function () {
-        equal(
-            processor.process('...Alfred Bertrand.'),
+    t.test('should replace three initial full stops', function (st) {
+        st.equal(
+            processor.process('...Alfred Bertrand.').toString(),
             '\u2026Alfred Bertrand.'
         );
+
+        st.end();
     });
 
-    it('should replace three final full stops', function () {
-        equal(
-            processor.process('Alfred Bertrand...'),
+    t.test('should replace three final full stops', function (st) {
+        st.equal(
+            processor.process('Alfred Bertrand...').toString(),
             'Alfred Bertrand\u2026'
         );
+
+        st.end();
     });
 
-    it('should replace three padded full stops', function () {
-        equal(
-            processor.process('Alfred ... Bertrand.'),
+    t.test('should replace three padded full stops', function (st) {
+        st.equal(
+            processor.process('Alfred ... Bertrand.').toString(),
             'Alfred \u2026 Bertrand.'
         );
+
+        st.end();
     });
 
-    it('should replace three padded initial full stops', function () {
-        equal(
-            processor.process('... Alfred Bertrand.'),
+    t.test('should replace three padded initial full stops', function (st) {
+        st.equal(
+            processor.process('... Alfred Bertrand.').toString(),
             '\u2026 Alfred Bertrand.'
         );
+
+        st.end();
     });
 
-    it('should replace three padded final full stops', function () {
-        equal(
-            processor.process('Alfred Bertrand ...'),
+    t.test('should replace three padded final full stops', function (st) {
+        st.equal(
+            processor.process('Alfred Bertrand ...').toString(),
             'Alfred Bertrand \u2026'
         );
+
+        st.end();
     });
 
-    it('should replace three padded full stops with spaces', function () {
-        equal(
-            processor.process('Alfred . . . Bertrand.'),
+    t.test('should replace three padded full stops with spaces', function (st) {
+        st.equal(
+            processor.process('Alfred . . . Bertrand.').toString(),
             'Alfred \u2026 Bertrand.'
         );
+
+        st.end();
     });
 
-    it('should replace three padded initial full stops with spaces',
-        function () {
-            equal(
-                processor.process('. . . Alfred Bertrand.'),
+    t.test('should replace three padded initial full stops with spaces',
+        function (st) {
+            st.equal(
+                processor.process('. . . Alfred Bertrand.').toString(),
                 '\u2026 Alfred Bertrand.'
             );
+
+            st.end();
         }
     );
 
-    it('should replace three padded final full stops with spaces',
-        function () {
-            equal(
-                processor.process('Alfred Bertrand . . .'),
+    t.test('should replace three padded final full stops with spaces',
+        function (st) {
+            st.equal(
+                processor.process('Alfred Bertrand . . .').toString(),
                 'Alfred Bertrand \u2026'
             );
+
+            st.end();
         }
     );
 
-    it('should replace three full stops with spaces', function () {
-        equal(
-            processor.process('Alfred. . . Bertrand.'),
+    t.test('should replace three full stops with spaces', function (st) {
+        st.equal(
+            processor.process('Alfred. . . Bertrand.').toString(),
             'Alfred\u2026 Bertrand.'
         );
+
+        st.end();
     });
 
-    it('should replace three initial full stops with spaces',
-        function () {
-            equal(
-                processor.process('. . .Alfred Bertrand.'),
+    t.test('should replace three initial full stops with spaces',
+        function (st) {
+            st.equal(
+                processor.process('. . .Alfred Bertrand.').toString(),
                 '\u2026Alfred Bertrand.'
             );
+
+            st.end();
         }
     );
 
-    it('should replace three final full stops with spaces',
-        function () {
-            equal(
-                processor.process('Alfred Bertrand. . .'),
+    t.test('should replace three final full stops with spaces',
+        function (st) {
+            st.equal(
+                processor.process('Alfred Bertrand. . .').toString(),
                 'Alfred Bertrand\u2026'
             );
+
+            st.end();
         }
     );
 
-    it('should replace more than three full stops', function () {
-        equal(
-            processor.process('Alfred..... Bertrand.'),
+    t.test('should replace more than three full stops', function (st) {
+        st.equal(
+            processor.process('Alfred..... Bertrand.').toString(),
             'Alfred\u2026 Bertrand.'
         );
 
-        equal(
-            processor.process('Alfred bertrand....'),
+        st.equal(
+            processor.process('Alfred bertrand....').toString(),
             'Alfred bertrand\u2026'
         );
 
-        equal(
-            processor.process('......Alfred bertrand.'),
+        st.equal(
+            processor.process('......Alfred bertrand.').toString(),
             '\u2026Alfred bertrand.'
         );
+
+        st.end();
     });
 
-    it('should replace more than three full stops with funky spacing',
-        function () {
-            equal(
-                processor.process('Alfred .. .. . Bertrand.'),
+    t.test('should replace more than three full stops with funky spacing',
+        function (st) {
+            st.equal(
+                processor.process('Alfred .. .. . Bertrand.').toString(),
                 'Alfred \u2026 Bertrand.'
             );
+
+            st.end();
         }
     );
 
-    it('should NOT replace less than three full stops', function () {
-        equal(
-            processor.process('Alfred.. Bertrand.'),
+    t.test('should NOT replace less than three full stops', function (st) {
+        st.equal(
+            processor.process('Alfred.. Bertrand.').toString(),
             'Alfred.. Bertrand.'
         );
 
-        equal(
-            processor.process('Alfred bertrand. .'),
+        st.equal(
+            processor.process('Alfred bertrand. .').toString(),
             'Alfred bertrand. .'
         );
 
-        equal(
-            processor.process('.Alfred bertrand.'),
+        st.equal(
+            processor.process('.Alfred bertrand.').toString(),
             '.Alfred bertrand.'
         );
+
+        st.end();
     });
+
+    t.end();
 });
