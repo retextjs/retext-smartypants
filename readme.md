@@ -1,27 +1,26 @@
 # retext-smartypants [![Build Status][travis-badge]][travis] [![Coverage Status][codecov-badge]][codecov]
 
-<!--lint disable heading-increment list-item-spacing-->
-
 [smartypants][] in [**retext**][retext].
 
 ## Installation
 
-[npm][npm-install]:
+[npm][]:
 
 ```bash
 npm install retext-smartypants
 ```
 
-**retext-smartypants** is also available as an AMD, CommonJS, and
-globals module, [uncompressed and compressed][releases].
-
 ## Usage
 
-```js
+```javascript
 var retext = require('retext');
 var smartypants = require('retext-smartypants');
 
-var doc = retext().use(smartypants).process('He said, "A \'simple\' english sentence. . ."');
+var file = retext()
+  .use(smartypants)
+  .process('He said, "A \'simple\' english sentence. . ."');
+
+console.log(String(file));
 ```
 
 Yields:
@@ -73,9 +72,7 @@ Replaces “dumb” punctuation marks with “smart” punctuation marks.
 
 [codecov]: https://codecov.io/github/wooorm/retext-smartypants
 
-[npm-install]: https://docs.npmjs.com/cli/install
-
-[releases]: https://github.com/wooorm/retext-smartypants/releases
+[npm]: https://docs.npmjs.com/cli/install
 
 [license]: LICENSE
 
