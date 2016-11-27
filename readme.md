@@ -51,7 +51,7 @@ Replaces “dumb” punctuation marks with “smart” punctuation marks.
     into an opening single quote, and a “dumb” single quote into a
     closing single quote.
 
-    **Note!** Quotes can not be `true` when `backticks` is `'all'`;
+    **Note!**  Quotes can not be `true` when `backticks` is `'all'`;
 
 *   `dashes` (`boolean` or `'oldschool'`, `'inverted'`, default: `true`)
     — When `true`, converts two dashes into an em-dash character;
