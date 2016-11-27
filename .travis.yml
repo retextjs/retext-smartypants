@@ -1,13 +1,9 @@
 language: node_js
 node_js:
-- '0.11'
-- '0.12'
 - '4.0'
-- '5.0'
-- '6.0'
+- '7.0'
 sudo: false
-after_success:
-- bash <(curl -s https://codecov.io/bash)
+after_script: bash <(curl -s https://codecov.io/bash)
 deploy:
   - provider: npm
     email: tituswormer@gmail.com
@@ -15,7 +11,7 @@ deploy:
       secure: A6+aTkwWeACZGO22dm+PedgUyhFk9LLMtiRdrLkTniDUEN/5r+x0evLkVG4z6p5wWnno3JrZ4HIVFqD7W+v+C/78WXmISSaLPxuBH8lZq64gmuBCmai0XpRByvpEdcwoqekn8ZdJFKGab126xo7VjpaUllPcjPEIR9Sx8QuJrGg=
     on:
       tags: true
-      node: '5.0'
+      node: '4.0'
   - provider: releases
     api_key:
       secure: iaejkiZe2L6/WBi+OAlpGVN2EbFEc5/1rHBnuYmEb/70Q9cwuRvhLvtufphiBors6lV9r0JiezydYNlIB99ae0uIXKEYpYhqzVGaNKXfQ0BLrFHQMIbRMizfrecWAFOfP8njeyvE0TBWI8p54GEC0LwCfFNvzaHwPhcV1FI2JPc=
@@ -24,4 +20,4 @@ deploy:
       - "retext-smartypants.min.js"
     on:
       tags: true
-      node: '6.0'
+      node: '7.0'
