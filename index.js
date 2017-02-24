@@ -59,7 +59,7 @@ educators.quotes = {
 };
 
 /* Attacher. */
-function smartypants(processor, options) {
+function smartypants(options) {
   var methods = [];
   var quotes;
   var ellipses;

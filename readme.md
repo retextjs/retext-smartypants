@@ -18,7 +18,7 @@ var smartypants = require('retext-smartypants');
 
 var file = retext()
   .use(smartypants)
-  .process('He said, "A \'simple\' english sentence. . ."');
+  .processSync('He said, "A \'simple\' english sentence. . ."');
 
 console.log(String(file));
 ```
