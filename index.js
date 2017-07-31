@@ -290,7 +290,7 @@ function ellipses(node, index, parent) {
   node.value = ELLIPSIS;
 }
 
-/* Transform dumb single- and double quotes into smart
+/* Transform straight single- and double quotes into smart
  * quotes. */
 function quotes(node, index, parent) {
   var siblings = parent.children;

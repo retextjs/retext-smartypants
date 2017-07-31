@@ -33,7 +33,8 @@ He said, “A ‘simple’ english sentence…”
 
 ### `retext().use(smartypants[, options])`
 
-Replaces “dumb” punctuation marks with “smart” punctuation marks.
+Replaces dumb/straight/typewriter punctuation marks with smart punctuation
+marks.
 
 ##### `options`
 
@@ -41,26 +42,25 @@ Replaces “dumb” punctuation marks with “smart” punctuation marks.
 
 Create smart quotes (`boolean`, default: `true`).
 
-Converts “dumb” double and single quotes to smart double or
-single quotes
+Converts straight double and single quotes to smart double or single quotes.
 
 ###### `options.ellipses`
 
 Create smart ellipses (`boolean`, default: `true`).
 
-Converts triple dot characters (with or without spaces between)
-into a single unicode ellipsis character
+Converts triple dot characters (with or without spaces between) into a single
+unicode ellipsis character
 
 ###### `options.backticks`
 
 Create smart quotes from backticks (`boolean` or `'all'`, default: `true`).
 
-When `true`, converts double back-ticks into an opening double
-quote, and double “dumb” single quotes into a closing double quote.
+When `true`, converts double back-ticks into an opening double quote, and
+double straight single quotes into a closing double quote.
 
-When `'all'`: does the preceding, and converts single back-ticks
-into an opening single quote, and a “dumb” single quote into a
-closing single quote.
+When `'all'`: does the preceding and converts single back-ticks into an
+opening single quote, and a straight single quote into a closing single
+smart quote.
 
 > **Note**: Quotes can not be `true` when `backticks` is `'all'`;
 
