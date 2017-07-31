@@ -35,28 +35,46 @@ He said, “A ‘simple’ english sentence…”
 
 Replaces “dumb” punctuation marks with “smart” punctuation marks.
 
-###### `options`
+##### `options`
 
-*   `quotes` (`boolean`, default: `true`)
-    — Converts “dumb” double and single quotes to smart double or
-    single quotes;
-*   `ellipses` (`boolean`, default: `true`)
-    — Converts triple dot characters (with or without spaces between)
-    into a single unicode ellipsis character;
-*   `backticks` (`boolean` or `'all'`, default: `true`)
-    — When `true`, converts double back-ticks into an opening double
-    quote, and double “dumb” single quotes into a closing double quote;
-    When `'all'`: does the preceding, and converts single back-ticks
-    into an opening single quote, and a “dumb” single quote into a
-    closing single quote.
+###### `options.quotes`
 
-    **Note!**  Quotes can not be `true` when `backticks` is `'all'`;
+Create smart quotes (`boolean`, default: `true`).
 
-*   `dashes` (`boolean` or `'oldschool'`, `'inverted'`, default: `true`)
-    — When `true`, converts two dashes into an em-dash character;
-    When `'oldschool'`, converts two dashes into an en-dash, and three
-    dashes into an em-dash; When `'inverted'`, converts two dashes into
-    an em-dash, and three dashes into an en-dash.
+Converts “dumb” double and single quotes to smart double or
+single quotes
+
+###### `options.ellipses`
+
+Create smart ellipses (`boolean`, default: `true`).
+
+Converts triple dot characters (with or without spaces between)
+into a single unicode ellipsis character
+
+###### `options.backticks`
+
+Create smart quotes from backticks (`boolean` or `'all'`, default: `true`).
+
+When `true`, converts double back-ticks into an opening double
+quote, and double “dumb” single quotes into a closing double quote.
+
+When `'all'`: does the preceding, and converts single back-ticks
+into an opening single quote, and a “dumb” single quote into a
+closing single quote.
+
+> **Note**: Quotes can not be `true` when `backticks` is `'all'`;
+
+###### `options.dashes`
+
+Create smart dashes (`boolean` or `'oldschool'`, `'inverted'`, default: `true`).
+
+When `true`, converts two dashes into an em-dash character.
+
+When `'oldschool'`, converts two dashes into an en-dash, and three dashes into
+an em-dash.
+
+When `'inverted'`, converts two dashes into an em-dash, and three dashes into
+an en-dash.
 
 ## License
 
