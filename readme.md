@@ -76,6 +76,13 @@ an em-dash.
 When `'inverted'`, converts two dashes into an em-dash, and three dashes into
 an en-dash.
 
+## Contribute
+
+See [`contribute.md` in `retextjs/retext`][contribute] for ways to get started.
+
+This organisation has a [Code of Conduct][coc].  By interacting with this
+repository, organisation, or community you agree to abide by its terms.
+
 ## License
 
 [MIT][license] © [Titus Wormer][author]
@@ -99,3 +106,7 @@ an en-dash.
 [retext]: https://github.com/retextjs/retext
 
 [smartypants]: http://daringfireball.net/projects/smartypants
+
+[contribute]: https://github.com/retextjs/retext/blob/master/contributing.md
+
+[coc]: https://github.com/retextjs/retext/blob/master/code-of-conduct.md
