@@ -7,8 +7,8 @@
     "retext",
     "smartypants"
   ],
-  "repository": "https://github.com/wooorm/retext-smartypants",
-  "bugs": "https://github.com/wooorm/retext-smartypants/issues",
+  "repository": "retextjs/retext-smartypants",
+  "bugs": "https://github.com/retextjs/retext-smartypants/issues",
   "author": "Titus Wormer <tituswormer@gmail.com> (http://wooorm.com)",
   "contributors": [
     "Titus Wormer <tituswormer@gmail.com> (http://wooorm.com)"

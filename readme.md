@@ -82,13 +82,13 @@ an en-dash.
 
 <!-- Definitions -->
 
-[travis-badge]: https://img.shields.io/travis/wooorm/retext-smartypants.svg
+[travis-badge]: https://img.shields.io/travis/retextjs/retext-smartypants.svg
 
-[travis]: https://travis-ci.org/wooorm/retext-smartypants
+[travis]: https://travis-ci.org/retextjs/retext-smartypants
 
-[codecov-badge]: https://img.shields.io/codecov/c/github/wooorm/retext-smartypants.svg
+[codecov-badge]: https://img.shields.io/codecov/c/github/retextjs/retext-smartypants.svg
 
-[codecov]: https://codecov.io/github/wooorm/retext-smartypants
+[codecov]: https://codecov.io/github/retextjs/retext-smartypants
 
 [npm]: https://docs.npmjs.com/cli/install
 
@@ -96,6 +96,6 @@ an en-dash.
 
 [author]: http://wooorm.com
 
-[retext]: https://github.com/wooorm/retext
+[retext]: https://github.com/retextjs/retext
 
 [smartypants]: http://daringfireball.net/projects/smartypants
