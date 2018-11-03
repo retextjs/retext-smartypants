@@ -5,3 +5,4 @@ coverage/
 node_modules/
 retext-smartypants.js
 retext-smartypants.min.js
+yarn.lock
