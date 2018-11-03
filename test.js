@@ -2,7 +2,7 @@
 
 var test = require('tape');
 var retext = require('retext');
-var smartypants = require('./');
+var smartypants = require('.');
 
 test('Curly quotes', function (t) {
   var processor = retext().use(smartypants);
