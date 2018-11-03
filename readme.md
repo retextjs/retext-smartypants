@@ -13,14 +13,14 @@ npm install retext-smartypants
 ## Usage
 
 ```javascript
-var retext = require('retext');
-var smartypants = require('retext-smartypants');
+var retext = require('retext')
+var smartypants = require('retext-smartypants')
 
 var file = retext()
   .use(smartypants)
-  .processSync('He said, "A \'simple\' english sentence. . ."');
+  .processSync('He said, "A \'simple\' english sentence. . ."')
 
-console.log(String(file));
+console.log(String(file))
 ```
 
 Yields:

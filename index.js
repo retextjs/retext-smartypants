@@ -1,372 +1,371 @@
-'use strict';
+'use strict'
 
-var visit = require('unist-util-visit');
-var nlcstToString = require('nlcst-to-string');
+/* eslint-disable complexity */
 
-module.exports = smartypants;
+var visit = require('unist-util-visit')
+var nlcstToString = require('nlcst-to-string')
 
-var PUNCTUATION_NODE = 'PunctuationNode';
-var SYMBOL_NODE = 'SymbolNode';
-var WORD_NODE = 'WordNode';
-var WHITE_SPACE_NODE = 'WhiteSpaceNode';
+module.exports = smartypants
 
-var EXPRESSION_DECADE = /^\d\ds$/;
-var FULL_STOPS_THREE = /^\.{3,}$/;
-var FULL_STOPS = /^\.+$/;
-var THREE_DASHES = '---';
-var TWO_DASHES = '--';
-var EM_DASH = '—';
-var EN_DASH = '–';
-var ELLIPSIS = '\u2026';
-var TWO_BACKTICKS = '``';
-var BACKTICK = '`';
-var TWO_SINGLE_QUOTES = '\'\'';
-var SINGLE_QUOTE = '\'';
-var APOSTROPHE = '\u2019';
-var DOUBLE_QUOTE = '"';
-var OPENING_DOUBLE_QUOTE = '“';
-var CLOSING_DOUBLE_QUOTE = '”';
-var OPENING_SINGLE_QUOTE = '‘';
-var CLOSING_SINGLE_QUOTE = '’';
-var CLOSING_QUOTE_MAP = {};
-var OPENING_QUOTE_MAP = {};
+var punctuation = 'PunctuationNode'
+var symbol = 'SymbolNode'
+var word = 'WordNode'
+var whiteSpace = 'WhiteSpaceNode'
 
-OPENING_QUOTE_MAP[DOUBLE_QUOTE] = OPENING_DOUBLE_QUOTE;
-CLOSING_QUOTE_MAP[DOUBLE_QUOTE] = CLOSING_DOUBLE_QUOTE;
-OPENING_QUOTE_MAP[SINGLE_QUOTE] = OPENING_SINGLE_QUOTE;
-CLOSING_QUOTE_MAP[SINGLE_QUOTE] = CLOSING_SINGLE_QUOTE;
+var decadeExpression = /^\d\ds$/
+var threeFullStopsExpression = /^\.{3,}$/
+var fullStopsExpression = /^\.+$/
+var threeDashes = '---'
+var twoDashes = '--'
+var emDash = '—'
+var enDash = '–'
+var ellipsis = '\u2026'
+var twoBackticks = '``'
+var backtick = '`'
+var twoSingleQuotes = "''"
+var singleQuote = "'"
+var apostrophe = '\u2019'
+var doubleQuote = '"'
+var openingDoubleQuote = '“'
+var closingDoubleQuote = '”'
+var openingSingleQuote = '‘'
+var closingSingleQuote = '’'
+var closingQuotes = {}
+var openingQuotes = {}
 
-var educators = {};
+openingQuotes[doubleQuote] = openingDoubleQuote
+closingQuotes[doubleQuote] = closingDoubleQuote
+openingQuotes[singleQuote] = openingSingleQuote
+closingQuotes[singleQuote] = closingSingleQuote
 
-/* Expose educators. */
+var educators = {}
+
+// Expose educators.
 educators.dashes = {
   true: dashes,
   oldschool: oldschool,
   inverted: inverted
-};
+}
 
 educators.backticks = {
   true: backticks,
   all: all
-};
+}
 
 educators.ellipses = {
   true: ellipses
-};
+}
 
 educators.quotes = {
   true: quotes
-};
+}
 
-/* Attacher. */
+// Attacher.
 function smartypants(options) {
-  var methods = [];
-  var quotes;
-  var ellipses;
-  var backticks;
-  var dashes;
+  var methods = []
+  var quotes
+  var ellipses
+  var backticks
+  var dashes
 
   if (!options) {
-    options = {};
+    options = {}
   }
 
   if ('quotes' in options) {
-    quotes = options.quotes;
+    quotes = options.quotes
 
     if (quotes !== Boolean(quotes)) {
       throw new TypeError(
-        'Illegal invocation: `' + quotes + '` ' +
-        'is not a valid value for `quotes` in ' +
-        '`smartypants`'
-      );
+        'Illegal invocation: `' +
+          quotes +
+          '` ' +
+          'is not a valid value for `quotes` in ' +
+          '`smartypants`'
+      )
     }
   } else {
-    quotes = true;
+    quotes = true
   }
 
   if ('ellipses' in options) {
-    ellipses = options.ellipses;
+    ellipses = options.ellipses
 
     if (ellipses !== Boolean(ellipses)) {
       throw new TypeError(
-        'Illegal invocation: `' + ellipses + '` ' +
-        'is not a valid value for `ellipses` in ' +
-        '`smartypants`'
-      );
+        'Illegal invocation: `' +
+          ellipses +
+          '` ' +
+          'is not a valid value for `ellipses` in ' +
+          '`smartypants`'
+      )
     }
   } else {
-    ellipses = true;
+    ellipses = true
   }
 
   if ('backticks' in options) {
-    backticks = options.backticks;
+    backticks = options.backticks
 
     if (backticks !== Boolean(backticks) && backticks !== 'all') {
       throw new TypeError(
-        'Illegal invocation: `' + backticks + '` ' +
-        'is not a valid value for `backticks` in ' +
-        '`smartypants`'
-      );
+        'Illegal invocation: `' +
+          backticks +
+          '` ' +
+          'is not a valid value for `backticks` in ' +
+          '`smartypants`'
+      )
     }
 
     if (backticks === 'all' && quotes === true) {
       throw new TypeError(
         'Illegal invocation: `backticks: ' +
-        backticks + '` is not a valid value ' +
-        'when `quotes: ' + quotes + '` in ' +
-        '`smartypants`'
-      );
+          backticks +
+          '` is not a valid value ' +
+          'when `quotes: ' +
+          quotes +
+          '` in ' +
+          '`smartypants`'
+      )
     }
   } else {
-    backticks = true;
+    backticks = true
   }
 
   if ('dashes' in options) {
-    dashes = options.dashes;
+    dashes = options.dashes
 
-    if (dashes !== Boolean(dashes) && dashes !== 'oldschool' && dashes !== 'inverted') {
+    if (
+      dashes !== Boolean(dashes) &&
+      dashes !== 'oldschool' &&
+      dashes !== 'inverted'
+    ) {
       throw new TypeError(
-        'Illegal invocation: `' + dashes + '` ' +
-        'is not a valid value for `dahes` in ' +
-        '`smartypants`'
-      );
+        'Illegal invocation: `' +
+          dashes +
+          '` ' +
+          'is not a valid value for `dahes` in ' +
+          '`smartypants`'
+      )
     }
   } else {
-    dashes = true;
+    dashes = true
   }
 
   if (quotes !== false) {
-    methods.push(educators.quotes[quotes]);
+    methods.push(educators.quotes[quotes])
   }
 
   if (ellipses !== false) {
-    methods.push(educators.ellipses[ellipses]);
+    methods.push(educators.ellipses[ellipses])
   }
 
   if (backticks !== false) {
-    methods.push(educators.backticks[backticks]);
+    methods.push(educators.backticks[backticks])
   }
 
   if (dashes !== false) {
-    methods.push(educators.dashes[dashes]);
+    methods.push(educators.dashes[dashes])
   }
 
-  return transformFactory(methods);
+  return transformFactory(methods)
 }
 
-/* Create a transformer for the bound methods. */
+// Create a transformer for the bound methods.
 function transformFactory(methods) {
-  var length = methods.length;
+  var length = methods.length
 
-  return transformer;
+  return transformer
 
-  /* Transformer. */
+  // Transformer.
   function transformer(cst) {
-    visit(cst, visitor);
+    visit(cst, visitor)
   }
 
   function visitor(node, position, parent) {
-    var index = -1;
+    var index = -1
 
-    if (node.type === PUNCTUATION_NODE || node.type === SYMBOL_NODE) {
+    if (node.type === punctuation || node.type === symbol) {
       while (++index < length) {
-        methods[index](node, position, parent);
+        methods[index](node, position, parent)
       }
     }
   }
 }
 
-/* Transform three dahes into an em-dash, and two
- * into an en-dash. */
+// Transform three dahes into an em-dash, and two into an en-dash.
 function oldschool(node) {
-  if (node.value === THREE_DASHES) {
-    node.value = EM_DASH;
-  } else if (node.value === TWO_DASHES) {
-    node.value = EN_DASH;
+  if (node.value === threeDashes) {
+    node.value = emDash
+  } else if (node.value === twoDashes) {
+    node.value = enDash
   }
 }
 
-/* Transform two dahes into an em-dash. */
+// Transform two dahes into an em-dash.
 function dashes(node) {
-  if (node.value === TWO_DASHES) {
-    node.value = EM_DASH;
+  if (node.value === twoDashes) {
+    node.value = emDash
   }
 }
 
-/* Transform three dahes into an en-dash, and two
- * into an em-dash. */
+// Transform three dahes into an en-dash, and two into an em-dash.
 function inverted(node) {
-  if (node.value === THREE_DASHES) {
-    node.value = EN_DASH;
-  } else if (node.value === TWO_DASHES) {
-    node.value = EM_DASH;
+  if (node.value === threeDashes) {
+    node.value = enDash
+  } else if (node.value === twoDashes) {
+    node.value = emDash
   }
 }
 
-/* Transform double backticks and single quotes into smart
- * quotes. */
+// Transform double backticks and single quotes into smart quotes.
 function backticks(node) {
-  if (node.value === TWO_BACKTICKS) {
-    node.value = OPENING_DOUBLE_QUOTE;
-  } else if (node.value === TWO_SINGLE_QUOTES) {
-    node.value = CLOSING_DOUBLE_QUOTE;
+  if (node.value === twoBackticks) {
+    node.value = openingDoubleQuote
+  } else if (node.value === twoSingleQuotes) {
+    node.value = closingDoubleQuote
   }
 }
 
-/* Transform single and double backticks and single quotes
- * into smart quotes. */
+// Transform single and double backticks and single quotes into smart quotes.
 function all(node) {
-  backticks(node);
+  backticks(node)
 
-  if (node.value === BACKTICK) {
-    node.value = OPENING_SINGLE_QUOTE;
-  } else if (node.value === SINGLE_QUOTE) {
-    node.value = CLOSING_SINGLE_QUOTE;
+  if (node.value === backtick) {
+    node.value = openingSingleQuote
+  } else if (node.value === singleQuote) {
+    node.value = closingSingleQuote
   }
 }
 
-/* Transform multiple dots into unicode ellipses. */
+// Transform multiple dots into unicode ellipses.
 function ellipses(node, index, parent) {
-  var value = node.value;
-  var siblings = parent.children;
-  var position;
-  var nodes;
-  var sibling;
-  var type;
-  var count;
-  var queue;
+  var value = node.value
+  var siblings = parent.children
+  var position
+  var nodes
+  var sibling
+  var type
+  var count
+  var queue
 
-  /* Simple node with three dots and without white-space. */
-  if (FULL_STOPS_THREE.test(node.value)) {
-    node.value = ELLIPSIS;
-    return;
+  // Simple node with three dots and without white-space.
+  if (threeFullStopsExpression.test(node.value)) {
+    node.value = ellipsis
+    return
   }
 
-  if (!FULL_STOPS.test(value)) {
-    return;
+  if (!fullStopsExpression.test(value)) {
+    return
   }
 
-  /* Search for dot-nodes with white-space between. */
-  nodes = [];
-  position = index;
-  count = 1;
+  // Search for dot-nodes with white-space between.
+  nodes = []
+  position = index
+  count = 1
 
-  /* It’s possible that the node is merged with an
-   * adjacent word-node. In that code, we cannot
-   * transform it because there’s no reference to the
-   * grandparent. */
+  // It’s possible that the node is merged with an adjacent word-node.  In that
+  // code, we cannot transform it because there’s no reference to the
+  // grandparent.
   while (--position > 0) {
-    sibling = siblings[position];
+    sibling = siblings[position]
 
-    if (sibling.type !== WHITE_SPACE_NODE) {
-      break;
+    if (sibling.type !== whiteSpace) {
+      break
     }
 
-    queue = sibling;
-    sibling = siblings[--position];
-    type = sibling && sibling.type;
+    queue = sibling
+    sibling = siblings[--position]
+    type = sibling && sibling.type
 
     if (
       sibling &&
-      (type === PUNCTUATION_NODE || type === SYMBOL_NODE) &&
-      FULL_STOPS.test(sibling.value)
+      (type === punctuation || type === symbol) &&
+      fullStopsExpression.test(sibling.value)
     ) {
-      nodes.push(queue, sibling);
+      nodes.push(queue, sibling)
 
-      count++;
+      count++
 
-      continue;
+      continue
     }
 
-    break;
+    break
   }
 
   if (count < 3) {
-    return;
+    return
   }
 
-  siblings.splice(index - nodes.length, nodes.length);
+  siblings.splice(index - nodes.length, nodes.length)
 
-  node.value = ELLIPSIS;
+  node.value = ellipsis
 }
 
-/* Transform straight single- and double quotes into smart
- * quotes. */
+// Transform straight single- and double quotes into smart quotes.
 function quotes(node, index, parent) {
-  var siblings = parent.children;
-  var value = node.value;
-  var next;
-  var nextNext;
-  var prev;
-  var nextValue;
+  var siblings = parent.children
+  var value = node.value
+  var next
+  var nextNext
+  var prev
+  var nextValue
 
-  if (value !== DOUBLE_QUOTE && value !== SINGLE_QUOTE) {
-    return;
+  if (value !== doubleQuote && value !== singleQuote) {
+    return
   }
 
-  prev = siblings[index - 1];
-  next = siblings[index + 1];
-  nextNext = siblings[index + 2];
-  nextValue = next && nlcstToString(next);
+  prev = siblings[index - 1]
+  next = siblings[index + 1]
+  nextNext = siblings[index + 2]
+  nextValue = next && nlcstToString(next)
 
   if (
     next &&
     nextNext &&
-    (next.type === PUNCTUATION_NODE || next.type === SYMBOL_NODE) &&
-    nextNext.type !== WORD_NODE
+    (next.type === punctuation || next.type === symbol) &&
+    nextNext.type !== word
   ) {
-    /* Special case if the very first character is
-     * a quote followed by punctuation at a
-     * non-word-break. Close the quotes by brute
-     * force. */
-    node.value = CLOSING_QUOTE_MAP[value];
+    // Special case if the very first character is a quote followed by
+    // punctuation at a non-word-break. Close the quotes by brute force.
+    node.value = closingQuotes[value]
   } else if (
     nextNext &&
-    (nextValue === DOUBLE_QUOTE || nextValue === SINGLE_QUOTE) &&
-    nextNext.type === WORD_NODE
+    (nextValue === doubleQuote || nextValue === singleQuote) &&
+    nextNext.type === word
   ) {
-    /* Special case for double sets of quotes:
-     * `He said, "'Quoted' words in a larger quote."` */
-    node.value = OPENING_QUOTE_MAP[value];
-    next.value = OPENING_QUOTE_MAP[nextValue];
-  } else if (
-    next &&
-    EXPRESSION_DECADE.test(nextValue)
-  ) {
-    /* Special case for decade abbreviations:
-     *
-     *   the '80s
-     */
-    node.value = CLOSING_QUOTE_MAP[value];
+    // Special case for double sets of quotes:
+    // `He said, "'Quoted' words in a larger quote."`
+    node.value = openingQuotes[value]
+    next.value = openingQuotes[nextValue]
+  } else if (next && decadeExpression.test(nextValue)) {
+    // Special case for decade abbreviations: `the '80s`
+    node.value = closingQuotes[value]
   } else if (
     prev &&
     next &&
-    (
-      prev.type === WHITE_SPACE_NODE ||
-      prev.type === PUNCTUATION_NODE ||
-      prev.type === SYMBOL_NODE
-    ) &&
-    next.type === WORD_NODE
+    (prev.type === whiteSpace ||
+      prev.type === punctuation ||
+      prev.type === symbol) &&
+    next.type === word
   ) {
-    /* Get most opening single quotes. */
-    node.value = OPENING_QUOTE_MAP[value];
+    // Get most opening single quotes.
+    node.value = openingQuotes[value]
   } else if (
     prev &&
-    (
-      prev.type !== WHITE_SPACE_NODE &&
-      prev.type !== SYMBOL_NODE &&
-      prev.type !== PUNCTUATION_NODE
-    )
+    (prev.type !== whiteSpace &&
+      prev.type !== symbol &&
+      prev.type !== punctuation)
   ) {
-    /* Closing quotes */
-    node.value = CLOSING_QUOTE_MAP[value];
+    // Closing quotes.
+    node.value = closingQuotes[value]
   } else if (
     !next ||
-    next.type === WHITE_SPACE_NODE ||
-    ((value === SINGLE_QUOTE || value === APOSTROPHE) && nextValue === 's')
+    next.type === whiteSpace ||
+    ((value === singleQuote || value === apostrophe) && nextValue === 's')
   ) {
-    node.value = CLOSING_QUOTE_MAP[value];
+    node.value = closingQuotes[value]
   } else {
-    node.value = OPENING_QUOTE_MAP[value];
+    node.value = openingQuotes[value]
   }
 }
