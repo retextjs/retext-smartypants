@@ -1,18 +1,26 @@
-# retext-smartypants [![Build Status][travis-badge]][travis] [![Coverage Status][codecov-badge]][codecov]
+# retext-smartypants
 
-[smartypants][] in [**retext**][retext].
+[![Build][build-badge]][build]
+[![Coverage][coverage-badge]][coverage]
+[![Downloads][downloads-badge]][downloads]
+[![Size][size-badge]][size]
+[![Sponsors][sponsors-badge]][collective]
+[![Backers][backers-badge]][collective]
+[![Chat][chat-badge]][chat]
 
-## Installation
+[**retext**][retext] plugin to implement [SmartyPants][].
+
+## Install
 
 [npm][]:
 
-```bash
+```sh
 npm install retext-smartypants
 ```
 
-## Usage
+## Use
 
-```javascript
+```js
 var retext = require('retext')
 var smartypants = require('retext-smartypants')
 
@@ -25,7 +33,7 @@ console.log(String(file))
 
 Yields:
 
-```text
+```txt
 He said, “A ‘simple’ english sentence…”
 ```
 
@@ -33,7 +41,7 @@ He said, “A ‘simple’ english sentence…”
 
 ### `retext().use(smartypants[, options])`
 
-Replaces dumb/straight/typewriter punctuation marks with smart punctuation
+Replaces dumb/straight/typewriter punctuation marks with smart/curly punctuation
 marks.
 
 ##### `options`
@@ -78,11 +86,13 @@ an en-dash.
 
 ## Contribute
 
-See [`contributing.md` in `retextjs/retext`][contribute] for ways to get
-started.
+See [`contributing.md`][contributing] in [`retextjs/.github`][health] for ways
+to get started.
+See [`support.md`][support] for ways to get help.
 
-This organisation has a [Code of Conduct][coc].  By interacting with this
-repository, organisation, or community you agree to abide by its terms.
+This project has a [Code of Conduct][coc].
+By interacting with this repository, organisation, or community you agree to
+abide by its terms.
 
 ## License
 
@@ -90,15 +100,41 @@ repository, organisation, or community you agree to abide by its terms.
 
 <!-- Definitions -->
 
-[travis-badge]: https://img.shields.io/travis/retextjs/retext-smartypants.svg
+[build-badge]: https://img.shields.io/travis/retextjs/retext-smartypants.svg
 
-[travis]: https://travis-ci.org/retextjs/retext-smartypants
+[build]: https://travis-ci.org/retextjs/retext-smartypants
 
-[codecov-badge]: https://img.shields.io/codecov/c/github/retextjs/retext-smartypants.svg
+[coverage-badge]: https://img.shields.io/codecov/c/github/retextjs/retext-smartypants.svg
 
-[codecov]: https://codecov.io/github/retextjs/retext-smartypants
+[coverage]: https://codecov.io/github/retextjs/retext-smartypants
+
+[downloads-badge]: https://img.shields.io/npm/dm/retext-smartypants.svg
+
+[downloads]: https://www.npmjs.com/package/retext-smartypants
+
+[size-badge]: https://img.shields.io/bundlephobia/minzip/retext-smartypants.svg
+
+[size]: https://bundlephobia.com/result?p=retext-smartypants
+
+[sponsors-badge]: https://opencollective.com/unified/sponsors/badge.svg
+
+[backers-badge]: https://opencollective.com/unified/backers/badge.svg
+
+[collective]: https://opencollective.com/unified
+
+[chat-badge]: https://img.shields.io/badge/join%20the%20community-on%20spectrum-7b16ff.svg
+
+[chat]: https://spectrum.chat/unified/retext
 
 [npm]: https://docs.npmjs.com/cli/install
+
+[health]: https://github.com/retextjs/.github
+
+[contributing]: https://github.com/retextjs/.github/blob/master/contributing.md
+
+[support]: https://github.com/retextjs/.github/blob/master/support.md
+
+[coc]: https://github.com/retextjs/.github/blob/master/code-of-conduct.md
 
 [license]: license
 
@@ -106,8 +142,4 @@ repository, organisation, or community you agree to abide by its terms.
 
 [retext]: https://github.com/retextjs/retext
 
-[smartypants]: http://daringfireball.net/projects/smartypants
-
-[contribute]: https://github.com/retextjs/retext/blob/master/contributing.md
-
-[coc]: https://github.com/retextjs/retext/blob/master/code-of-conduct.md
+[smartypants]: https://daringfireball.net/projects/smartypants
