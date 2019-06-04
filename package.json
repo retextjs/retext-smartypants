@@ -1,9 +1,10 @@
 {
   "name": "retext-smartypants",
   "version": "3.0.2",
-  "description": "Retext implementation of SmartyPants",
+  "description": "retext plugin to implement SmartyPants",
   "license": "MIT",
   "keywords": [
+    "unified",
     "retext",
     "smartypants"
   ],
