@@ -1,7 +1,5 @@
 'use strict'
 
-/* eslint-disable complexity */
-
 var visit = require('unist-util-visit')
 var nlcstToString = require('nlcst-to-string')
 
@@ -303,6 +301,7 @@ function ellipses(node, index, parent) {
 }
 
 // Transform straight single- and double quotes into smart quotes.
+// eslint-disable-next-line complexity
 function quotes(node, index, parent) {
   var siblings = parent.children
   var value = node.value
