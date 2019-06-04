@@ -1,7 +1,7 @@
 language: node_js
 node_js:
-- lts/boron
-- node
+  - lts/dubnium
+  - node
 sudo: false
 after_script: bash <(curl -s https://codecov.io/bash)
 deploy:
@@ -10,8 +10,7 @@ deploy:
   api_key:
     secure: iaejkiZe2L6/WBi+OAlpGVN2EbFEc5/1rHBnuYmEb/70Q9cwuRvhLvtufphiBors6lV9r0JiezydYNlIB99ae0uIXKEYpYhqzVGaNKXfQ0BLrFHQMIbRMizfrecWAFOfP8njeyvE0TBWI8p54GEC0LwCfFNvzaHwPhcV1FI2JPc=
   file:
-    - "retext-smartypants.js"
-    - "retext-smartypants.min.js"
+    - 'retext-smartypants.js'
+    - 'retext-smartypants.min.js'
   on:
     tags: true
-    node: '9.0'
