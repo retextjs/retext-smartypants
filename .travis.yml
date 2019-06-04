@@ -8,7 +8,7 @@ deploy:
   provider: releases
   skip_cleanup: true
   api_key:
-    secure: iaejkiZe2L6/WBi+OAlpGVN2EbFEc5/1rHBnuYmEb/70Q9cwuRvhLvtufphiBors6lV9r0JiezydYNlIB99ae0uIXKEYpYhqzVGaNKXfQ0BLrFHQMIbRMizfrecWAFOfP8njeyvE0TBWI8p54GEC0LwCfFNvzaHwPhcV1FI2JPc=
+    secure: Bc4jNaVEx1sWOGT5N3Kz8k/0R6Krz5i5kiT6ptua+H8ymolpkFzpcR00fsFO6f78Da7/amiJjE4t+rgiFDfruly/YUhJyR+Lbkkt83GCD2cvmLQfA50WD8dUZE1VvtOYmbVhCeyjGbx0jPP5kgdyUZMczr6E4hi7OCl6Z7gbc5I=
   file:
     - 'retext-smartypants.js'
     - 'retext-smartypants.min.js'
