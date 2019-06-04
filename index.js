@@ -17,12 +17,12 @@ var threeDashes = '---'
 var twoDashes = '--'
 var emDash = '—'
 var enDash = '–'
-var ellipsis = '\u2026'
+var ellipsis = '…'
 var twoBackticks = '``'
 var backtick = '`'
 var twoSingleQuotes = "''"
 var singleQuote = "'"
-var apostrophe = '\u2019'
+var apostrophe = '’'
 var doubleQuote = '"'
 var openingDoubleQuote = '“'
 var closingDoubleQuote = '”'
@@ -176,8 +176,8 @@ function transformFactory(methods) {
   return transformer
 
   // Transformer.
-  function transformer(cst) {
-    visit(cst, visitor)
+  function transformer(tree) {
+    visit(tree, visitor)
   }
 
   function visitor(node, position, parent) {
