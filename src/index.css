@@ -20,17 +20,14 @@ fieldset {
 
 label {
   display: block;
+  margin-top: calc(0.5 * (1em + 1ex));
+  margin-bottom: calc(0.5 * (1em + 1ex));
 }
 
 p,
 fieldset {
   margin-top: calc(1em + 1ex);
   margin-bottom: calc(1em + 1ex);
-}
-
-label {
-  margin-top: calc(0.5 * (1em + 1ex));
-  margin-bottom: calc(0.5 * (1em + 1ex));
 }
 
 textarea {
