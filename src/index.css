@@ -1,0 +1,44 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: system-ui;
+  margin: calc(2em + 2ex) auto;
+  max-width: calc(30 * (1em + 1ex));
+  padding: 0 calc(1em + 1ex);
+}
+
+output {
+  font-weight: bold;
+}
+
+fieldset {
+  width: 100%;
+  padding: 0 calc(1em + 1ex);
+}
+
+label {
+  display: block;
+}
+
+p,
+fieldset {
+  margin-top: calc(1em + 1ex);
+  margin-bottom: calc(1em + 1ex);
+}
+
+label {
+  margin-top: calc(0.5 * (1em + 1ex));
+  margin-bottom: calc(0.5 * (1em + 1ex));
+}
+
+textarea {
+  width: 100%;
+}
+
+input,
+select,
+textarea {
+  font-size: inherit;
+}
