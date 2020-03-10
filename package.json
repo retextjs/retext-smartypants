@@ -6,7 +6,12 @@
   "keywords": [
     "unified",
     "retext",
-    "smartypants"
+    "retext-plugin",
+    "smartypants",
+    "typography",
+    "quotes",
+    "dashes",
+    "ellipses"
   ],
   "repository": "retextjs/retext-smartypants",
   "bugs": "https://github.com/retextjs/retext-smartypants/issues",
