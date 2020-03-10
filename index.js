@@ -1,7 +1,7 @@
 'use strict'
 
 var visit = require('unist-util-visit')
-var nlcstToString = require('nlcst-to-string')
+var toString = require('nlcst-to-string')
 
 module.exports = smartypants
 
@@ -317,7 +317,7 @@ function quotes(node, index, parent) {
   prev = siblings[index - 1]
   next = siblings[index + 1]
   nextNext = siblings[index + 2]
-  nextValue = next && nlcstToString(next)
+  nextValue = next && toString(next)
 
   if (
     next &&
@@ -352,9 +352,9 @@ function quotes(node, index, parent) {
     node.value = openingQuotes[value]
   } else if (
     prev &&
-    (prev.type !== whiteSpace &&
-      prev.type !== symbol &&
-      prev.type !== punctuation)
+    prev.type !== whiteSpace &&
+    prev.type !== symbol &&
+    prev.type !== punctuation
   ) {
     // Closing quotes.
     node.value = closingQuotes[value]
