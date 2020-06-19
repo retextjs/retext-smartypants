@@ -307,14 +307,14 @@ function quotes(node, index, parent) {
   var value = node.value
   var next
   var nextNext
-  var prev
+  var previous
   var nextValue
 
   if (value !== doubleQuote && value !== singleQuote) {
     return
   }
 
-  prev = siblings[index - 1]
+  previous = siblings[index - 1]
   next = siblings[index + 1]
   nextNext = siblings[index + 2]
   nextValue = next && toString(next)
@@ -341,20 +341,20 @@ function quotes(node, index, parent) {
     // Special case for decade abbreviations: `the '80s`
     node.value = closingQuotes[value]
   } else if (
-    prev &&
+    previous &&
     next &&
-    (prev.type === whiteSpace ||
-      prev.type === punctuation ||
-      prev.type === symbol) &&
+    (previous.type === whiteSpace ||
+      previous.type === punctuation ||
+      previous.type === symbol) &&
     next.type === word
   ) {
     // Get most opening single quotes.
     node.value = openingQuotes[value]
   } else if (
-    prev &&
-    prev.type !== whiteSpace &&
-    prev.type !== symbol &&
-    prev.type !== punctuation
+    previous &&
+    previous.type !== whiteSpace &&
+    previous.type !== symbol &&
+    previous.type !== punctuation
   ) {
     // Closing quotes.
     node.value = closingQuotes[value]

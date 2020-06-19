@@ -1,3 +1,5 @@
 coverage/
 retext-smartypants.js
 retext-smartypants.min.js
+*.json
+*.md

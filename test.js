@@ -4,32 +4,28 @@ var test = require('tape')
 var retext = require('retext')
 var smartypants = require('.')
 
-test('Curly quotes', function(t) {
+test('Curly quotes', function (t) {
   var processor = retext().use(smartypants)
 
-  t.test('should throw when not given `true`, `false`, or omitted', function(
+  t.test('should throw when not given `true`, `false`, or omitted', function (
     st
   ) {
-    st.throws(function() {
-      retext()
-        .use(smartypants, {quotes: 1})
-        .freeze()
+    st.throws(function () {
+      retext().use(smartypants, {quotes: 1}).freeze()
     }, /1/)
 
     st.end()
   })
 
-  t.test('should not throw when not omitted', function(st) {
-    st.doesNotThrow(function() {
-      retext()
-        .use(smartypants, {quotes: false})
-        .freeze()
+  t.test('should not throw when not omitted', function (st) {
+    st.doesNotThrow(function () {
+      retext().use(smartypants, {quotes: false}).freeze()
     })
 
     st.end()
   })
 
-  t.test('should curl double quotes', function(st) {
+  t.test('should curl double quotes', function (st) {
     st.equal(
       processor.processSync('Alfred "bertrand" cees.').toString(),
       'Alfred “bertrand” cees.'
@@ -38,7 +34,7 @@ test('Curly quotes', function(t) {
     st.end()
   })
 
-  t.test('should curl single quotes', function(st) {
+  t.test('should curl single quotes', function (st) {
     st.equal(
       processor.processSync("Alfred 'bertrand' cees.").toString(),
       'Alfred ‘bertrand’ cees.'
@@ -47,7 +43,7 @@ test('Curly quotes', function(t) {
     st.end()
   })
 
-  t.test('should curl initial double quotes', function(st) {
+  t.test('should curl initial double quotes', function (st) {
     st.equal(
       processor.processSync('"Alfred" bertrand.').toString(),
       '“Alfred” bertrand.'
@@ -56,7 +52,7 @@ test('Curly quotes', function(t) {
     st.end()
   })
 
-  t.test('should curl initial single quotes', function(st) {
+  t.test('should curl initial single quotes', function (st) {
     st.equal(
       processor.processSync("'Alfred' bertrand.").toString(),
       '‘Alfred’ bertrand.'
@@ -65,7 +61,7 @@ test('Curly quotes', function(t) {
     st.end()
   })
 
-  t.test('should curl final double quotes', function(st) {
+  t.test('should curl final double quotes', function (st) {
     st.equal(
       processor.processSync('Alfred "bertrand".').toString(),
       'Alfred “bertrand”.'
@@ -74,7 +70,7 @@ test('Curly quotes', function(t) {
     st.end()
   })
 
-  t.test('should curl final single quotes', function(st) {
+  t.test('should curl final single quotes', function (st) {
     st.equal(
       processor.processSync("Alfred 'bertrand'.").toString(),
       'Alfred ‘bertrand’.'
@@ -83,7 +79,7 @@ test('Curly quotes', function(t) {
     st.end()
   })
 
-  t.test('should curl single quotes in double quotes', function(st) {
+  t.test('should curl single quotes in double quotes', function (st) {
     st.equal(
       processor.processSync('"\'Alfred\' bertrand" cees.').toString(),
       '“‘Alfred’ bertrand” cees.'
@@ -97,7 +93,7 @@ test('Curly quotes', function(t) {
     st.end()
   })
 
-  t.test('should curl double quotes in single quotes', function(st) {
+  t.test('should curl double quotes in single quotes', function (st) {
     st.equal(
       processor.processSync('\'"Alfred" bertrand\' cees.').toString(),
       '‘“Alfred” bertrand’ cees.'
@@ -111,7 +107,7 @@ test('Curly quotes', function(t) {
     st.end()
   })
 
-  t.test('should curl nested double quotes', function(st) {
+  t.test('should curl nested double quotes', function (st) {
     st.equal(
       processor.processSync('"Alfred "bertrand" cees."').toString(),
       '“Alfred “bertrand” cees.”'
@@ -120,7 +116,7 @@ test('Curly quotes', function(t) {
     st.end()
   })
 
-  t.test('should curl nested single quotes', function(st) {
+  t.test('should curl nested single quotes', function (st) {
     st.equal(
       processor.processSync("'Alfred 'bertrand' cees.'").toString(),
       '‘Alfred ‘bertrand’ cees.’'
@@ -131,7 +127,7 @@ test('Curly quotes', function(t) {
 
   t.test(
     'should curl initial double quotes when followed by a full stop',
-    function(st) {
+    function (st) {
       st.equal(
         processor.processSync('Alfred ".bertrand" cees.').toString(),
         'Alfred “.bertrand” cees.'
@@ -143,7 +139,7 @@ test('Curly quotes', function(t) {
 
   t.test(
     'should curl initial single quotes when followed by a full stop',
-    function(st) {
+    function (st) {
       st.equal(
         processor.processSync("Alfred '.bertrand' cees.").toString(),
         'Alfred ‘.bertrand’ cees.'
@@ -155,7 +151,7 @@ test('Curly quotes', function(t) {
 
   t.test(
     'should curl initial double quotes when preceded by a full stop',
-    function(st) {
+    function (st) {
       st.equal(
         processor.processSync('Alfred "bertrand." cees.').toString(),
         'Alfred “bertrand.” cees.'
@@ -167,7 +163,7 @@ test('Curly quotes', function(t) {
 
   t.test(
     'should curl initial single quotes when preceded by a full stop',
-    function(st) {
+    function (st) {
       st.equal(
         processor.processSync("Alfred 'bertrand.' cees.").toString(),
         'Alfred ‘bertrand.’ cees.'
@@ -180,7 +176,7 @@ test('Curly quotes', function(t) {
   t.test(
     'should curl initial double quotes when followed by a multiple ' +
       'full-stops',
-    function(st) {
+    function (st) {
       st.equal(processor.processSync('"..Alfred"').toString(), '“..Alfred”')
 
       st.end()
@@ -190,7 +186,7 @@ test('Curly quotes', function(t) {
   t.test(
     'should curl initial single quotes when followed by a multiple ' +
       'full-stops',
-    function(st) {
+    function (st) {
       st.equal(processor.processSync("'..Alfred'").toString(), '‘..Alfred’')
 
       st.end()
@@ -200,7 +196,7 @@ test('Curly quotes', function(t) {
   t.test(
     'should curl final double quotes when followed by a multiple ' +
       'full-stops',
-    function(st) {
+    function (st) {
       st.equal(processor.processSync('"Alfred"..').toString(), '“Alfred”..')
 
       st.end()
@@ -210,14 +206,14 @@ test('Curly quotes', function(t) {
   t.test(
     'should curl final single quotes when followed by a multiple ' +
       'full-stops',
-    function(st) {
+    function (st) {
       st.equal(processor.processSync("'Alfred'..").toString(), '‘Alfred’..')
 
       st.end()
     }
   )
 
-  t.test('should curl final double quotes when followed by a comma', function(
+  t.test('should curl final double quotes when followed by a comma', function (
     st
   ) {
     st.equal(
@@ -228,7 +224,7 @@ test('Curly quotes', function(t) {
     st.end()
   })
 
-  t.test('should curl final single quotes when followed by a comma', function(
+  t.test('should curl final single quotes when followed by a comma', function (
     st
   ) {
     st.equal(
@@ -239,7 +235,7 @@ test('Curly quotes', function(t) {
     st.end()
   })
 
-  t.test('should curl apostrophes when followed `s`', function(st) {
+  t.test('should curl apostrophes when followed `s`', function (st) {
     st.equal(
       processor.processSync("Alfred's bertrand.").toString(),
       'Alfred’s bertrand.'
@@ -248,7 +244,7 @@ test('Curly quotes', function(t) {
     st.end()
   })
 
-  t.test('should curl apostrophes when followed by a decade (`80s`)', function(
+  t.test('should curl apostrophes when followed by a decade (`80s`)', function (
     st
   ) {
     st.equal(processor.processSync("In the '90s.").toString(), 'In the ’90s.')
@@ -258,7 +254,7 @@ test('Curly quotes', function(t) {
 
   t.test(
     'should curl final double quotes when followed by a full stop',
-    function(st) {
+    function (st) {
       st.equal(
         processor.processSync('"Alfred bertrand". Cees.').toString(),
         '“Alfred bertrand”. Cees.'
@@ -270,7 +266,7 @@ test('Curly quotes', function(t) {
 
   t.test(
     'should curl final single quotes when followed by a full stop',
-    function(st) {
+    function (st) {
       st.equal(
         processor.processSync("'Alfred bertrand'. Cees.").toString(),
         '‘Alfred bertrand’. Cees.'
@@ -283,31 +279,27 @@ test('Curly quotes', function(t) {
   t.end()
 })
 
-test('En- and em-dashes', function(t) {
+test('En- and em-dashes', function (t) {
   t.test(
     'should throw when not given `true`, `false`, `oldschool`, ' +
       '`inverted`, or omitted',
-    function(st) {
-      st.throws(function() {
-        retext()
-          .use(smartypants, {dashes: 'test'})
-          .freeze()
+    function (st) {
+      st.throws(function () {
+        retext().use(smartypants, {dashes: 'test'}).freeze()
       }, /test/)
 
       st.end()
     }
   )
 
-  t.test('should not throw when not omitted', function(st) {
-    retext()
-      .use(smartypants, {dashes: false})
-      .freeze()
+  t.test('should not throw when not omitted', function (st) {
+    retext().use(smartypants, {dashes: false}).freeze()
 
     st.end()
   })
 
-  t.test('true', function(st) {
-    st.test('should replace two dashes with an em-dash', function(sst) {
+  t.test('true', function (st) {
+    st.test('should replace two dashes with an em-dash', function (sst) {
       sst.equal(
         retext()
           .use(smartypants)
@@ -322,11 +314,11 @@ test('En- and em-dashes', function(t) {
     st.end()
   })
 
-  t.test('oldschool', function(st) {
+  t.test('oldschool', function (st) {
     t.test(
       'should replace two dashes with an en-dash, three dashes with ' +
         'an em-dash',
-      function(sst) {
+      function (sst) {
         sst.equal(
           retext()
             .use(smartypants, {dashes: 'oldschool'})
@@ -342,11 +334,11 @@ test('En- and em-dashes', function(t) {
     st.end()
   })
 
-  t.test('inverted', function(st) {
+  t.test('inverted', function (st) {
     t.test(
       'should replace two dashes with an em-dash, three dashes with ' +
         'an en-dash',
-      function(sst) {
+      function (sst) {
         sst.equal(
           retext()
             .use(smartypants, {dashes: 'inverted'})
@@ -365,44 +357,38 @@ test('En- and em-dashes', function(t) {
   t.end()
 })
 
-test('Backticks', function(t) {
+test('Backticks', function (t) {
   t.test(
     'should throw when not given `true`, `false`, `all`, or omitted',
-    function(st) {
-      st.throws(function() {
-        retext()
-          .use(smartypants, {backticks: Infinity})
-          .freeze()
+    function (st) {
+      st.throws(function () {
+        retext().use(smartypants, {backticks: Infinity}).freeze()
       }, /Infinity/)
 
       st.end()
     }
   )
 
-  t.test('should not throw when not omitted', function(st) {
-    retext()
-      .use(smartypants, {backticks: false})
-      .freeze()
+  t.test('should not throw when not omitted', function (st) {
+    retext().use(smartypants, {backticks: false}).freeze()
 
     st.end()
   })
 
-  t.test('should throw when `all` is combined with `quotes`', function(st) {
-    st.throws(function() {
-      retext()
-        .use(smartypants, {backticks: 'all'})
-        .freeze()
+  t.test('should throw when `all` is combined with `quotes`', function (st) {
+    st.throws(function () {
+      retext().use(smartypants, {backticks: 'all'}).freeze()
     }, /`backticks: all` is not a valid value when `quotes: true`/)
 
     st.end()
   })
 
-  t.test('true', function(st) {
+  t.test('true', function (st) {
     var processor = retext().use(smartypants, {quotes: false})
 
     st.test(
       'should replace two backticks with an opening double quote',
-      function(sst) {
+      function (sst) {
         sst.equal(
           processor.processSync('``Alfred bertrand.').toString(),
           '“Alfred bertrand.'
@@ -414,7 +400,7 @@ test('Backticks', function(t) {
 
     st.test(
       'should replace two single quotes with a closing double quote',
-      function(sst) {
+      function (sst) {
         sst.equal(
           processor.processSync("Alfred'' bertrand.").toString(),
           'Alfred” bertrand.'
@@ -424,7 +410,7 @@ test('Backticks', function(t) {
       }
     )
 
-    st.test('should NOT replace a single backtick', function(sst) {
+    st.test('should NOT replace a single backtick', function (sst) {
       sst.equal(
         processor.processSync('`Alfred bertrand.').toString(),
         '`Alfred bertrand.'
@@ -433,7 +419,7 @@ test('Backticks', function(t) {
       sst.end()
     })
 
-    st.test('should NOT replace a single quote', function(sst) {
+    st.test('should NOT replace a single quote', function (sst) {
       sst.equal(
         processor.processSync("Alfred' bertrand.").toString(),
         "Alfred' bertrand."
@@ -443,7 +429,7 @@ test('Backticks', function(t) {
     })
   })
 
-  t.test('all', function(st) {
+  t.test('all', function (st) {
     var processor = retext().use(smartypants, {
       backticks: 'all',
       quotes: false
@@ -451,7 +437,7 @@ test('Backticks', function(t) {
 
     st.test(
       'should replace two backticks with an opening double quote',
-      function(sst) {
+      function (sst) {
         sst.equal(
           processor.processSync('``Alfred bertrand.').toString(),
           '“Alfred bertrand.'
@@ -463,7 +449,7 @@ test('Backticks', function(t) {
 
     st.test(
       'should replace two single quotes with a closing double quote',
-      function(sst) {
+      function (sst) {
         sst.equal(
           processor.processSync("Alfred'' bertrand.").toString(),
           'Alfred” bertrand.'
@@ -473,7 +459,7 @@ test('Backticks', function(t) {
       }
     )
 
-    st.test('should replace a single backtick', function(sst) {
+    st.test('should replace a single backtick', function (sst) {
       sst.equal(
         processor.processSync('`Alfred bertrand.').toString(),
         '‘Alfred bertrand.'
@@ -482,7 +468,7 @@ test('Backticks', function(t) {
       sst.end()
     })
 
-    st.test('should replace a single quote', function(sst) {
+    st.test('should replace a single quote', function (sst) {
       sst.equal(
         processor.processSync("Alfred' bertrand.").toString(),
         'Alfred’ bertrand.'
@@ -497,32 +483,28 @@ test('Backticks', function(t) {
   t.end()
 })
 
-test('Ellipses', function(t) {
+test('Ellipses', function (t) {
   var processor = retext().use(smartypants)
 
-  t.test('should throw when not given `true`, `false`, or omitted', function(
+  t.test('should throw when not given `true`, `false`, or omitted', function (
     st
   ) {
-    st.throws(function() {
-      retext()
-        .use(smartypants, {ellipses: Math})
-        .freeze()
+    st.throws(function () {
+      retext().use(smartypants, {ellipses: Math}).freeze()
     }, /\[object Math]/)
 
     st.end()
   })
 
-  t.test('should not throw when not omitted', function(st) {
-    st.doesNotThrow(function() {
-      retext()
-        .use(smartypants, {ellipses: false})
-        .freeze()
+  t.test('should not throw when not omitted', function (st) {
+    st.doesNotThrow(function () {
+      retext().use(smartypants, {ellipses: false}).freeze()
     })
 
     st.end()
   })
 
-  t.test('should replace three full stops', function(st) {
+  t.test('should replace three full stops', function (st) {
     st.equal(
       processor.processSync('Alfred... Bertrand.').toString(),
       'Alfred\u2026 Bertrand.'
@@ -531,7 +513,7 @@ test('Ellipses', function(t) {
     st.end()
   })
 
-  t.test('should replace three initial full stops', function(st) {
+  t.test('should replace three initial full stops', function (st) {
     st.equal(
       processor.processSync('...Alfred Bertrand.').toString(),
       '\u2026Alfred Bertrand.'
@@ -540,7 +522,7 @@ test('Ellipses', function(t) {
     st.end()
   })
 
-  t.test('should replace three final full stops', function(st) {
+  t.test('should replace three final full stops', function (st) {
     st.equal(
       processor.processSync('Alfred Bertrand...').toString(),
       'Alfred Bertrand\u2026'
@@ -549,7 +531,7 @@ test('Ellipses', function(t) {
     st.end()
   })
 
-  t.test('should replace three padded full stops', function(st) {
+  t.test('should replace three padded full stops', function (st) {
     st.equal(
       processor.processSync('Alfred ... Bertrand.').toString(),
       'Alfred \u2026 Bertrand.'
@@ -558,7 +540,7 @@ test('Ellipses', function(t) {
     st.end()
   })
 
-  t.test('should replace three padded initial full stops', function(st) {
+  t.test('should replace three padded initial full stops', function (st) {
     st.equal(
       processor.processSync('... Alfred Bertrand.').toString(),
       '\u2026 Alfred Bertrand.'
@@ -567,7 +549,7 @@ test('Ellipses', function(t) {
     st.end()
   })
 
-  t.test('should replace three padded final full stops', function(st) {
+  t.test('should replace three padded final full stops', function (st) {
     st.equal(
       processor.processSync('Alfred Bertrand ...').toString(),
       'Alfred Bertrand \u2026'
@@ -576,7 +558,7 @@ test('Ellipses', function(t) {
     st.end()
   })
 
-  t.test('should replace three padded full stops with spaces', function(st) {
+  t.test('should replace three padded full stops with spaces', function (st) {
     st.equal(
       processor.processSync('Alfred . . . Bertrand.').toString(),
       'Alfred \u2026 Bertrand.'
@@ -585,18 +567,19 @@ test('Ellipses', function(t) {
     st.end()
   })
 
-  t.test('should replace three padded initial full stops with spaces', function(
-    st
-  ) {
-    st.equal(
-      processor.processSync('. . . Alfred Bertrand.').toString(),
-      '\u2026 Alfred Bertrand.'
-    )
+  t.test(
+    'should replace three padded initial full stops with spaces',
+    function (st) {
+      st.equal(
+        processor.processSync('. . . Alfred Bertrand.').toString(),
+        '\u2026 Alfred Bertrand.'
+      )
 
-    st.end()
-  })
+      st.end()
+    }
+  )
 
-  t.test('should replace three padded final full stops with spaces', function(
+  t.test('should replace three padded final full stops with spaces', function (
     st
   ) {
     st.equal(
@@ -607,7 +590,7 @@ test('Ellipses', function(t) {
     st.end()
   })
 
-  t.test('should replace three full stops with spaces', function(st) {
+  t.test('should replace three full stops with spaces', function (st) {
     st.equal(
       processor.processSync('Alfred. . . Bertrand.').toString(),
       'Alfred\u2026 Bertrand.'
@@ -616,7 +599,7 @@ test('Ellipses', function(t) {
     st.end()
   })
 
-  t.test('should replace three initial full stops with spaces', function(st) {
+  t.test('should replace three initial full stops with spaces', function (st) {
     st.equal(
       processor.processSync('. . .Alfred Bertrand.').toString(),
       '\u2026Alfred Bertrand.'
@@ -625,7 +608,7 @@ test('Ellipses', function(t) {
     st.end()
   })
 
-  t.test('should replace three final full stops with spaces', function(st) {
+  t.test('should replace three final full stops with spaces', function (st) {
     st.equal(
       processor.processSync('Alfred Bertrand. . .').toString(),
       'Alfred Bertrand\u2026'
@@ -634,7 +617,7 @@ test('Ellipses', function(t) {
     st.end()
   })
 
-  t.test('should replace more than three full stops', function(st) {
+  t.test('should replace more than three full stops', function (st) {
     st.equal(
       processor.processSync('Alfred..... Bertrand.').toString(),
       'Alfred\u2026 Bertrand.'
@@ -655,7 +638,7 @@ test('Ellipses', function(t) {
 
   t.test(
     'should replace more than three full stops with funky spacing',
-    function(st) {
+    function (st) {
       st.equal(
         processor.processSync('Alfred .. .. . Bertrand.').toString(),
         'Alfred \u2026 Bertrand.'
@@ -665,7 +648,7 @@ test('Ellipses', function(t) {
     }
   )
 
-  t.test('should NOT replace less than three full stops', function(st) {
+  t.test('should NOT replace less than three full stops', function (st) {
     st.equal(
       processor.processSync('Alfred.. Bertrand.').toString(),
       'Alfred.. Bertrand.'
