@@ -1,15 +1,15 @@
 import test from 'tape'
-import retext from 'retext'
-import smartypants from './index.js'
+import {retext} from 'retext'
+import retextSmartypants from './index.js'
 
 test('Curly quotes', function (t) {
-  var processor = retext().use(smartypants)
+  var processor = retext().use(retextSmartypants)
 
   t.test(
     'should throw when not given `true`, `false`, or omitted',
     function (st) {
       st.throws(function () {
-        retext().use(smartypants, {quotes: 1}).freeze()
+        retext().use(retextSmartypants, {quotes: 1}).freeze()
       }, /1/)
 
       st.end()
@@ -18,7 +18,7 @@ test('Curly quotes', function (t) {
 
   t.test('should not throw when not omitted', function (st) {
     st.doesNotThrow(function () {
-      retext().use(smartypants, {quotes: false}).freeze()
+      retext().use(retextSmartypants, {quotes: false}).freeze()
     })
 
     st.end()
@@ -287,7 +287,7 @@ test('En- and em-dashes', function (t) {
       '`inverted`, or omitted',
     function (st) {
       st.throws(function () {
-        retext().use(smartypants, {dashes: 'test'}).freeze()
+        retext().use(retextSmartypants, {dashes: 'test'}).freeze()
       }, /test/)
 
       st.end()
@@ -295,7 +295,7 @@ test('En- and em-dashes', function (t) {
   )
 
   t.test('should not throw when not omitted', function (st) {
-    retext().use(smartypants, {dashes: false}).freeze()
+    retext().use(retextSmartypants, {dashes: false}).freeze()
 
     st.end()
   })
@@ -304,7 +304,7 @@ test('En- and em-dashes', function (t) {
     st.test('should replace two dashes with an em-dash', function (sst) {
       sst.equal(
         retext()
-          .use(smartypants)
+          .use(retextSmartypants)
           .processSync('Alfred--bertrand--cees.')
           .toString(),
         'Alfred—bertrand—cees.'
@@ -323,7 +323,7 @@ test('En- and em-dashes', function (t) {
       function (sst) {
         sst.equal(
           retext()
-            .use(smartypants, {dashes: 'oldschool'})
+            .use(retextSmartypants, {dashes: 'oldschool'})
             .processSync('Alfred--bertrand---cees.')
             .toString(),
           'Alfred–bertrand—cees.'
@@ -343,7 +343,7 @@ test('En- and em-dashes', function (t) {
       function (sst) {
         sst.equal(
           retext()
-            .use(smartypants, {dashes: 'inverted'})
+            .use(retextSmartypants, {dashes: 'inverted'})
             .processSync('Alfred--bertrand---cees.')
             .toString(),
           'Alfred—bertrand–cees.'
@@ -365,7 +365,7 @@ test('Backticks', function (t) {
     function (st) {
       st.throws(function () {
         retext()
-          .use(smartypants, {backticks: Number.POSITIVE_INFINITY})
+          .use(retextSmartypants, {backticks: Number.POSITIVE_INFINITY})
           .freeze()
       }, /Infinity/)
 
@@ -374,21 +374,21 @@ test('Backticks', function (t) {
   )
 
   t.test('should not throw when not omitted', function (st) {
-    retext().use(smartypants, {backticks: false}).freeze()
+    retext().use(retextSmartypants, {backticks: false}).freeze()
 
     st.end()
   })
 
   t.test('should throw when `all` is combined with `quotes`', function (st) {
     st.throws(function () {
-      retext().use(smartypants, {backticks: 'all'}).freeze()
+      retext().use(retextSmartypants, {backticks: 'all'}).freeze()
     }, /`backticks: all` is not a valid value when `quotes: true`/)
 
     st.end()
   })
 
   t.test('true', function (st) {
-    var processor = retext().use(smartypants, {quotes: false})
+    var processor = retext().use(retextSmartypants, {quotes: false})
 
     st.test(
       'should replace two backticks with an opening double quote',
@@ -434,7 +434,7 @@ test('Backticks', function (t) {
   })
 
   t.test('all', function (st) {
-    var processor = retext().use(smartypants, {
+    var processor = retext().use(retextSmartypants, {
       backticks: 'all',
       quotes: false
     })
@@ -488,13 +488,13 @@ test('Backticks', function (t) {
 })
 
 test('Ellipses', function (t) {
-  var processor = retext().use(smartypants)
+  var processor = retext().use(retextSmartypants)
 
   t.test(
     'should throw when not given `true`, `false`, or omitted',
     function (st) {
       st.throws(function () {
-        retext().use(smartypants, {ellipses: Math}).freeze()
+        retext().use(retextSmartypants, {ellipses: Math}).freeze()
       }, /\[object Math]/)
 
       st.end()
@@ -503,7 +503,7 @@ test('Ellipses', function (t) {
 
   t.test('should not throw when not omitted', function (st) {
     st.doesNotThrow(function () {
-      retext().use(smartypants, {ellipses: false}).freeze()
+      retext().use(retextSmartypants, {ellipses: false}).freeze()
     })
 
     st.end()
