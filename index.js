@@ -1,38 +1,38 @@
 import {visit} from 'unist-util-visit'
 import {toString} from 'nlcst-to-string'
 
-var punctuation = 'PunctuationNode'
-var symbol = 'SymbolNode'
-var word = 'WordNode'
-var whiteSpace = 'WhiteSpaceNode'
+const punctuation = 'PunctuationNode'
+const symbol = 'SymbolNode'
+const word = 'WordNode'
+const whiteSpace = 'WhiteSpaceNode'
 
-var decadeExpression = /^\d\ds$/
-var threeFullStopsExpression = /^\.{3,}$/
-var fullStopsExpression = /^\.+$/
-var threeDashes = '---'
-var twoDashes = '--'
-var emDash = '—'
-var enDash = '–'
-var ellipsis = '…'
-var twoBackticks = '``'
-var backtick = '`'
-var twoSingleQuotes = "''"
-var singleQuote = "'"
-var apostrophe = '’'
-var doubleQuote = '"'
-var openingDoubleQuote = '“'
-var closingDoubleQuote = '”'
-var openingSingleQuote = '‘'
-var closingSingleQuote = '’'
-var closingQuotes = {}
-var openingQuotes = {}
+const decadeExpression = /^\d\ds$/
+const threeFullStopsExpression = /^\.{3,}$/
+const fullStopsExpression = /^\.+$/
+const threeDashes = '---'
+const twoDashes = '--'
+const emDash = '—'
+const enDash = '–'
+const ellipsis = '…'
+const twoBackticks = '``'
+const backtick = '`'
+const twoSingleQuotes = "''"
+const singleQuote = "'"
+const apostrophe = '’'
+const doubleQuote = '"'
+const openingDoubleQuote = '“'
+const closingDoubleQuote = '”'
+const openingSingleQuote = '‘'
+const closingSingleQuote = '’'
+const closingQuotes = {}
+const openingQuotes = {}
 
 openingQuotes[doubleQuote] = openingDoubleQuote
 closingQuotes[doubleQuote] = closingDoubleQuote
 openingQuotes[singleQuote] = openingSingleQuote
 closingQuotes[singleQuote] = closingSingleQuote
 
-var educators = {}
+const educators = {}
 
 // Expose educators.
 educators.dashes = {
@@ -56,11 +56,11 @@ educators.quotes = {
 
 // Attacher.
 export default function retextSmartypants(options) {
-  var methods = []
-  var quotes
-  var ellipses
-  var backticks
-  var dashes
+  const methods = []
+  let quotes
+  let ellipses
+  let backticks
+  let dashes
 
   if (!options) {
     options = {}
@@ -167,7 +167,7 @@ export default function retextSmartypants(options) {
 
 // Create a transformer for the bound methods.
 function transformFactory(methods) {
-  var length = methods.length
+  const length = methods.length
 
   return transformer
 
@@ -177,7 +177,7 @@ function transformFactory(methods) {
   }
 
   function visitor(node, position, parent) {
-    var index = -1
+    let index = -1
 
     if (node.type === punctuation || node.type === symbol) {
       while (++index < length) {
@@ -234,14 +234,8 @@ function all(node) {
 
 // Transform multiple dots into unicode ellipses.
 function ellipses(node, index, parent) {
-  var value = node.value
-  var siblings = parent.children
-  var position
-  var nodes
-  var sibling
-  var type
-  var count
-  var queue
+  const value = node.value
+  const siblings = parent.children
 
   // Simple node with three dots and without white-space.
   if (threeFullStopsExpression.test(node.value)) {
@@ -254,23 +248,23 @@ function ellipses(node, index, parent) {
   }
 
   // Search for dot-nodes with white-space between.
-  nodes = []
-  position = index
-  count = 1
+  const nodes = []
+  let position = index
+  let count = 1
 
   // It’s possible that the node is merged with an adjacent word-node.  In that
   // code, we cannot transform it because there’s no reference to the
   // grandparent.
   while (--position > 0) {
-    sibling = siblings[position]
+    let sibling = siblings[position]
 
     if (sibling.type !== whiteSpace) {
       break
     }
 
-    queue = sibling
+    const queue = sibling
     sibling = siblings[--position]
-    type = sibling && sibling.type
+    const type = sibling && sibling.type
 
     if (
       sibling &&
@@ -299,21 +293,17 @@ function ellipses(node, index, parent) {
 // Transform straight single- and double quotes into smart quotes.
 // eslint-disable-next-line complexity
 function quotes(node, index, parent) {
-  var siblings = parent.children
-  var value = node.value
-  var next
-  var nextNext
-  var previous
-  var nextValue
+  const siblings = parent.children
+  const value = node.value
 
   if (value !== doubleQuote && value !== singleQuote) {
     return
   }
 
-  previous = siblings[index - 1]
-  next = siblings[index + 1]
-  nextNext = siblings[index + 2]
-  nextValue = next && toString(next)
+  const previous = siblings[index - 1]
+  const next = siblings[index + 1]
+  const nextNext = siblings[index + 2]
+  const nextValue = next && toString(next)
 
   if (
     next &&
