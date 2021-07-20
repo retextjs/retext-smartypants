@@ -31,24 +31,19 @@
     "unist-util-visit": "^2.0.0"
   },
   "devDependencies": {
-    "browserify": "^16.0.0",
     "c8": "^7.0.0",
     "prettier": "^2.0.0",
     "remark-cli": "^8.0.0",
     "remark-preset-wooorm": "^7.0.0",
     "retext": "^7.0.0",
     "tape": "^5.0.0",
-    "tinyify": "^2.0.0",
     "xo": "^0.32.0"
   },
   "scripts": {
     "format": "remark . -qfo && prettier . --write && xo --fix",
-    "build-bundle": "browserify . -s retextSmartypants > retext-smartypants.js",
-    "build-mangle": "browserify . -s retextSmartypants -p tinyify > retext-smartypants.min.js",
-    "build": "npm run build-bundle && npm run build-mangle",
     "test-api": "node --conditions development test.js",
     "test-coverage": "c8 --check-coverage --branches 100 --functions 100 --lines 100 --statements 100 --reporter lcov node --conditions development test.js",
-    "test": "npm run format && npm run build && npm run test-coverage"
+    "test": "npm run format && npm run test-coverage"
   },
   "prettier": {
     "tabWidth": 2,
@@ -60,10 +55,7 @@
   },
   "xo": {
     "prettier": true,
-    "esnext": false,
-    "ignores": [
-      "retext-smartypants.js"
-    ]
+    "esnext": false
   },
   "remarkConfig": {
     "plugins": [
