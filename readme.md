@@ -63,7 +63,7 @@ Converts straight double and single quotes to smart double or single quotes.
 Create smart ellipses (`boolean`, default: `true`).
 
 Converts triple dot characters (with or without spaces between) into a single
-unicode ellipsis character
+Unicode ellipsis character
 
 ###### `options.backticks`
 

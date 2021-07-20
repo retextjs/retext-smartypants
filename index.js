@@ -1,70 +1,275 @@
+/**
+ * @typedef Options
+ *   Configuration.
+ * @property {boolean} [quotes=true]
+ *   Create smart quotes.
+ *
+ *   Converts straight double and single quotes to smart double or single
+ *   quotes.
+ * @property {boolean} [ellipses=true]
+ *   Create smart ellipses.
+ *
+ *   Converts triple dot characters (with or without spaces between) into a
+ *   single Unicode ellipsis character.
+ * @property {boolean|'all'} [backticks=true]
+ *   Create smart quotes from backticks.
+ *
+ *   When `true`, converts double back-ticks into an opening double quote, and
+ *   double straight single quotes into a closing double quote.
+ *
+ *   When `'all'`: does the preceding and converts single back-ticks into an
+ *   opening single quote, and a straight single quote into a closing single
+ *   smart quote.
+ *
+ *   Note: Quotes can not be `true` when `backticks` is `'all'`;
+ * @property {boolean|'oldschool'|'inverted'} [dashes=true]
+ *   Create smart dashes.
+ *
+ *   When `true`, converts two dashes into an em-dash character.
+ *
+ *   When `'oldschool'`, converts two dashes into an en-dash, and three dashes
+ *   into an em-dash.
+ *
+ *   When `'inverted'`, converts two dashes into an em-dash, and three dashes
+ *   into an en-dash.
+ *
+ * @typedef {import('unist').Node} Node
+ * @typedef {import('unist').Parent} Parent
+ * @typedef {import('unist').Literal<string>} Literal
+ *
+ * @callback Method
+ * @param {Literal} node
+ * @param {number} index
+ * @param {Parent} parent
+ * @returns {void}
+ */
+
 import {visit} from 'unist-util-visit'
 import {toString} from 'nlcst-to-string'
 
-const punctuation = 'PunctuationNode'
-const symbol = 'SymbolNode'
-const word = 'WordNode'
-const whiteSpace = 'WhiteSpaceNode'
+const closingQuotes = {'"': '”', "'": '’'}
+const openingQuotes = {'"': '“', "'": '‘'}
 
-const decadeExpression = /^\d\ds$/
-const threeFullStopsExpression = /^\.{3,}$/
-const fullStopsExpression = /^\.+$/
-const threeDashes = '---'
-const twoDashes = '--'
-const emDash = '—'
-const enDash = '–'
-const ellipsis = '…'
-const twoBackticks = '``'
-const backtick = '`'
-const twoSingleQuotes = "''"
-const singleQuote = "'"
-const apostrophe = '’'
-const doubleQuote = '"'
-const openingDoubleQuote = '“'
-const closingDoubleQuote = '”'
-const openingSingleQuote = '‘'
-const closingSingleQuote = '’'
-const closingQuotes = {}
-const openingQuotes = {}
+const educators = {
+  dashes: {
+    /**
+     * Transform two dahes into an em-dash.
+     *
+     * @type {Method}
+     */
+    true(node) {
+      if (node.value === '--') {
+        node.value = '—'
+      }
+    },
+    /**
+     * Transform three dahes into an em-dash, and two into an en-dash.
+     *
+     * @type {Method}
+     */
+    oldschool(node) {
+      if (node.value === '---') {
+        node.value = '—'
+      } else if (node.value === '--') {
+        node.value = '–'
+      }
+    },
+    /**
+     * Transform three dahes into an en-dash, and two into an em-dash.
+     *
+     * @type {Method}
+     */
+    inverted(node) {
+      if (node.value === '---') {
+        node.value = '–'
+      } else if (node.value === '--') {
+        node.value = '—'
+      }
+    }
+  },
+  backticks: {
+    /**
+     * Transform double backticks and single quotes into smart quotes.
+     *
+     * @type {Method}
+     */
+    true(node) {
+      if (node.value === '``') {
+        node.value = '“'
+      } else if (node.value === "''") {
+        node.value = '”'
+      }
+    },
+    /**
+     * Transform single and double backticks and single quotes into smart quotes.
+     *
+     * @type {Method}
+     */
+    all(node, index, parent) {
+      educators.backticks.true(node, index, parent)
 
-openingQuotes[doubleQuote] = openingDoubleQuote
-closingQuotes[doubleQuote] = closingDoubleQuote
-openingQuotes[singleQuote] = openingSingleQuote
-closingQuotes[singleQuote] = closingSingleQuote
+      if (node.value === '`') {
+        node.value = '‘'
+      } else if (node.value === "'") {
+        node.value = '’'
+      }
+    }
+  },
+  ellipses: {
+    /**
+     * Transform multiple dots into unicode ellipses.
+     *
+     * @type {Method}
+     */
+    true(node, index, parent) {
+      const value = node.value
+      const siblings = parent.children
 
-const educators = {}
+      // Simple node with three dots and without white-space.
+      if (/^\.{3,}$/.test(node.value)) {
+        node.value = '…'
+        return
+      }
 
-// Expose educators.
-educators.dashes = {
-  true: dashes,
-  oldschool,
-  inverted
-}
+      if (!/^\.+$/.test(value)) {
+        return
+      }
 
-educators.backticks = {
-  true: backticks,
-  all
-}
+      // Search for dot-nodes with white-space between.
+      /** @type {Node[]} */
+      const nodes = []
+      let position = index
+      let count = 1
 
-educators.ellipses = {
-  true: ellipses
-}
+      // It’s possible that the node is merged with an adjacent word-node.  In that
+      // code, we cannot transform it because there’s no reference to the
+      // grandparent.
+      while (--position > 0) {
+        let sibling = siblings[position]
 
-educators.quotes = {
-  true: quotes
-}
+        if (sibling.type !== 'WhiteSpaceNode') {
+          break
+        }
 
-// Attacher.
-export default function retextSmartypants(options) {
-  const methods = []
-  let quotes
-  let ellipses
-  let backticks
-  let dashes
+        const queue = sibling
+        sibling = siblings[--position]
 
-  if (!options) {
-    options = {}
+        if (
+          sibling &&
+          (sibling.type === 'PunctuationNode' ||
+            sibling.type === 'SymbolNode') &&
+          // @ts-expect-error: it’s a literal.
+          /^\.+$/.test(sibling.value)
+        ) {
+          nodes.push(queue, sibling)
+
+          count++
+
+          continue
+        }
+
+        break
+      }
+
+      if (count < 3) {
+        return
+      }
+
+      siblings.splice(index - nodes.length, nodes.length)
+
+      node.value = '…'
+    }
+  },
+  quotes: {
+    /**
+     * Transform straight single- and double quotes into smart quotes.
+     *
+     * @type {Method}
+     */
+    // eslint-disable-next-line complexity
+    true(node, index, parent) {
+      const siblings = parent.children
+      const value = node.value
+
+      if (value !== '"' && value !== "'") {
+        return
+      }
+
+      const previous = siblings[index - 1]
+      const next = siblings[index + 1]
+      const nextNext = siblings[index + 2]
+      const nextValue = next && toString(next)
+
+      if (
+        next &&
+        nextNext &&
+        (next.type === 'PunctuationNode' || next.type === 'SymbolNode') &&
+        nextNext.type !== 'WordNode'
+      ) {
+        // Special case if the very first character is a quote followed by
+        // punctuation at a non-word-break. Close the quotes by brute force.
+        node.value = closingQuotes[value]
+      } else if (
+        nextNext &&
+        (nextValue === '"' || nextValue === "'") &&
+        nextNext.type === 'WordNode'
+      ) {
+        // Special case for double sets of quotes:
+        // `He said, "'Quoted' words in a larger quote."`
+        node.value = openingQuotes[value]
+        // @ts-expect-error: it’s a literal.
+        next.value = openingQuotes[nextValue]
+      } else if (next && /^\d\ds$/.test(nextValue)) {
+        // Special case for decade abbreviations: `the '80s`
+        node.value = closingQuotes[value]
+      } else if (
+        previous &&
+        next &&
+        (previous.type === 'WhiteSpaceNode' ||
+          previous.type === 'PunctuationNode' ||
+          previous.type === 'SymbolNode') &&
+        next.type === 'WordNode'
+      ) {
+        // Get most opening single quotes.
+        node.value = openingQuotes[value]
+      } else if (
+        previous &&
+        previous.type !== 'WhiteSpaceNode' &&
+        previous.type !== 'SymbolNode' &&
+        previous.type !== 'PunctuationNode'
+      ) {
+        // Closing quotes.
+        node.value = closingQuotes[value]
+      } else if (
+        !next ||
+        next.type === 'WhiteSpaceNode' ||
+        (value === "'" && nextValue === 's')
+      ) {
+        node.value = closingQuotes[value]
+      } else {
+        node.value = openingQuotes[value]
+      }
+    }
   }
+}
+
+/**
+ * Plugin to replace dumb/straight/typewriter punctuation marks with smart/curly
+ * punctuation marks.
+ *
+ * @type {import('unified').Plugin<[Options?]>}
+ */
+export default function retextSmartypants(options = {}) {
+  /** @type {Array.<Method>} */
+  const methods = []
+  /** @type {Options['quotes']} */
+  let quotes
+  /** @type {Options['ellipses']} */
+  let ellipses
+  /** @type {Options['backticks']} */
+  let backticks
+  /** @type {Options['dashes']} */
+  let dashes
 
   if ('quotes' in options) {
     quotes = options.quotes
@@ -147,210 +352,31 @@ export default function retextSmartypants(options) {
   }
 
   if (quotes !== false) {
-    methods.push(educators.quotes[quotes])
+    methods.push(educators.quotes.true)
   }
 
   if (ellipses !== false) {
-    methods.push(educators.ellipses[ellipses])
+    methods.push(educators.ellipses.true)
   }
 
   if (backticks !== false) {
-    methods.push(educators.backticks[backticks])
+    methods.push(educators.backticks[backticks === true ? 'true' : backticks])
   }
 
   if (dashes !== false) {
-    methods.push(educators.dashes[dashes])
+    methods.push(educators.dashes[dashes === true ? 'true' : dashes])
   }
 
-  return transformFactory(methods)
-}
+  return (tree) => {
+    visit(tree, (node, position, parent) => {
+      let index = -1
 
-// Create a transformer for the bound methods.
-function transformFactory(methods) {
-  const length = methods.length
-
-  return transformer
-
-  // Transformer.
-  function transformer(tree) {
-    visit(tree, visitor)
-  }
-
-  function visitor(node, position, parent) {
-    let index = -1
-
-    if (node.type === punctuation || node.type === symbol) {
-      while (++index < length) {
-        methods[index](node, position, parent)
+      if (node.type === 'PunctuationNode' || node.type === 'SymbolNode') {
+        while (++index < methods.length) {
+          // @ts-expect-error: they’re literals.
+          methods[index](node, position, parent)
+        }
       }
-    }
-  }
-}
-
-// Transform three dahes into an em-dash, and two into an en-dash.
-function oldschool(node) {
-  if (node.value === threeDashes) {
-    node.value = emDash
-  } else if (node.value === twoDashes) {
-    node.value = enDash
-  }
-}
-
-// Transform two dahes into an em-dash.
-function dashes(node) {
-  if (node.value === twoDashes) {
-    node.value = emDash
-  }
-}
-
-// Transform three dahes into an en-dash, and two into an em-dash.
-function inverted(node) {
-  if (node.value === threeDashes) {
-    node.value = enDash
-  } else if (node.value === twoDashes) {
-    node.value = emDash
-  }
-}
-
-// Transform double backticks and single quotes into smart quotes.
-function backticks(node) {
-  if (node.value === twoBackticks) {
-    node.value = openingDoubleQuote
-  } else if (node.value === twoSingleQuotes) {
-    node.value = closingDoubleQuote
-  }
-}
-
-// Transform single and double backticks and single quotes into smart quotes.
-function all(node) {
-  backticks(node)
-
-  if (node.value === backtick) {
-    node.value = openingSingleQuote
-  } else if (node.value === singleQuote) {
-    node.value = closingSingleQuote
-  }
-}
-
-// Transform multiple dots into unicode ellipses.
-function ellipses(node, index, parent) {
-  const value = node.value
-  const siblings = parent.children
-
-  // Simple node with three dots and without white-space.
-  if (threeFullStopsExpression.test(node.value)) {
-    node.value = ellipsis
-    return
-  }
-
-  if (!fullStopsExpression.test(value)) {
-    return
-  }
-
-  // Search for dot-nodes with white-space between.
-  const nodes = []
-  let position = index
-  let count = 1
-
-  // It’s possible that the node is merged with an adjacent word-node.  In that
-  // code, we cannot transform it because there’s no reference to the
-  // grandparent.
-  while (--position > 0) {
-    let sibling = siblings[position]
-
-    if (sibling.type !== whiteSpace) {
-      break
-    }
-
-    const queue = sibling
-    sibling = siblings[--position]
-    const type = sibling && sibling.type
-
-    if (
-      sibling &&
-      (type === punctuation || type === symbol) &&
-      fullStopsExpression.test(sibling.value)
-    ) {
-      nodes.push(queue, sibling)
-
-      count++
-
-      continue
-    }
-
-    break
-  }
-
-  if (count < 3) {
-    return
-  }
-
-  siblings.splice(index - nodes.length, nodes.length)
-
-  node.value = ellipsis
-}
-
-// Transform straight single- and double quotes into smart quotes.
-// eslint-disable-next-line complexity
-function quotes(node, index, parent) {
-  const siblings = parent.children
-  const value = node.value
-
-  if (value !== doubleQuote && value !== singleQuote) {
-    return
-  }
-
-  const previous = siblings[index - 1]
-  const next = siblings[index + 1]
-  const nextNext = siblings[index + 2]
-  const nextValue = next && toString(next)
-
-  if (
-    next &&
-    nextNext &&
-    (next.type === punctuation || next.type === symbol) &&
-    nextNext.type !== word
-  ) {
-    // Special case if the very first character is a quote followed by
-    // punctuation at a non-word-break. Close the quotes by brute force.
-    node.value = closingQuotes[value]
-  } else if (
-    nextNext &&
-    (nextValue === doubleQuote || nextValue === singleQuote) &&
-    nextNext.type === word
-  ) {
-    // Special case for double sets of quotes:
-    // `He said, "'Quoted' words in a larger quote."`
-    node.value = openingQuotes[value]
-    next.value = openingQuotes[nextValue]
-  } else if (next && decadeExpression.test(nextValue)) {
-    // Special case for decade abbreviations: `the '80s`
-    node.value = closingQuotes[value]
-  } else if (
-    previous &&
-    next &&
-    (previous.type === whiteSpace ||
-      previous.type === punctuation ||
-      previous.type === symbol) &&
-    next.type === word
-  ) {
-    // Get most opening single quotes.
-    node.value = openingQuotes[value]
-  } else if (
-    previous &&
-    previous.type !== whiteSpace &&
-    previous.type !== symbol &&
-    previous.type !== punctuation
-  ) {
-    // Closing quotes.
-    node.value = closingQuotes[value]
-  } else if (
-    !next ||
-    next.type === whiteSpace ||
-    ((value === singleQuote || value === apostrophe) && nextValue === 's')
-  ) {
-    node.value = closingQuotes[value]
-  } else {
-    node.value = openingQuotes[value]
+    })
   }
 }

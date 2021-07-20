@@ -7,6 +7,7 @@ test('Curly quotes', (t) => {
 
   t.test('should throw when not given `true`, `false`, or omitted', (st) => {
     st.throws(() => {
+      // @ts-expect-error: runtime.
       retext().use(retextSmartypants, {quotes: 1}).freeze()
     }, /1/)
 
@@ -275,6 +276,7 @@ test('En- and em-dashes', (t) => {
       '`inverted`, or omitted',
     (st) => {
       st.throws(() => {
+        // @ts-expect-error: runtime.
         retext().use(retextSmartypants, {dashes: 'test'}).freeze()
       }, /test/)
 
@@ -353,6 +355,7 @@ test('Backticks', (t) => {
     (st) => {
       st.throws(() => {
         retext()
+          // @ts-expect-error: runtime.
           .use(retextSmartypants, {backticks: Number.POSITIVE_INFINITY})
           .freeze()
       }, /Infinity/)
@@ -480,6 +483,7 @@ test('Ellipses', (t) => {
 
   t.test('should throw when not given `true`, `false`, or omitted', (st) => {
     st.throws(() => {
+      // @ts-expect-error: runtime.
       retext().use(retextSmartypants, {ellipses: Math}).freeze()
     }, /\[object Math]/)
 
