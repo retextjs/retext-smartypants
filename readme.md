@@ -100,9 +100,9 @@ abide by its terms.
 
 <!-- Definitions -->
 
-[build-badge]: https://img.shields.io/travis/retextjs/retext-smartypants.svg
+[build-badge]: https://github.com/retextjs/retext-smartypants/workflows/main/badge.svg
 
-[build]: https://travis-ci.org/retextjs/retext-smartypants
+[build]: https://github.com/retextjs/retext-smartypants/actions
 
 [coverage-badge]: https://img.shields.io/codecov/c/github/retextjs/retext-smartypants.svg
 
