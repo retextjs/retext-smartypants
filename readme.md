@@ -12,6 +12,9 @@
 
 ## Install
 
+This package is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c):
+Node 12+ is needed to use it and it must be `import`ed instead of `require`d.
+
 [npm][]:
 
 ```sh
@@ -21,11 +24,11 @@ npm install retext-smartypants
 ## Use
 
 ```js
-var retext = require('retext')
-var smartypants = require('retext-smartypants')
+import {retext} from 'retext'
+import retextSmartypants from 'retext-smartypants'
 
-var file = retext()
-  .use(smartypants)
+const file = retext()
+  .use(retextSmartypants)
   .processSync('He said, "A \'simple\' english sentence. . ."')
 
 console.log(String(file))
@@ -39,7 +42,10 @@ He said, “A ‘simple’ english sentence…”
 
 ## API
 
-### `retext().use(smartypants[, options])`
+This package exports no identifiers.
+The default export is `retextSmartypants`.
+
+### `unified().use(retextSmartypants[, options])`
 
 Replaces dumb/straight/typewriter punctuation marks with smart/curly punctuation
 marks.
