@@ -1,9 +1,5 @@
-'use strict'
-
-var visit = require('unist-util-visit')
-var toString = require('nlcst-to-string')
-
-module.exports = smartypants
+import visit from 'unist-util-visit'
+import toString from 'nlcst-to-string'
 
 var punctuation = 'PunctuationNode'
 var symbol = 'SymbolNode'
@@ -41,13 +37,13 @@ var educators = {}
 // Expose educators.
 educators.dashes = {
   true: dashes,
-  oldschool: oldschool,
-  inverted: inverted
+  oldschool,
+  inverted
 }
 
 educators.backticks = {
   true: backticks,
-  all: all
+  all
 }
 
 educators.ellipses = {
@@ -59,7 +55,7 @@ educators.quotes = {
 }
 
 // Attacher.
-function smartypants(options) {
+export default function retextSmartypants(options) {
   var methods = []
   var quotes
   var ellipses

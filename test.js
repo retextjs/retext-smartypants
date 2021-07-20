@@ -1,21 +1,20 @@
-'use strict'
-
-var test = require('tape')
-var retext = require('retext')
-var smartypants = require('.')
+import test from 'tape'
+import retext from 'retext'
+import smartypants from './index.js'
 
 test('Curly quotes', function (t) {
   var processor = retext().use(smartypants)
 
-  t.test('should throw when not given `true`, `false`, or omitted', function (
-    st
-  ) {
-    st.throws(function () {
-      retext().use(smartypants, {quotes: 1}).freeze()
-    }, /1/)
+  t.test(
+    'should throw when not given `true`, `false`, or omitted',
+    function (st) {
+      st.throws(function () {
+        retext().use(smartypants, {quotes: 1}).freeze()
+      }, /1/)
 
-    st.end()
-  })
+      st.end()
+    }
+  )
 
   t.test('should not throw when not omitted', function (st) {
     st.doesNotThrow(function () {
@@ -213,27 +212,29 @@ test('Curly quotes', function (t) {
     }
   )
 
-  t.test('should curl final double quotes when followed by a comma', function (
-    st
-  ) {
-    st.equal(
-      processor.processSync('"Alfred", bertrand.').toString(),
-      '“Alfred”, bertrand.'
-    )
+  t.test(
+    'should curl final double quotes when followed by a comma',
+    function (st) {
+      st.equal(
+        processor.processSync('"Alfred", bertrand.').toString(),
+        '“Alfred”, bertrand.'
+      )
 
-    st.end()
-  })
+      st.end()
+    }
+  )
 
-  t.test('should curl final single quotes when followed by a comma', function (
-    st
-  ) {
-    st.equal(
-      processor.processSync("'Alfred', bertrand.").toString(),
-      '‘Alfred’, bertrand.'
-    )
+  t.test(
+    'should curl final single quotes when followed by a comma',
+    function (st) {
+      st.equal(
+        processor.processSync("'Alfred', bertrand.").toString(),
+        '‘Alfred’, bertrand.'
+      )
 
-    st.end()
-  })
+      st.end()
+    }
+  )
 
   t.test('should curl apostrophes when followed `s`', function (st) {
     st.equal(
@@ -244,13 +245,14 @@ test('Curly quotes', function (t) {
     st.end()
   })
 
-  t.test('should curl apostrophes when followed by a decade (`80s`)', function (
-    st
-  ) {
-    st.equal(processor.processSync("In the '90s.").toString(), 'In the ’90s.')
+  t.test(
+    'should curl apostrophes when followed by a decade (`80s`)',
+    function (st) {
+      st.equal(processor.processSync("In the '90s.").toString(), 'In the ’90s.')
 
-    st.end()
-  })
+      st.end()
+    }
+  )
 
   t.test(
     'should curl final double quotes when followed by a full stop',
@@ -362,7 +364,9 @@ test('Backticks', function (t) {
     'should throw when not given `true`, `false`, `all`, or omitted',
     function (st) {
       st.throws(function () {
-        retext().use(smartypants, {backticks: Infinity}).freeze()
+        retext()
+          .use(smartypants, {backticks: Number.POSITIVE_INFINITY})
+          .freeze()
       }, /Infinity/)
 
       st.end()
@@ -486,15 +490,16 @@ test('Backticks', function (t) {
 test('Ellipses', function (t) {
   var processor = retext().use(smartypants)
 
-  t.test('should throw when not given `true`, `false`, or omitted', function (
-    st
-  ) {
-    st.throws(function () {
-      retext().use(smartypants, {ellipses: Math}).freeze()
-    }, /\[object Math]/)
+  t.test(
+    'should throw when not given `true`, `false`, or omitted',
+    function (st) {
+      st.throws(function () {
+        retext().use(smartypants, {ellipses: Math}).freeze()
+      }, /\[object Math]/)
 
-    st.end()
-  })
+      st.end()
+    }
+  )
 
   t.test('should not throw when not omitted', function (st) {
     st.doesNotThrow(function () {
@@ -579,16 +584,17 @@ test('Ellipses', function (t) {
     }
   )
 
-  t.test('should replace three padded final full stops with spaces', function (
-    st
-  ) {
-    st.equal(
-      processor.processSync('Alfred Bertrand . . .').toString(),
-      'Alfred Bertrand \u2026'
-    )
+  t.test(
+    'should replace three padded final full stops with spaces',
+    function (st) {
+      st.equal(
+        processor.processSync('Alfred Bertrand . . .').toString(),
+        'Alfred Bertrand \u2026'
+      )
 
-    st.end()
-  })
+      st.end()
+    }
+  )
 
   t.test('should replace three full stops with spaces', function (st) {
     st.equal(
