@@ -1,5 +1,5 @@
-import visit from 'unist-util-visit'
-import toString from 'nlcst-to-string'
+import {visit} from 'unist-util-visit'
+import {toString} from 'nlcst-to-string'
 
 var punctuation = 'PunctuationNode'
 var symbol = 'SymbolNode'
