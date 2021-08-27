@@ -1,4 +1,11 @@
 /**
+ * @typedef {import('nlcst').Root} Root
+ * @typedef {import('nlcst').Sentence} Sentence
+ * @typedef {import('nlcst').Word} Word
+ * @typedef {import('nlcst').Symbol} Symbol
+ * @typedef {import('nlcst').Punctuation} Punctuation
+ * @typedef {import('nlcst').SentenceContent} SentenceContent
+ *
  * @typedef Options
  *   Configuration.
  * @property {boolean} [quotes=true]
@@ -33,14 +40,10 @@
  *   When `'inverted'`, converts two dashes into an em-dash, and three dashes
  *   into an en-dash.
  *
- * @typedef {import('unist').Node} Node
- * @typedef {import('unist').Parent} Parent
- * @typedef {import('unist').Literal<string>} Literal
- *
  * @callback Method
- * @param {Literal} node
+ * @param {Punctuation|Symbol} node
  * @param {number} index
- * @param {Parent} parent
+ * @param {Word|Sentence} parent
  * @returns {void}
  */
 
@@ -136,7 +139,7 @@ const educators = {
       }
 
       // Search for dot-nodes with white-space between.
-      /** @type {Node[]} */
+      /** @type {SentenceContent[]} */
       const nodes = []
       let position = index
       let count = 1
@@ -158,7 +161,6 @@ const educators = {
           sibling &&
           (sibling.type === 'PunctuationNode' ||
             sibling.type === 'SymbolNode') &&
-          // @ts-expect-error: it’s a literal.
           /^\.+$/.test(sibling.value)
         ) {
           nodes.push(queue, sibling)
@@ -257,7 +259,7 @@ const educators = {
  * Plugin to replace dumb/straight/typewriter punctuation marks with smart/curly
  * punctuation marks.
  *
- * @type {import('unified').Plugin<[Options?]>}
+ * @type {import('unified').Plugin<[Options?]|[], Root>}
  */
 export default function retextSmartypants(options = {}) {
   /** @type {Array.<Method>} */
