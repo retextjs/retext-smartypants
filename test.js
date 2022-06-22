@@ -267,6 +267,21 @@ test('Curly quotes', (t) => {
     }
   )
 
+  t.test('should use quotes from options', (st) => {
+    st.equal(
+      retext()
+        .use(retextSmartypants, {
+          openingQuotes: {'"': '«', "'": '‹'},
+          closingQuotes: {'"': '»', "'": '›'}
+        })
+        .processSync('Alfred "bertrand" \'cees\'.')
+        .toString(),
+      'Alfred «bertrand» ‹cees›.'
+    )
+
+    st.end()
+  })
+
   t.end()
 })
 
