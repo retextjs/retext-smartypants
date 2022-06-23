@@ -57,7 +57,10 @@ import {toString} from 'nlcst-to-string'
 const defaultClosingQuotes = {'"': '”', "'": '’'}
 const defaultOpeningQuotes = {'"': '“', "'": '‘'}
 
-function createEducators(/** @type {Options} */ options = {}) {
+/**
+ * @param {Options} options
+ */
+function createEducators(options) {
   const {
     closingQuotes = defaultClosingQuotes,
     openingQuotes = defaultOpeningQuotes
