@@ -271,8 +271,8 @@ test('Curly quotes', (t) => {
     st.equal(
       retext()
         .use(retextSmartypants, {
-          openingQuotes: {'"': '«', "'": '‹'},
-          closingQuotes: {'"': '»', "'": '›'}
+          openingQuotes: {double: '«', single: '‹'},
+          closingQuotes: {double: '»', single: '›'}
         })
         .processSync('Alfred "bertrand" \'cees\'.')
         .toString(),

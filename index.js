@@ -6,6 +6,13 @@
  * @typedef {import('nlcst').Punctuation} Punctuation
  * @typedef {import('nlcst').SentenceContent} SentenceContent
  *
+ * @typedef QuoteCharacterMap
+ *   Quote characters.
+ * @property {string} double
+ *   Character to use for double quotes.
+ * @property {string} single
+ *   Character to use for single quotes.
+ *
  * @typedef Options
  *   Configuration.
  * @property {boolean} [quotes=true]
@@ -13,9 +20,9 @@
  *
  *   Converts straight double and single quotes to smart double or single
  *   quotes.
- * @property {{ '"': string; "'": string }} [openingQuotes]
+ * @property {QuoteCharacterMap} [openingQuotes]
  *   Characters to use for opening double and single quotes.
- * @property {{ '"': string; "'": string }} [closingQuotes]
+ * @property {QuoteCharacterMap} [closingQuotes]
  *   Characters to use for closing double and single quotes.
  * @property {boolean} [ellipses=true]
  *   Create smart ellipses.
@@ -61,10 +68,12 @@ const defaultOpeningQuotes = {'"': '“', "'": '‘'}
  * @param {Options} options
  */
 function createEducators(options) {
-  const {
-    closingQuotes = defaultClosingQuotes,
-    openingQuotes = defaultOpeningQuotes
-  } = options
+  const closingQuotes = options.closingQuotes
+    ? {'"': options.closingQuotes.double, "'": options.closingQuotes.single}
+    : defaultClosingQuotes
+  const openingQuotes = options.openingQuotes
+    ? {'"': options.openingQuotes.double, "'": options.openingQuotes.single}
+    : defaultOpeningQuotes
 
   const educators = {
     dashes: {
