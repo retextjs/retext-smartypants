@@ -58,6 +58,14 @@ Create smart quotes (`boolean`, default: `true`).
 
 Converts straight double and single quotes to smart double or single quotes.
 
+###### `options.openingQuotes`
+
+Which characters to use for opening quotes `{double: '“', single: '‘'}`.
+
+###### `options.closingQuotes`
+
+Which characters to use for closing quotes `{double: '”', single: '’'}`.
+
 ###### `options.ellipses`
 
 Create smart ellipses (`boolean`, default: `true`).
