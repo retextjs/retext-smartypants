@@ -120,9 +120,9 @@ function createEducators(options) {
        */
       true(node) {
         if (node.value === '``') {
-          node.value = openingQuotes['"']
+          node.value = '“'
         } else if (node.value === "''") {
-          node.value = closingQuotes['"']
+          node.value = '”'
         }
       },
       /**
@@ -134,9 +134,9 @@ function createEducators(options) {
         educators.backticks.true(node, index, parent)
 
         if (node.value === '`') {
-          node.value = openingQuotes["'"]
+          node.value = '‘'
         } else if (node.value === "'") {
-          node.value = closingQuotes["'"]
+          node.value = '’'
         }
       }
     },
