@@ -420,6 +420,42 @@ test('Backticks', (t) => {
       }
     )
 
+    st.test(
+      'should replace two backticks with an opening double quote from options',
+      (sst) => {
+        sst.equal(
+          retext()
+            .use(retextSmartypants, {
+              quotes: false,
+              openingQuotes: {double: '«', single: '‹'}
+            })
+            .processSync('``Alfred bertrand.')
+            .toString(),
+          '«Alfred bertrand.'
+        )
+
+        sst.end()
+      }
+    )
+
+    st.test(
+      'should replace two single quotes with a closing double quote from options',
+      (sst) => {
+        sst.equal(
+          retext()
+            .use(retextSmartypants, {
+              quotes: false,
+              closingQuotes: {double: '»', single: '›'}
+            })
+            .processSync("Alfred'' bertrand.")
+            .toString(),
+          'Alfred» bertrand.'
+        )
+
+        sst.end()
+      }
+    )
+
     st.test('should NOT replace a single backtick', (sst) => {
       sst.equal(
         processor.processSync('`Alfred bertrand.').toString(),
@@ -486,6 +522,82 @@ test('Backticks', (t) => {
 
       sst.end()
     })
+
+    st.test(
+      'should replace two backticks with an opening double quote from options',
+      (sst) => {
+        sst.equal(
+          retext()
+            .use(retextSmartypants, {
+              backticks: 'all',
+              quotes: false,
+              openingQuotes: {double: '«', single: '‹'}
+            })
+            .processSync('``Alfred bertrand.')
+            .toString(),
+          '«Alfred bertrand.'
+        )
+
+        sst.end()
+      }
+    )
+
+    st.test(
+      'should replace two single quotes with a closing double quote from options',
+      (sst) => {
+        sst.equal(
+          retext()
+            .use(retextSmartypants, {
+              backticks: 'all',
+              quotes: false,
+              closingQuotes: {double: '»', single: '›'}
+            })
+            .processSync("Alfred'' bertrand.")
+            .toString(),
+          'Alfred» bertrand.'
+        )
+
+        sst.end()
+      }
+    )
+
+    st.test(
+      'should replace a single backtick with character from options',
+      (sst) => {
+        sst.equal(
+          retext()
+            .use(retextSmartypants, {
+              backticks: 'all',
+              quotes: false,
+              openingQuotes: {double: '«', single: '‹'}
+            })
+            .processSync('`Alfred bertrand.')
+            .toString(),
+          '‹Alfred bertrand.'
+        )
+
+        sst.end()
+      }
+    )
+
+    st.test(
+      'should replace a single quote from options with character from options',
+      (sst) => {
+        sst.equal(
+          retext()
+            .use(retextSmartypants, {
+              backticks: 'all',
+              quotes: false,
+              closingQuotes: {double: '»', single: '›'}
+            })
+            .processSync("Alfred' bertrand.")
+            .toString(),
+          'Alfred› bertrand.'
+        )
+
+        sst.end()
+      }
+    )
 
     st.end()
   })
