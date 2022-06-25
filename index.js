@@ -161,7 +161,7 @@ function createEducators(options) {
         }
 
         // Search for dot-nodes with white-space between.
-        /** @type {SentenceContent[]} */
+        /** @type {Array<SentenceContent>} */
         const nodes = []
         let position = index
         let count = 1
@@ -287,7 +287,7 @@ function createEducators(options) {
  * @type {import('unified').Plugin<[Options?]|[], Root>}
  */
 export default function retextSmartypants(options = {}) {
-  /** @type {Array.<Method>} */
+  /** @type {Array<Method>} */
   const methods = []
   /** @type {Options['quotes']} */
   let quotes
