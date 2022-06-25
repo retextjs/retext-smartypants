@@ -8,17 +8,54 @@
 [![Backers][backers-badge]][collective]
 [![Chat][chat-badge]][chat]
 
-[**retext**][retext] plugin to implement [SmartyPants][].
+**[retext][]** plugin to apply [SmartyPants][].
+
+## Contents
+
+*   [What is this?](#what-is-this)
+*   [When should I use this?](#when-should-i-use-this)
+*   [Install](#install)
+*   [Use](#use)
+*   [API](#api)
+    *   [`unified().use(retextSmartypants[, options])`](#unifieduseretextsmartypants-options)
+*   [Types](#types)
+*   [Compatibility](#compatibility)
+*   [Contribute](#contribute)
+*   [License](#license)
+
+## What is this?
+
+This package is a [unified][] ([retext][]) plugin to apply [SmartyPants][] to
+the syntax tree.
+It replaces straight/typewriter punctuation marks and symbols with smart/curly
+marks and symbols.
+
+## When should I use this?
+
+You can use this plugin any time there straight marks and symbols in prose,
+but you want to use smart ones instead.
 
 ## Install
 
-This package is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c):
-Node 12+ is needed to use it and it must be `import`ed instead of `require`d.
-
-[npm][]:
+This package is [ESM only][esm].
+In Node.js (version 12.20+, 14.14+, 16.0+, or 18.0+), install with [npm][]:
 
 ```sh
 npm install retext-smartypants
+```
+
+In Deno with [`esm.sh`][esmsh]:
+
+```js
+import retextSmartypants from 'https://esm.sh/retext-smartypants@5'
+```
+
+In browsers with [`esm.sh`][esmsh]:
+
+```html
+<script type="module">
+  import retextSmartypants from 'https://esm.sh/retext-smartypants@5?bundle'
+</script>
 ```
 
 ## Use
@@ -27,9 +64,9 @@ npm install retext-smartypants
 import {retext} from 'retext'
 import retextSmartypants from 'retext-smartypants'
 
-const file = retext()
+const file = await retext()
   .use(retextSmartypants)
-  .processSync('He said, "A \'simple\' english sentence. . ."')
+  .process('He said, "A \'simple\' english sentence. . ."')
 
 console.log(String(file))
 ```
@@ -47,56 +84,71 @@ The default export is `retextSmartypants`.
 
 ### `unified().use(retextSmartypants[, options])`
 
-Replaces dumb/straight/typewriter punctuation marks with smart/curly punctuation
-marks.
+Apply [SmartyPants][].
 
 ##### `options`
+
+Configuration (optional).
 
 ###### `options.quotes`
 
 Create smart quotes (`boolean`, default: `true`).
 
 Converts straight double and single quotes to smart double or single quotes.
+The options `options.openingQuotes` and `options.closingQuotes` affect which
+quotes are considered smart.
 
 ###### `options.openingQuotes`
 
-Which characters to use for opening quotes `{double: '“', single: '‘'}`.
+Characters to use for opening quotes `{single: '‘', double: '“'}`.
 
 ###### `options.closingQuotes`
 
-Which characters to use for closing quotes `{double: '”', single: '’'}`.
+Characters to use for closing quotes `{single: '’', double: '”'}`.
 
 ###### `options.ellipses`
 
 Create smart ellipses (`boolean`, default: `true`).
 
-Converts triple dot characters (with or without spaces between) into a single
-Unicode ellipsis character
+Converts triple dot characters (with or without spaces) into a single unicode
+ellipsis character.
 
 ###### `options.backticks`
 
 Create smart quotes from backticks (`boolean` or `'all'`, default: `true`).
 
-When `true`, converts double back-ticks into an opening double quote, and
+When `true`, converts double backticks into an opening double quote, and
 double straight single quotes into a closing double quote.
 
-When `'all'`: does the preceding and converts single back-ticks into an
-opening single quote, and a straight single quote into a closing single
-smart quote.
+When `'all'`: does the what `true` does with the addition of converting single
+backticks into an opening single quote, and a straight single quote into a
+closing single smart quote.
 
-> **Note**: Quotes can not be `true` when `backticks` is `'all'`;
+> 👉 **Note**: `options.quotes` can not be `true` when `backticks` is `'all'`.
 
 ###### `options.dashes`
 
 Create smart dashes (`boolean` or `'oldschool'`, `'inverted'`, default: `true`).
 
-When `true`, converts two dashes into an em-dash character.
+When `true`, converts two dashes into an em dash character.
 
-When `'oldschool'`, converts two dashes into an en-dash, and three dashes into
-an em-dash.
+When `'oldschool'`, converts two dashes into an en dash, and three dashes into
+an em dash.
 
-When `'inverted'`, converts two dashes into an em-dash, and three dashes into
-an en-dash.
+When `'inverted'`, converts two dashes into an em dash, and three dashes into
+an en dash.
+
+## Types
+
+This package is fully typed with [TypeScript][].
+It exports the additional types `Options` and `QuoteCharacterMap`.
+
+## Compatibility
+
+Projects maintained by the unified collective are compatible with all maintained
+versions of Node.js.
+As of now, that is Node.js 12.20+, 14.14+, 16.0+, and 18.0+.
+Our projects sometimes work with older versions, but this is not guaranteed.
 
 ## Contribute
 
@@ -142,17 +194,25 @@ abide by its terms.
 
 [npm]: https://docs.npmjs.com/cli/install
 
+[esm]: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c
+
+[esmsh]: https://esm.sh
+
+[typescript]: https://www.typescriptlang.org
+
 [health]: https://github.com/retextjs/.github
 
-[contributing]: https://github.com/retextjs/.github/blob/HEAD/contributing.md
+[contributing]: https://github.com/retextjs/.github/blob/main/contributing.md
 
-[support]: https://github.com/retextjs/.github/blob/HEAD/support.md
+[support]: https://github.com/retextjs/.github/blob/main/support.md
 
-[coc]: https://github.com/retextjs/.github/blob/HEAD/code-of-conduct.md
+[coc]: https://github.com/retextjs/.github/blob/main/code-of-conduct.md
 
 [license]: license
 
 [author]: https://wooorm.com
+
+[unified]: https://github.com/unifiedjs/unified
 
 [retext]: https://github.com/retextjs/retext
 
