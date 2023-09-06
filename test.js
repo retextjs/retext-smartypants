@@ -267,6 +267,30 @@ test('Curly quotes', (t) => {
     }
   )
 
+  t.test(
+    'should never curl double quotes when escaped with a backslash',
+    (st) => {
+      st.equal(
+        processor.processSync('\\"Hello, world.\\"').toString(),
+        '"Hello, world."'
+      )
+
+      st.end()
+    }
+  )
+
+  t.test(
+    'should never curl single quotes when escaped with a backslash',
+    (st) => {
+      st.equal(
+        processor.processSync("\\'Hello, world.\\'").toString(),
+        "'Hello, world.'"
+      )
+
+      st.end()
+    }
+  )
+
   t.test('should use quotes from options', (st) => {
     st.equal(
       retext()

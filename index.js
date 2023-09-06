@@ -224,6 +224,16 @@ function createEducators(options) {
         const nextNext = siblings[index + 2]
         const nextValue = next && toString(next)
 
+        // If preceded by a backslash, don't substitute
+        if (
+          previous &&
+          previous.type === 'PunctuationNode' &&
+          previous.value === '\\'
+        ) {
+          parent.children.splice(index - 1, 1)
+          return
+        }
+
         if (
           next &&
           nextNext &&
