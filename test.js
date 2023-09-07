@@ -1,274 +1,238 @@
-import test from 'tape'
+import assert from 'node:assert/strict'
+import test from 'node:test'
 import {retext} from 'retext'
 import retextSmartypants from './index.js'
 
-test('Curly quotes', (t) => {
+test('Curly quotes', async function (t) {
   const processor = retext().use(retextSmartypants)
 
-  t.test('should throw when not given `true`, `false`, or omitted', (st) => {
-    st.throws(() => {
-      // @ts-expect-error: runtime.
-      retext().use(retextSmartypants, {quotes: 1}).freeze()
-    }, /1/)
+  await t.test(
+    'should throw when not given `true`, `false`, or omitted',
+    async function () {
+      assert.throws(function () {
+        // @ts-expect-error: runtime.
+        retext().use(retextSmartypants, {quotes: 1}).freeze()
+      }, /`1` is not a valid value for `quotes`/)
+    }
+  )
 
-    st.end()
-  })
-
-  t.test('should not throw when not omitted', (st) => {
-    st.doesNotThrow(() => {
+  await t.test('should not throw when not omitted', async function () {
+    assert.doesNotThrow(async function () {
       retext().use(retextSmartypants, {quotes: false}).freeze()
     })
-
-    st.end()
   })
 
-  t.test('should curl double quotes', (st) => {
-    st.equal(
+  await t.test('should curl double quotes', async function () {
+    assert.equal(
       processor.processSync('Alfred "bertrand" cees.').toString(),
       'Alfred “bertrand” cees.'
     )
-
-    st.end()
   })
 
-  t.test('should curl single quotes', (st) => {
-    st.equal(
+  await t.test('should curl single quotes', async function () {
+    assert.equal(
       processor.processSync("Alfred 'bertrand' cees.").toString(),
       'Alfred ‘bertrand’ cees.'
     )
-
-    st.end()
   })
 
-  t.test('should curl initial double quotes', (st) => {
-    st.equal(
+  await t.test('should curl initial double quotes', async function () {
+    assert.equal(
       processor.processSync('"Alfred" bertrand.').toString(),
       '“Alfred” bertrand.'
     )
-
-    st.end()
   })
 
-  t.test('should curl initial single quotes', (st) => {
-    st.equal(
+  await t.test('should curl initial single quotes', async function () {
+    assert.equal(
       processor.processSync("'Alfred' bertrand.").toString(),
       '‘Alfred’ bertrand.'
     )
-
-    st.end()
   })
 
-  t.test('should curl final double quotes', (st) => {
-    st.equal(
+  await t.test('should curl final double quotes', async function () {
+    assert.equal(
       processor.processSync('Alfred "bertrand".').toString(),
       'Alfred “bertrand”.'
     )
-
-    st.end()
   })
 
-  t.test('should curl final single quotes', (st) => {
-    st.equal(
+  await t.test('should curl final single quotes', async function () {
+    assert.equal(
       processor.processSync("Alfred 'bertrand'.").toString(),
       'Alfred ‘bertrand’.'
     )
-
-    st.end()
   })
 
-  t.test('should curl single quotes in double quotes', (st) => {
-    st.equal(
+  await t.test('should curl single quotes in double quotes', async function () {
+    assert.equal(
       processor.processSync('"\'Alfred\' bertrand" cees.').toString(),
       '“‘Alfred’ bertrand” cees.'
     )
 
-    st.equal(
+    assert.equal(
       processor.processSync('"Alfred \'bertrand\'" cees.').toString(),
       '“Alfred ‘bertrand’” cees.'
     )
-
-    st.end()
   })
 
-  t.test('should curl double quotes in single quotes', (st) => {
-    st.equal(
+  await t.test('should curl double quotes in single quotes', async function () {
+    assert.equal(
       processor.processSync('\'"Alfred" bertrand\' cees.').toString(),
       '‘“Alfred” bertrand’ cees.'
     )
 
-    st.equal(
+    assert.equal(
       processor.processSync('\'Alfred "bertrand"\' cees.').toString(),
       '‘Alfred “bertrand”’ cees.'
     )
-
-    st.end()
   })
 
-  t.test('should curl nested double quotes', (st) => {
-    st.equal(
+  await t.test('should curl nested double quotes', async function () {
+    assert.equal(
       processor.processSync('"Alfred "bertrand" cees."').toString(),
       '“Alfred “bertrand” cees.”'
     )
-
-    st.end()
   })
 
-  t.test('should curl nested single quotes', (st) => {
-    st.equal(
+  await t.test('should curl nested single quotes', async function () {
+    assert.equal(
       processor.processSync("'Alfred 'bertrand' cees.'").toString(),
       '‘Alfred ‘bertrand’ cees.’'
     )
-
-    st.end()
   })
 
-  t.test(
+  await t.test(
     'should curl initial double quotes when followed by a full stop',
-    (st) => {
-      st.equal(
+    async function () {
+      assert.equal(
         processor.processSync('Alfred ".bertrand" cees.').toString(),
         'Alfred “.bertrand” cees.'
       )
-
-      st.end()
     }
   )
 
-  t.test(
+  await t.test(
     'should curl initial single quotes when followed by a full stop',
-    (st) => {
-      st.equal(
+    async function () {
+      assert.equal(
         processor.processSync("Alfred '.bertrand' cees.").toString(),
         'Alfred ‘.bertrand’ cees.'
       )
-
-      st.end()
     }
   )
 
-  t.test(
+  await t.test(
     'should curl initial double quotes when preceded by a full stop',
-    (st) => {
-      st.equal(
+    async function () {
+      assert.equal(
         processor.processSync('Alfred "bertrand." cees.').toString(),
         'Alfred “bertrand.” cees.'
       )
-
-      st.end()
     }
   )
 
-  t.test(
+  await t.test(
     'should curl initial single quotes when preceded by a full stop',
-    (st) => {
-      st.equal(
+    async function () {
+      assert.equal(
         processor.processSync("Alfred 'bertrand.' cees.").toString(),
         'Alfred ‘bertrand.’ cees.'
       )
-
-      st.end()
     }
   )
 
-  t.test(
+  await t.test(
     'should curl initial double quotes when followed by a multiple ' +
       'full-stops',
-    (st) => {
-      st.equal(processor.processSync('"..Alfred"').toString(), '“..Alfred”')
-
-      st.end()
+    async function () {
+      assert.equal(processor.processSync('"..Alfred"').toString(), '“..Alfred”')
     }
   )
 
-  t.test(
+  await t.test(
     'should curl initial single quotes when followed by a multiple ' +
       'full-stops',
-    (st) => {
-      st.equal(processor.processSync("'..Alfred'").toString(), '‘..Alfred’')
-
-      st.end()
+    async function () {
+      assert.equal(processor.processSync("'..Alfred'").toString(), '‘..Alfred’')
     }
   )
 
-  t.test(
+  await t.test(
     'should curl final double quotes when followed by a multiple ' +
       'full-stops',
-    (st) => {
-      st.equal(processor.processSync('"Alfred"..').toString(), '“Alfred”..')
-
-      st.end()
+    async function () {
+      assert.equal(processor.processSync('"Alfred"..').toString(), '“Alfred”..')
     }
   )
 
-  t.test(
+  await t.test(
     'should curl final single quotes when followed by a multiple ' +
       'full-stops',
-    (st) => {
-      st.equal(processor.processSync("'Alfred'..").toString(), '‘Alfred’..')
-
-      st.end()
+    async function () {
+      assert.equal(processor.processSync("'Alfred'..").toString(), '‘Alfred’..')
     }
   )
 
-  t.test('should curl final double quotes when followed by a comma', (st) => {
-    st.equal(
-      processor.processSync('"Alfred", bertrand.').toString(),
-      '“Alfred”, bertrand.'
-    )
+  await t.test(
+    'should curl final double quotes when followed by a comma',
+    async function () {
+      assert.equal(
+        processor.processSync('"Alfred", bertrand.').toString(),
+        '“Alfred”, bertrand.'
+      )
+    }
+  )
 
-    st.end()
-  })
+  await t.test(
+    'should curl final single quotes when followed by a comma',
+    async function () {
+      assert.equal(
+        processor.processSync("'Alfred', bertrand.").toString(),
+        '‘Alfred’, bertrand.'
+      )
+    }
+  )
 
-  t.test('should curl final single quotes when followed by a comma', (st) => {
-    st.equal(
-      processor.processSync("'Alfred', bertrand.").toString(),
-      '‘Alfred’, bertrand.'
-    )
-
-    st.end()
-  })
-
-  t.test('should curl apostrophes when followed `s`', (st) => {
-    st.equal(
+  await t.test('should curl apostrophes when followed `s`', async function () {
+    assert.equal(
       processor.processSync("Alfred's bertrand.").toString(),
       'Alfred’s bertrand.'
     )
-
-    st.end()
   })
 
-  t.test('should curl apostrophes when followed by a decade (`80s`)', (st) => {
-    st.equal(processor.processSync("In the '90s.").toString(), 'In the ’90s.')
+  await t.test(
+    'should curl apostrophes when followed by a decade (`80s`)',
+    async function () {
+      assert.equal(
+        processor.processSync("In the '90s.").toString(),
+        'In the ’90s.'
+      )
+    }
+  )
 
-    st.end()
-  })
-
-  t.test(
+  await t.test(
     'should curl final double quotes when followed by a full stop',
-    (st) => {
-      st.equal(
+    async function () {
+      assert.equal(
         processor.processSync('"Alfred bertrand". Cees.').toString(),
         '“Alfred bertrand”. Cees.'
       )
-
-      st.end()
     }
   )
 
-  t.test(
+  await t.test(
     'should curl final single quotes when followed by a full stop',
-    (st) => {
-      st.equal(
+    async function () {
+      assert.equal(
         processor.processSync("'Alfred bertrand'. Cees.").toString(),
         '‘Alfred bertrand’. Cees.'
       )
-
-      st.end()
     }
   )
 
-  t.test('should use quotes from options', (st) => {
-    st.equal(
+  await t.test('should use quotes from options', async function () {
+    assert.equal(
       retext()
         .use(retextSmartypants, {
           openingQuotes: {double: '«', single: '‹'},
@@ -278,398 +242,350 @@ test('Curly quotes', (t) => {
         .toString(),
       'Alfred «bertrand» ‹cees›.'
     )
-
-    st.end()
   })
-
-  t.end()
 })
 
-test('En- and em-dashes', (t) => {
-  t.test(
+test('En- and em-dashes', async function (t) {
+  await t.test(
     'should throw when not given `true`, `false`, `oldschool`, ' +
       '`inverted`, or omitted',
-    (st) => {
-      st.throws(() => {
+    async function () {
+      assert.throws(function () {
         // @ts-expect-error: runtime.
         retext().use(retextSmartypants, {dashes: 'test'}).freeze()
-      }, /test/)
-
-      st.end()
+      }, /`test` is not a valid value for `dahes`/)
     }
   )
 
-  t.test('should not throw when not omitted', (st) => {
+  await t.test('should not throw when not omitted', async function () {
     retext().use(retextSmartypants, {dashes: false}).freeze()
-
-    st.end()
   })
 
-  t.test('true', (st) => {
-    st.test('should replace two dashes with an em-dash', (sst) => {
-      sst.equal(
-        retext()
-          .use(retextSmartypants)
-          .processSync('Alfred--bertrand--cees.')
-          .toString(),
-        'Alfred—bertrand—cees.'
-      )
-
-      sst.end()
-    })
-
-    st.end()
+  await t.test('true', async function (t) {
+    await t.test(
+      'should replace two dashes with an em-dash',
+      async function () {
+        assert.equal(
+          retext()
+            .use(retextSmartypants)
+            .processSync('Alfred--bertrand--cees.')
+            .toString(),
+          'Alfred—bertrand—cees.'
+        )
+      }
+    )
   })
 
-  t.test('oldschool', (st) => {
-    t.test(
+  await t.test('oldschool', async function (t) {
+    await t.test(
       'should replace two dashes with an en-dash, three dashes with ' +
         'an em-dash',
-      (sst) => {
-        sst.equal(
+      async function () {
+        assert.equal(
           retext()
             .use(retextSmartypants, {dashes: 'oldschool'})
             .processSync('Alfred--bertrand---cees.')
             .toString(),
           'Alfred–bertrand—cees.'
         )
-
-        sst.end()
       }
     )
-
-    st.end()
   })
 
-  t.test('inverted', (st) => {
-    t.test(
+  await t.test('inverted', async function (t) {
+    await t.test(
       'should replace two dashes with an em-dash, three dashes with ' +
         'an en-dash',
-      (sst) => {
-        sst.equal(
+      async function () {
+        assert.equal(
           retext()
             .use(retextSmartypants, {dashes: 'inverted'})
             .processSync('Alfred--bertrand---cees.')
             .toString(),
           'Alfred—bertrand–cees.'
         )
-
-        sst.end()
       }
     )
-
-    st.end()
   })
-
-  t.end()
 })
 
-test('Backticks', (t) => {
-  t.test(
+test('Backticks', async function (t) {
+  await t.test(
     'should throw when not given `true`, `false`, `all`, or omitted',
-    (st) => {
-      st.throws(() => {
+    async function () {
+      assert.throws(function () {
         retext()
           // @ts-expect-error: runtime.
           .use(retextSmartypants, {backticks: Number.POSITIVE_INFINITY})
           .freeze()
-      }, /Infinity/)
-
-      st.end()
+      }, /`Infinity` is not a valid value for `backticks`/)
     }
   )
 
-  t.test('should not throw when not omitted', (st) => {
+  await t.test('should not throw when not omitted', async function () {
     retext().use(retextSmartypants, {backticks: false}).freeze()
-
-    st.end()
   })
 
-  t.test('should throw when `all` is combined with `quotes`', (st) => {
-    st.throws(() => {
-      retext().use(retextSmartypants, {backticks: 'all'}).freeze()
-    }, /`backticks: all` is not a valid value when `quotes: true`/)
+  await t.test(
+    'should throw when `all` is combined with `quotes`',
+    async function () {
+      assert.throws(function () {
+        retext().use(retextSmartypants, {backticks: 'all'}).freeze()
+      }, /`backticks: all` is not a valid value when `quotes: true`/)
+    }
+  )
 
-    st.end()
-  })
-
-  t.test('true', (st) => {
+  await t.test('true', async function (t) {
     const processor = retext().use(retextSmartypants, {quotes: false})
 
-    st.test(
+    await t.test(
       'should replace two backticks with an opening double quote',
-      (sst) => {
-        sst.equal(
+      async function () {
+        assert.equal(
           processor.processSync('``Alfred bertrand.').toString(),
           '“Alfred bertrand.'
         )
-
-        sst.end()
       }
     )
 
-    st.test(
+    await t.test(
       'should replace two single quotes with a closing double quote',
-      (sst) => {
-        sst.equal(
+      async function () {
+        assert.equal(
           processor.processSync("Alfred'' bertrand.").toString(),
           'Alfred” bertrand.'
         )
-
-        sst.end()
       }
     )
 
-    st.test('should NOT replace a single backtick', (sst) => {
-      sst.equal(
+    await t.test('should NOT replace a single backtick', async function () {
+      assert.equal(
         processor.processSync('`Alfred bertrand.').toString(),
         '`Alfred bertrand.'
       )
-
-      sst.end()
     })
 
-    st.test('should NOT replace a single quote', (sst) => {
-      sst.equal(
+    await t.test('should NOT replace a single quote', async function () {
+      assert.equal(
         processor.processSync("Alfred' bertrand.").toString(),
         "Alfred' bertrand."
       )
-
-      sst.end()
     })
   })
 
-  t.test('all', (st) => {
+  await t.test('all', async function (t) {
     const processor = retext().use(retextSmartypants, {
       backticks: 'all',
       quotes: false
     })
 
-    st.test(
+    await t.test(
       'should replace two backticks with an opening double quote',
-      (sst) => {
-        sst.equal(
+      async function () {
+        assert.equal(
           processor.processSync('``Alfred bertrand.').toString(),
           '“Alfred bertrand.'
         )
-
-        sst.end()
       }
     )
 
-    st.test(
+    await t.test(
       'should replace two single quotes with a closing double quote',
-      (sst) => {
-        sst.equal(
+      async function () {
+        assert.equal(
           processor.processSync("Alfred'' bertrand.").toString(),
           'Alfred” bertrand.'
         )
-
-        sst.end()
       }
     )
 
-    st.test('should replace a single backtick', (sst) => {
-      sst.equal(
+    await t.test('should replace a single backtick', async function () {
+      assert.equal(
         processor.processSync('`Alfred bertrand.').toString(),
         '‘Alfred bertrand.'
       )
-
-      sst.end()
     })
 
-    st.test('should replace a single quote', (sst) => {
-      sst.equal(
+    await t.test('should replace a single quote', async function () {
+      assert.equal(
         processor.processSync("Alfred' bertrand.").toString(),
         'Alfred’ bertrand.'
       )
-
-      sst.end()
     })
-
-    st.end()
   })
-
-  t.end()
 })
 
-test('Ellipses', (t) => {
+test('Ellipses', async function (t) {
   const processor = retext().use(retextSmartypants)
 
-  t.test('should throw when not given `true`, `false`, or omitted', (st) => {
-    st.throws(() => {
-      // @ts-expect-error: runtime.
-      retext().use(retextSmartypants, {ellipses: Math}).freeze()
-    }, /\[object Math]/)
+  await t.test(
+    'should throw when not given `true`, `false`, or omitted',
+    async function () {
+      assert.throws(function () {
+        // @ts-expect-error: runtime.
+        retext().use(retextSmartypants, {ellipses: 'hi'}).freeze()
+      }, /`hi` is not a valid value for `ellipses`/)
+    }
+  )
 
-    st.end()
-  })
-
-  t.test('should not throw when not omitted', (st) => {
-    st.doesNotThrow(() => {
+  await t.test('should not throw when not omitted', async function () {
+    assert.doesNotThrow(async function () {
       retext().use(retextSmartypants, {ellipses: false}).freeze()
     })
-
-    st.end()
   })
 
-  t.test('should replace three full stops', (st) => {
-    st.equal(
+  await t.test('should replace three full stops', async function () {
+    assert.equal(
       processor.processSync('Alfred... Bertrand.').toString(),
       'Alfred\u2026 Bertrand.'
     )
-
-    st.end()
   })
 
-  t.test('should replace three initial full stops', (st) => {
-    st.equal(
+  await t.test('should replace three initial full stops', async function () {
+    assert.equal(
       processor.processSync('...Alfred Bertrand.').toString(),
       '\u2026Alfred Bertrand.'
     )
-
-    st.end()
   })
 
-  t.test('should replace three final full stops', (st) => {
-    st.equal(
+  await t.test('should replace three final full stops', async function () {
+    assert.equal(
       processor.processSync('Alfred Bertrand...').toString(),
       'Alfred Bertrand\u2026'
     )
-
-    st.end()
   })
 
-  t.test('should replace three padded full stops', (st) => {
-    st.equal(
+  await t.test('should replace three padded full stops', async function () {
+    assert.equal(
       processor.processSync('Alfred ... Bertrand.').toString(),
       'Alfred \u2026 Bertrand.'
     )
-
-    st.end()
   })
 
-  t.test('should replace three padded initial full stops', (st) => {
-    st.equal(
-      processor.processSync('... Alfred Bertrand.').toString(),
-      '\u2026 Alfred Bertrand.'
-    )
+  await t.test(
+    'should replace three padded initial full stops',
+    async function () {
+      assert.equal(
+        processor.processSync('... Alfred Bertrand.').toString(),
+        '\u2026 Alfred Bertrand.'
+      )
+    }
+  )
 
-    st.end()
-  })
+  await t.test(
+    'should replace three padded final full stops',
+    async function () {
+      assert.equal(
+        processor.processSync('Alfred Bertrand ...').toString(),
+        'Alfred Bertrand \u2026'
+      )
+    }
+  )
 
-  t.test('should replace three padded final full stops', (st) => {
-    st.equal(
-      processor.processSync('Alfred Bertrand ...').toString(),
-      'Alfred Bertrand \u2026'
-    )
+  await t.test(
+    'should replace three padded full stops with spaces',
+    async function () {
+      assert.equal(
+        processor.processSync('Alfred . . . Bertrand.').toString(),
+        'Alfred \u2026 Bertrand.'
+      )
+    }
+  )
 
-    st.end()
-  })
+  await t.test(
+    'should replace three padded initial full stops with spaces',
+    async function () {
+      assert.equal(
+        processor.processSync('. . . Alfred Bertrand.').toString(),
+        '\u2026 Alfred Bertrand.'
+      )
+    }
+  )
 
-  t.test('should replace three padded full stops with spaces', (st) => {
-    st.equal(
-      processor.processSync('Alfred . . . Bertrand.').toString(),
-      'Alfred \u2026 Bertrand.'
-    )
+  await t.test(
+    'should replace three padded final full stops with spaces',
+    async function () {
+      assert.equal(
+        processor.processSync('Alfred Bertrand . . .').toString(),
+        'Alfred Bertrand \u2026'
+      )
+    }
+  )
 
-    st.end()
-  })
+  await t.test(
+    'should replace three full stops with spaces',
+    async function () {
+      assert.equal(
+        processor.processSync('Alfred. . . Bertrand.').toString(),
+        'Alfred\u2026 Bertrand.'
+      )
+    }
+  )
 
-  t.test('should replace three padded initial full stops with spaces', (st) => {
-    st.equal(
-      processor.processSync('. . . Alfred Bertrand.').toString(),
-      '\u2026 Alfred Bertrand.'
-    )
+  await t.test(
+    'should replace three initial full stops with spaces',
+    async function () {
+      assert.equal(
+        processor.processSync('. . .Alfred Bertrand.').toString(),
+        '\u2026Alfred Bertrand.'
+      )
+    }
+  )
 
-    st.end()
-  })
+  await t.test(
+    'should replace three final full stops with spaces',
+    async function () {
+      assert.equal(
+        processor.processSync('Alfred Bertrand. . .').toString(),
+        'Alfred Bertrand\u2026'
+      )
+    }
+  )
 
-  t.test('should replace three padded final full stops with spaces', (st) => {
-    st.equal(
-      processor.processSync('Alfred Bertrand . . .').toString(),
-      'Alfred Bertrand \u2026'
-    )
-
-    st.end()
-  })
-
-  t.test('should replace three full stops with spaces', (st) => {
-    st.equal(
-      processor.processSync('Alfred. . . Bertrand.').toString(),
-      'Alfred\u2026 Bertrand.'
-    )
-
-    st.end()
-  })
-
-  t.test('should replace three initial full stops with spaces', (st) => {
-    st.equal(
-      processor.processSync('. . .Alfred Bertrand.').toString(),
-      '\u2026Alfred Bertrand.'
-    )
-
-    st.end()
-  })
-
-  t.test('should replace three final full stops with spaces', (st) => {
-    st.equal(
-      processor.processSync('Alfred Bertrand. . .').toString(),
-      'Alfred Bertrand\u2026'
-    )
-
-    st.end()
-  })
-
-  t.test('should replace more than three full stops', (st) => {
-    st.equal(
+  await t.test('should replace more than three full stops', async function () {
+    assert.equal(
       processor.processSync('Alfred..... Bertrand.').toString(),
       'Alfred\u2026 Bertrand.'
     )
 
-    st.equal(
+    assert.equal(
       processor.processSync('Alfred bertrand....').toString(),
       'Alfred bertrand\u2026'
     )
 
-    st.equal(
+    assert.equal(
       processor.processSync('......Alfred bertrand.').toString(),
       '\u2026Alfred bertrand.'
     )
-
-    st.end()
   })
 
-  t.test(
+  await t.test(
     'should replace more than three full stops with funky spacing',
-    (st) => {
-      st.equal(
+    async function () {
+      assert.equal(
         processor.processSync('Alfred .. .. . Bertrand.').toString(),
         'Alfred \u2026 Bertrand.'
       )
-
-      st.end()
     }
   )
 
-  t.test('should NOT replace less than three full stops', (st) => {
-    st.equal(
-      processor.processSync('Alfred.. Bertrand.').toString(),
-      'Alfred.. Bertrand.'
-    )
+  await t.test(
+    'should NOT replace less than three full stops',
+    async function () {
+      assert.equal(
+        processor.processSync('Alfred.. Bertrand.').toString(),
+        'Alfred.. Bertrand.'
+      )
 
-    st.equal(
-      processor.processSync('Alfred bertrand. .').toString(),
-      'Alfred bertrand. .'
-    )
+      assert.equal(
+        processor.processSync('Alfred bertrand. .').toString(),
+        'Alfred bertrand. .'
+      )
 
-    st.equal(
-      processor.processSync('.Alfred bertrand.').toString(),
-      '.Alfred bertrand.'
-    )
-
-    st.end()
-  })
-
-  t.end()
+      assert.equal(
+        processor.processSync('.Alfred bertrand.').toString(),
+        '.Alfred bertrand.'
+      )
+    }
+  )
 })
