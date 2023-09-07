@@ -18,6 +18,8 @@
 *   [Use](#use)
 *   [API](#api)
     *   [`unified().use(retextSmartypants[, options])`](#unifieduseretextsmartypants-options)
+    *   [`Options`](#options)
+    *   [`QuoteCharacterMap`](#quotecharactermap)
 *   [Types](#types)
 *   [Compatibility](#compatibility)
 *   [Contribute](#contribute)
@@ -38,7 +40,7 @@ but you want to use smart ones instead.
 ## Install
 
 This package is [ESM only][esm].
-In Node.js (version 12.20+, 14.14+, 16.0+, or 18.0+), install with [npm][]:
+In Node.js (version 16+), install with [npm][]:
 
 ```sh
 npm install retext-smartypants
@@ -80,75 +82,79 @@ He said, “A ‘simple’ english sentence…”
 ## API
 
 This package exports no identifiers.
-The default export is `retextSmartypants`.
+The default export is [`retextSmartypants`][api-retext-smartypants].
 
 ### `unified().use(retextSmartypants[, options])`
 
-Apply [SmartyPants][].
+Replace straight punctuation marks with curly ones.
 
-##### `options`
+###### Parameters
 
-Configuration (optional).
+*   `options` ([`Options`][api-options], optional)
+    — configuration
 
-###### `options.quotes`
+###### Returns
 
-Create smart quotes (`boolean`, default: `true`).
+Transform ([`Transformer`][unified-transformer]).
 
-Converts straight double and single quotes to smart double or single quotes.
-The options `options.openingQuotes` and `options.closingQuotes` affect which
-quotes are considered smart.
+### `Options`
 
-###### `options.openingQuotes`
+Configuration (TypeScript type).
 
-Characters to use for opening quotes `{single: '‘', double: '“'}`.
+###### Fields
 
-###### `options.closingQuotes`
+*   `backticks` (`boolean` or `'all'`, default: `true`)
+    — transform backticks;
+    when `true`, turns double backticks into an opening double quote and
+    double straight single quotes into a closing double quote;
+    when `'all'`, does that and turns single backticks into an opening
+    single quote and a straight single quotes into a closing single smart
+    quote;
+    `quotes: false` must be used with `backticks: 'all'`
+*   `closingQuotes` ([`QuoteCharacterMap`][api-quote-character-map], default:
+    `{double: '”', single: '’'}`)
+    — closing quotes to use
+*   `dashes` (`'inverted'` or `'oldschool'` or `boolean`, default: `true`)
+    transform dashes;
+    when `true`, turns two dashes into an em dash character;
+    when `'oldschool'`, turns three dashes into an em dash and two into an en
+    dash;
+    when `'inverted'`, turns three dashes into an en dash and two into an em
+    dash
+*   `ellipses` (`boolean`, default: `true`)
+    — transform triple dots, with or without spaces between
+*   `openingQuotes` ([`QuoteCharacterMap`][api-quote-character-map], default:
+    `{double: '“', single: '‘'}`)
+    — opening quotes to use
+*   `quotes` (`boolean`, default: `true`)
+    — Transform straight quotes into smart quotes
 
-Characters to use for closing quotes `{single: '’', double: '”'}`.
+### `QuoteCharacterMap`
 
-###### `options.ellipses`
+Quote characters (TypeScript type).
 
-Create smart ellipses (`boolean`, default: `true`).
+###### Fields
 
-Converts triple dot characters (with or without spaces) into a single unicode
-ellipsis character.
-
-###### `options.backticks`
-
-Create smart quotes from backticks (`boolean` or `'all'`, default: `true`).
-
-When `true`, converts double backticks into an opening double quote, and
-double straight single quotes into a closing double quote.
-
-When `'all'`: does the what `true` does with the addition of converting single
-backticks into an opening single quote, and a straight single quote into a
-closing single smart quote.
-
-> 👉 **Note**: `options.quotes` can not be `true` when `backticks` is `'all'`.
-
-###### `options.dashes`
-
-Create smart dashes (`boolean` or `'oldschool'`, `'inverted'`, default: `true`).
-
-When `true`, converts two dashes into an em dash character.
-
-When `'oldschool'`, converts two dashes into an en dash, and three dashes into
-an em dash.
-
-When `'inverted'`, converts two dashes into an em dash, and three dashes into
-an en dash.
+*   `double` (`string`)
+    — character to use for double quotes
+*   `single` (`string`)
+    — character to use for single quotes
 
 ## Types
 
 This package is fully typed with [TypeScript][].
-It exports the additional types `Options` and `QuoteCharacterMap`.
+It exports the additional types [`Options`][api-options] and
+[`QuoteCharacterMap`][api-quote-character-map].
 
 ## Compatibility
 
-Projects maintained by the unified collective are compatible with all maintained
+Projects maintained by the unified collective are compatible with maintained
 versions of Node.js.
-As of now, that is Node.js 12.20+, 14.14+, 16.0+, and 18.0+.
-Our projects sometimes work with older versions, but this is not guaranteed.
+
+When we cut a new major release, we drop support for unmaintained versions of
+Node.
+This means we try to keep the current release line, `retext-smartypants@^5`,
+compatible with Node.js 12.
 
 ## Contribute
 
@@ -178,9 +184,9 @@ abide by its terms.
 
 [downloads]: https://www.npmjs.com/package/retext-smartypants
 
-[size-badge]: https://img.shields.io/bundlephobia/minzip/retext-smartypants.svg
+[size-badge]: https://img.shields.io/bundlejs/size/retext-smartypants
 
-[size]: https://bundlephobia.com/result?p=retext-smartypants
+[size]: https://bundlejs.com/?q=retext-smartypants
 
 [sponsors-badge]: https://opencollective.com/unified/sponsors/badge.svg
 
@@ -212,8 +218,16 @@ abide by its terms.
 
 [author]: https://wooorm.com
 
-[unified]: https://github.com/unifiedjs/unified
+[smartypants]: https://daringfireball.net/projects/smartypants
 
 [retext]: https://github.com/retextjs/retext
 
-[smartypants]: https://daringfireball.net/projects/smartypants
+[unified]: https://github.com/unifiedjs/unified
+
+[unified-transformer]: https://github.com/unifiedjs/unified#transformer
+
+[api-options]: #options
+
+[api-quote-character-map]: #quotecharactermap
+
+[api-retext-smartypants]: #unifieduseretextsmartypants-options
