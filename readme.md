@@ -49,14 +49,14 @@ npm install retext-smartypants
 In Deno with [`esm.sh`][esmsh]:
 
 ```js
-import retextSmartypants from 'https://esm.sh/retext-smartypants@5'
+import retextSmartypants from 'https://esm.sh/retext-smartypants@6'
 ```
 
 In browsers with [`esm.sh`][esmsh]:
 
 ```html
 <script type="module">
-  import retextSmartypants from 'https://esm.sh/retext-smartypants@5?bundle'
+  import retextSmartypants from 'https://esm.sh/retext-smartypants@6?bundle'
 </script>
 ```
 
