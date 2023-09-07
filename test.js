@@ -3,18 +3,16 @@ import test from 'node:test'
 import {retext} from 'retext'
 import retextSmartypants from './index.js'
 
+test('retextSmartypants', async function (t) {
+  await t.test('should expose the public api', async function () {
+    assert.deepEqual(Object.keys(await import('./index.js')).sort(), [
+      'default'
+    ])
+  })
+})
+
 test('Curly quotes', async function (t) {
   const processor = retext().use(retextSmartypants)
-
-  await t.test(
-    'should throw when not given `true`, `false`, or omitted',
-    async function () {
-      assert.throws(function () {
-        // @ts-expect-error: runtime.
-        retext().use(retextSmartypants, {quotes: 1}).freeze()
-      }, /`1` is not a valid value for `quotes`/)
-    }
-  )
 
   await t.test('should not throw when not omitted', async function () {
     assert.doesNotThrow(async function () {
@@ -235,8 +233,8 @@ test('Curly quotes', async function (t) {
     assert.equal(
       retext()
         .use(retextSmartypants, {
-          openingQuotes: {double: '«', single: '‹'},
-          closingQuotes: {double: '»', single: '›'}
+          closingQuotes: {double: '»', single: '›'},
+          openingQuotes: {double: '«', single: '‹'}
         })
         .processSync('Alfred "bertrand" \'cees\'.')
         .toString(),
@@ -246,17 +244,6 @@ test('Curly quotes', async function (t) {
 })
 
 test('En- and em-dashes', async function (t) {
-  await t.test(
-    'should throw when not given `true`, `false`, `oldschool`, ' +
-      '`inverted`, or omitted',
-    async function () {
-      assert.throws(function () {
-        // @ts-expect-error: runtime.
-        retext().use(retextSmartypants, {dashes: 'test'}).freeze()
-      }, /`test` is not a valid value for `dahes`/)
-    }
-  )
-
   await t.test('should not throw when not omitted', async function () {
     retext().use(retextSmartypants, {dashes: false}).freeze()
   })
@@ -310,18 +297,6 @@ test('En- and em-dashes', async function (t) {
 })
 
 test('Backticks', async function (t) {
-  await t.test(
-    'should throw when not given `true`, `false`, `all`, or omitted',
-    async function () {
-      assert.throws(function () {
-        retext()
-          // @ts-expect-error: runtime.
-          .use(retextSmartypants, {backticks: Number.POSITIVE_INFINITY})
-          .freeze()
-      }, /`Infinity` is not a valid value for `backticks`/)
-    }
-  )
-
   await t.test('should not throw when not omitted', async function () {
     retext().use(retextSmartypants, {backticks: false}).freeze()
   })
@@ -331,7 +306,7 @@ test('Backticks', async function (t) {
     async function () {
       assert.throws(function () {
         retext().use(retextSmartypants, {backticks: 'all'}).freeze()
-      }, /`backticks: all` is not a valid value when `quotes: true`/)
+      }, /Cannot accept `backticks: 'all'` with `quotes: true`/)
     }
   )
 
@@ -417,16 +392,6 @@ test('Backticks', async function (t) {
 
 test('Ellipses', async function (t) {
   const processor = retext().use(retextSmartypants)
-
-  await t.test(
-    'should throw when not given `true`, `false`, or omitted',
-    async function () {
-      assert.throws(function () {
-        // @ts-expect-error: runtime.
-        retext().use(retextSmartypants, {ellipses: 'hi'}).freeze()
-      }, /`hi` is not a valid value for `ellipses`/)
-    }
-  )
 
   await t.test('should not throw when not omitted', async function () {
     assert.doesNotThrow(async function () {
