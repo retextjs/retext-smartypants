@@ -554,3 +554,156 @@ test('Ellipses', async function (t) {
     }
   )
 })
+
+test('Ellipses (unspaced)', async function (t) {
+  const processor = retext().use(retextSmartypants, {ellipses: 'unspaced'})
+
+  await t.test('should replace three full stops', async function () {
+    assert.equal(
+      processor.processSync('Alfred... Bertrand.').toString(),
+      'Alfred\u2026 Bertrand.'
+    )
+  })
+
+  await t.test('should replace three initial full stops', async function () {
+    assert.equal(
+      processor.processSync('...Alfred Bertrand.').toString(),
+      '\u2026Alfred Bertrand.'
+    )
+  })
+
+  await t.test('should replace three final full stops', async function () {
+    assert.equal(
+      processor.processSync('Alfred Bertrand...').toString(),
+      'Alfred Bertrand\u2026'
+    )
+  })
+
+  await t.test('should replace three padded full stops', async function () {
+    assert.equal(
+      processor.processSync('Alfred ... Bertrand.').toString(),
+      'Alfred \u2026 Bertrand.'
+    )
+  })
+
+  await t.test(
+    'should replace three padded initial full stops',
+    async function () {
+      assert.equal(
+        processor.processSync('... Alfred Bertrand.').toString(),
+        '\u2026 Alfred Bertrand.'
+      )
+    }
+  )
+
+  await t.test(
+    'should replace three padded final full stops',
+    async function () {
+      assert.equal(
+        processor.processSync('Alfred Bertrand ...').toString(),
+        'Alfred Bertrand \u2026'
+      )
+    }
+  )
+
+  await t.test('should replace more than three full stops', async function () {
+    assert.equal(
+      processor.processSync('Alfred..... Bertrand.').toString(),
+      'Alfred\u2026 Bertrand.'
+    )
+
+    assert.equal(
+      processor.processSync('Alfred bertrand....').toString(),
+      'Alfred bertrand\u2026'
+    )
+
+    assert.equal(
+      processor.processSync('......Alfred bertrand.').toString(),
+      '\u2026Alfred bertrand.'
+    )
+  })
+
+  await t.test(
+    'should NOT replace less than three full stops',
+    async function () {
+      assert.equal(
+        processor.processSync('Alfred.. Bertrand.').toString(),
+        'Alfred.. Bertrand.'
+      )
+
+      assert.equal(
+        processor.processSync('Alfred bertrand. .').toString(),
+        'Alfred bertrand. .'
+      )
+
+      assert.equal(
+        processor.processSync('.Alfred bertrand.').toString(),
+        '.Alfred bertrand.'
+      )
+    }
+  )
+})
+
+test('Ellipses (spaced)', async function (t) {
+  const processor = retext().use(retextSmartypants, {ellipses: 'spaced'})
+
+  await t.test(
+    'should replace three padded full stops with spaces',
+    async function () {
+      assert.equal(
+        processor.processSync('Alfred . . . Bertrand.').toString(),
+        'Alfred \u2026 Bertrand.'
+      )
+    }
+  )
+
+  await t.test(
+    'should replace three padded initial full stops with spaces',
+    async function () {
+      assert.equal(
+        processor.processSync('. . . Alfred Bertrand.').toString(),
+        '\u2026 Alfred Bertrand.'
+      )
+    }
+  )
+
+  await t.test(
+    'should replace three padded final full stops with spaces',
+    async function () {
+      assert.equal(
+        processor.processSync('Alfred Bertrand . . .').toString(),
+        'Alfred Bertrand \u2026'
+      )
+    }
+  )
+
+  await t.test(
+    'should replace three full stops with spaces',
+    async function () {
+      assert.equal(
+        processor.processSync('Alfred. . . Bertrand.').toString(),
+        'Alfred\u2026 Bertrand.'
+      )
+    }
+  )
+
+  await t.test(
+    'should replace three initial full stops with spaces',
+    async function () {
+      assert.equal(
+        processor.processSync('. . .Alfred Bertrand.').toString(),
+        '\u2026Alfred Bertrand.'
+      )
+    }
+  )
+
+  await t.test(
+    'should replace three final full stops with spaces',
+    async function () {
+      assert.equal(
+        processor.processSync('Alfred Bertrand. . .').toString(),
+        'Alfred Bertrand\u2026'
+      )
+    }
+  )
+})
