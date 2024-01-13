@@ -115,19 +115,22 @@ Configuration (TypeScript type).
     `{double: '”', single: '’'}`)
     — closing quotes to use
 *   `dashes` (`'inverted'` or `'oldschool'` or `boolean`, default: `true`)
-    transform dashes;
+    — transform dashes;
     when `true`, turns two dashes into an em dash character;
     when `'oldschool'`, turns three dashes into an em dash and two into an en
     dash;
     when `'inverted'`, turns three dashes into an en dash and two into an em
     dash
-*   `ellipses` (`boolean`, default: `true`)
-    — transform triple dots, with or without spaces between
+*   `ellipses` (`'spaced'` or `'unspaced'` or `boolean`, default: `true`)
+    — transform triple dots;
+    when `'spaced'`, turns triple dots with spaces into ellipses;
+    when `'unspaced'`, turns triple dots without spaces into ellipses;
+    when `true`, turns triple dots with or without spaces into ellipses
 *   `openingQuotes` ([`QuoteCharacterMap`][api-quote-character-map], default:
     `{double: '“', single: '‘'}`)
     — opening quotes to use
 *   `quotes` (`boolean`, default: `true`)
-    — Transform straight quotes into smart quotes
+    — transform straight quotes into smart quotes
 
 ### `QuoteCharacterMap`
 
