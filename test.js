@@ -241,6 +241,34 @@ test('Curly quotes', async function (t) {
       'Alfred «bertrand» ‹cees›.'
     )
   })
+
+  await t.test(
+    'should use correct quotes around work breaks',
+    async function () {
+      assert.equal(processor.processSync('("A.")').toString(), '(“A.”)')
+    }
+  )
+
+  await t.test(
+    'should use correct quotes around work breaks #1',
+    async function () {
+      assert.equal(processor.processSync('"~a').toString(), '“~a')
+    }
+  )
+
+  await t.test(
+    'should use correct quotes around work breaks #2',
+    async function () {
+      assert.equal(processor.processSync('"~*').toString(), '”~*')
+    }
+  )
+
+  await t.test(
+    'should use correct quotes around work breaks #3',
+    async function () {
+      assert.equal(processor.processSync('"~').toString(), '”~')
+    }
+  )
 })
 
 test('En- and em-dashes', async function (t) {
