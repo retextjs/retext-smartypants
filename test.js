@@ -305,6 +305,19 @@ test('En- and em-dashes', async function (t) {
         )
       }
     )
+
+    await t.test(
+      'should turn an en dash + dash into an em-dash',
+      async function () {
+        assert.equal(
+          retext()
+            .use(retextSmartypants, {dashes: 'oldschool'})
+            .processSync('Alfred–-')
+            .toString(),
+          'Alfred—'
+        )
+      }
+    )
   })
 
   await t.test('inverted', async function (t) {
@@ -318,6 +331,19 @@ test('En- and em-dashes', async function (t) {
             .processSync('Alfred--bertrand---cees.')
             .toString(),
           'Alfred—bertrand–cees.'
+        )
+      }
+    )
+
+    await t.test(
+      'should turn an em dash + dash into an en-dash',
+      async function () {
+        assert.equal(
+          retext()
+            .use(retextSmartypants, {dashes: 'inverted'})
+            .processSync('Alfred—-')
+            .toString(),
+          'Alfred–'
         )
       }
     )
