@@ -1,20 +1,20 @@
 <!doctype html>
 <meta charset=utf8>
-<meta content=width=device-width,initial-scale=1 name=viewport>
+<meta content=initial-scale=1,width=device-width name=viewport>
 <title>retext-smartypants</title>
-<link rel=stylesheet href=index.css>
+<link href=index.css rel=stylesheet>
 <h1>retext-smartypants</h1>
 <p>A quick demo of <a href=https://github.com/retextjs/retext-smartypants>retext-smartypants</a>. Please raise any issues on <a href=https://github.com/retextjs/retext-smartypants/issues>GitHub</a>.
 <form>
   <fieldset>
     <legend>Options</legend>
-    <label>Quotes? <input name=quotes type=checkbox checked></label>
-    <label>Ellipses? <input name=ellipses type=checkbox checked></label>
+    <label>Quotes? <input checked name=quotes type=checkbox></label>
+    <label>Ellipses? <input checked name=ellipses type=checkbox></label>
     <label>
       Backticks?
       <select name=backticks>
         <option value=all>All
-        <option value=true selected>Yes
+        <option selected value=true>Yes
         <option value=false>No
       </select>
       <small><b>Note</b>! Backticks: all does not work together with Quotes: true.</small>
@@ -24,13 +24,13 @@
       <select name=dashes>
         <option value=oldschool>Old school
         <option value=inverted>Inverted
-        <option value=true selected>Yes
+        <option selected value=true>Yes
         <option value=false>No
       </select>
     </label>
   </fieldset>
   <p>
-    <textarea spellcheck=false rows=20 cols=80 autofocus>Enter some text here--A 'simple' english sentence. . . or something more sophisticated.
+    <textarea autofocus cols=80 rows=20 spellcheck=false>Enter some text here--A 'simple' english sentence. . . or something more sophisticated.
 
   ``a''
   `a'
@@ -39,6 +39,7 @@
   a--a a---a
   a...a. . .a . . .a. . . a</textarea>
   <p>
-    <textarea rows=20 cols=80 readonly></textarea>
+    <textarea cols=80 readonly rows=20></textarea>
 </form>
-<script src=index.js></script>
+<script src=index.module.js type=module></script>
+<script nomodule src=index.nomodule.js></script>

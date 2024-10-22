@@ -1,24 +1,40 @@
-'use strict'
-
 /* eslint-env browser */
 
-var unified = require('unified')
-var english = require('retext-english')
-var stringify = require('retext-stringify')
-var smartypants = require('retext-smartypants')
+/**
+ * @import {Root} from 'nlcst'
+ * @import {Options} from 'retext-smartypants'
+ * @import {Processor} from 'unified'
+ */
 
-var $areas = document.querySelectorAll('textarea')
-var $form = document.querySelector('form')
-var $quotes = document.getElementsByName('quotes')[0]
-var $ellipses = document.getElementsByName('ellipses')[0]
-var $dashes = document.getElementsByName('dashes')[0]
-var $backticks = document.getElementsByName('backticks')[0]
+import {ok as assert} from 'devlop'
+import retextEnglish from 'retext-english'
+import retextSmartypants from 'retext-smartypants'
+import retextStringify from 'retext-stringify'
+import {unified} from 'unified'
 
-var $input = $areas[0]
-var $output = $areas[1]
+const $areas = document.querySelectorAll('textarea')
+const $form = /** @type {HTMLFormElement} */ (document.querySelector('form'))
+const $quotes = /** @type {HTMLInputElement} */ (
+  document.getElementsByName('quotes')[0]
+)
+const $ellipses = /** @type {HTMLInputElement} */ (
+  document.getElementsByName('ellipses')[0]
+)
+const $dashes = /** @type {HTMLSelectElement} */ (
+  document.getElementsByName('dashes')[0]
+)
+const $backticks = /** @type {HTMLSelectElement} */ (
+  document.getElementsByName('backticks')[0]
+)
 
-var processor
-var state = {options: {}}
+const $input = $areas[0]
+const $output = $areas[1]
+
+/** @type {Processor<Root, Root, undefined, Root, string> | undefined} */
+let processor
+
+/** @type {{options: Options}} */
+const state = {options: {}}
 
 $quotes.addEventListener('change', oncheckboxchange)
 $ellipses.addEventListener('change', oncheckboxchange)
@@ -44,18 +60,35 @@ onselectchange({target: $backticks})
 
 onanyoptionchange()
 
+/**
+ * @param {{target: EventTarget | null}} event
+ * @returns {undefined}
+ */
 function oncheckboxchange(event) {
-  state.options[event.target.name] = event.target.checked
+  // This is all just because TS doesn’t understand normal code.
+  const target = /** @type {HTMLInputElement} */ (event.target)
+  const name = target.name
+  assert(name === 'ellipses' || name === 'quotes')
+
+  state.options[name] = target.checked
 }
 
+/**
+ * @param {{target: EventTarget | null}} event
+ * @returns {undefined}
+ */
 function onselectchange(event) {
-  var value = event.target.selectedOptions[0]
+  // This is all just because TS doesn’t understand normal code.
+  const target = /** @type {HTMLSelectElement} */ (event.target)
 
-  if (!value) {
+  const selectedOption = target.selectedOptions[0]
+
+  if (!selectedOption) {
     return
   }
 
-  value = value.value
+  /** @type {string | boolean} */
+  let value = selectedOption.value
 
   if (value === 'true') {
     value = true
@@ -63,9 +96,13 @@ function onselectchange(event) {
     value = false
   }
 
-  state.options[event.target.name] = value
+  // @ts-expect-error: TS doesn’t understand normal code.
+  state.options[target.name] = value
 }
 
+/**
+ * @returns {undefined}
+ */
 function onbacktickschange() {
   if (state.options.backticks === 'all' && state.options.quotes) {
     $quotes.checked = false
@@ -73,6 +110,9 @@ function onbacktickschange() {
   }
 }
 
+/**
+ * @returns {undefined}
+ */
 function onquoteschange() {
   if (state.options.backticks === 'all' && state.options.quotes) {
     $backticks.selectedIndex = 1
@@ -80,20 +120,31 @@ function onquoteschange() {
   }
 }
 
-function onsubmit(ev) {
-  ev.preventDefault()
+/**
+ * @param {SubmitEvent} event
+ * @returns {undefined}
+ */
+function onsubmit(event) {
+  event.preventDefault()
   onanyoptionchange()
 }
 
+/**
+ * @returns {undefined}
+ */
 function onanyoptionchange() {
   processor = unified()
-    .use(english)
-    .use(smartypants, state.options)
-    .use(stringify)
+    .use(retextEnglish)
+    .use(retextSmartypants, state.options)
+    .use(retextStringify)
 
   smarten()
 }
 
+/**
+ * @returns {undefined}
+ */
 function smarten() {
+  assert(processor)
   $output.value = processor.processSync($input.value).toString()
 }

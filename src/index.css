@@ -4,7 +4,6 @@
 
 :root {
   color-scheme: light dark;
-  background-color: hsl(0, 0%, 90%);
 }
 
 body {
@@ -53,8 +52,8 @@ output {
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    background-color: hsl(214, 13%, 10%);
-    color: hsl(214, 13%, 90%);
+  html {
+    background-color: hsl(214deg 13% 7.5%);
+    color: hsl(214deg 13% 95%);
   }
 }
